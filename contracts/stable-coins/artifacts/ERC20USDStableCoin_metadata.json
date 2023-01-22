@@ -6,7 +6,13 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "contract_owner",
+						"type": "address"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -258,7 +264,7 @@
 				"name": "owner",
 				"outputs": [
 					{
-						"internalType": "address payable",
+						"internalType": "address",
 						"name": "",
 						"type": "address"
 					}
@@ -274,19 +280,6 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "ownerBal",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -545,19 +538,19 @@
 			]
 		},
 		"contracts/stable-coins/ERC20StableCoin.sol": {
-			"keccak256": "0x595b87d300e2f186d518dbfe080567a66953977afc33fb2fabdabed9a542a3ba",
+			"keccak256": "0x22b86f3fb3f64c7abf99f86f13a920d02d84e7cac04624e28adf8205ba58bce0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5bd245eecd2ec30f3b8fa796b5b2a242ce4775e8f96ca7854feba0d6b611fb35",
-				"dweb:/ipfs/QmP3jhXDU1YENqpWt9URD1HotY4rQfpDmY9sUZYY6ZAjid"
+				"bzz-raw://a2ddd323be86202688dd46c3bed2449218f99ef426de1e572d223e14f5227fea",
+				"dweb:/ipfs/QmeDCaySM76oJSXmCfKMLF62JtinWucmsv9KdXJYjWFihD"
 			]
 		},
 		"contracts/stable-coins/ERC20USDStableCoin.sol": {
-			"keccak256": "0x0dc6aaa66716d6709475dfa4aae7cd8317946a4080cdaa4657e9d108b964cbf4",
+			"keccak256": "0xfb4b9fc50eed0100e515e6c2b3c3cc8285f5021a501828ee55b02497359f2cf9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://324ffe64ce5ffd12f71c008a68b791a0fdb24396fb248d15452eb09f1594b434",
-				"dweb:/ipfs/QmPodRDzH8vt265sxMbvRyBZiu3F7yxqjDzC9xCAjF6SUF"
+				"bzz-raw://a1200728529c847b28ef1a8d1652890636eef957843ba8d1250cb11e5d3b5b18",
+				"dweb:/ipfs/QmcrraqmySWXbN11c4XnLWTfh1QjpwxQPHgGVbzheSAKrx"
 			]
 		},
 		"hardhat/console.sol": {

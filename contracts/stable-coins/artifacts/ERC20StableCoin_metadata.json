@@ -199,6 +199,13 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "dummy",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -527,11 +534,11 @@
 			]
 		},
 		"contracts/stable-coins/ERC20StableCoin.sol": {
-			"keccak256": "0xa93f3c66abe31b643c420e2e9cbfd02f4b10b49cf2a6a233fa293efb53a3d303",
+			"keccak256": "0x22f533965b18573079ce34e4049447d035c63902140ba98abb5b4eb3c6fab6a4",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://25ea494f3d998adcaed4f1a880f8929fe0f7405602e1eedc8383dc6b162ac6d1",
-				"dweb:/ipfs/QmfU6eBiMjt3TcCQmfiSDgLwrP9Y4Q29ztVGRT6Z5TJTzt"
+				"bzz-raw://a2f7baedb3bf7a68a43bb7686cf98b2c729ad9a11f5b8cdc793b27ca3fbb7f1e",
+				"dweb:/ipfs/QmPhSPL1koB82NgBdCSx2pF26Ho38q44D3G4YAELvVAec5"
 			]
 		},
 		"hardhat/console.sol": {

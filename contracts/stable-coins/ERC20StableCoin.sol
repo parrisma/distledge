@@ -15,7 +15,7 @@ abstract contract ERC20StableCoin is ERC20Pausable {
     uint8 private _decimals;
 
     constructor(address contract_owner, uint8 decimals_) {
-        console.logString(Strings.toHexString(uint160(_msgSender()), 20));
+        console.logString(Strings.toHexString(uint160(contract_owner), 20));
         owner = payable(contract_owner);
         _decimals = decimals_;
     }
@@ -35,6 +35,21 @@ abstract contract ERC20StableCoin is ERC20Pausable {
         if (!paused()) {
             super._pause();
         }
+    }
+
+    function dummy() public {
+           console.logString(
+            string.concat(
+                "DD msg.sender: ",
+                Strings.toHexString(uint160(msg.sender), 20)
+            )
+        );
+        console.logString(
+            string.concat(
+                "DD owner: ",
+                Strings.toHexString(uint160(this.ownerAddress()), 20)
+            )
+        );     
     }
 
     // Un pause all change activity on the contract

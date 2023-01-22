@@ -55,6 +55,7 @@
 			"burn(uint256)": "42966c68",
 			"decimals()": "313ce567",
 			"decreaseAllowance(address,uint256)": "a457c2d7",
+			"dummy()": "32e43a11",
 			"increaseAllowance(address,uint256)": "39509351",
 			"mint(uint8)": "6ecd2306",
 			"name()": "06fdde03",
@@ -261,6 +262,13 @@
 					"type": "bool"
 				}
 			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "dummy",
+			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
 		},
