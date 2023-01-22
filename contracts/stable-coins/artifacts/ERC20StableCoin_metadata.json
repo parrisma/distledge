@@ -276,19 +276,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "ownerBal",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "pause",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -540,11 +527,11 @@
 			]
 		},
 		"contracts/stable-coins/ERC20StableCoin.sol": {
-			"keccak256": "0xbd66ed077c98c0ecae1310c4c7030957caf0f37c60ede24b02727ca59a7c63ee",
+			"keccak256": "0xa93f3c66abe31b643c420e2e9cbfd02f4b10b49cf2a6a233fa293efb53a3d303",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ce52b05de6cd19f71c2439c024b5f9cb18a54b7c4e12bd13793c27800ae3e9cd",
-				"dweb:/ipfs/QmdWfLTq6C2D3PVTgeeiyAotzDFdSf2TzewzyamiA8WuBy"
+				"bzz-raw://25ea494f3d998adcaed4f1a880f8929fe0f7405602e1eedc8383dc6b162ac6d1",
+				"dweb:/ipfs/QmfU6eBiMjt3TcCQmfiSDgLwrP9Y4Q29ztVGRT6Z5TJTzt"
 			]
 		},
 		"hardhat/console.sol": {

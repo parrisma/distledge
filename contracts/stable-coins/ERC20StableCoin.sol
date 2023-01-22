@@ -1,6 +1,8 @@
 // contracts/OceanToken.sol
 // SPDX-License-Identifier: MIT
 
+// Base contract for ERC20 Based Stable Coin
+
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";

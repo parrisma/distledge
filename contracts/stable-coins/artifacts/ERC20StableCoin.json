@@ -60,7 +60,6 @@
 			"name()": "06fdde03",
 			"owner()": "8da5cb5b",
 			"ownerAddress()": "8f84aa09",
-			"ownerBal()": "07d49020",
 			"pause()": "8456cb59",
 			"paused()": "5c975abb",
 			"symbol()": "95d89b41",
@@ -336,19 +335,6 @@
 					"internalType": "address",
 					"name": "",
 					"type": "address"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "ownerBal",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
 				}
 			],
 			"stateMutability": "view",
