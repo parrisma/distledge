@@ -11,10 +11,12 @@ import "remix_tests.sol";
 import "remix_accounts.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "../contracts/stable-coins/Sender.sol";
+import "../contracts/stable-coins/SimpleERC20.sol";
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // File name has to end with '_test.sol', this file can contain more than one testSuite contracts
-contract testSuite2 is Sender {
+contract testSuite2{
     function beforeAll() public {
         console.logString(Strings.toHexString(uint160(msg.sender), 20));
     }
@@ -25,7 +27,9 @@ contract testSuite2 is Sender {
 
     function checkTransferOfTokens() public {
         console.logString(Strings.toHexString(uint160(msg.sender), 20));
-        console.logString(Strings.toHexString(uint160(getOwner()), 20));
+        // console.logString(Strings.toHexString(uint160(getOwner()), 20));
+        SimpleERC20 tkn = new SimpleERC20();
+        tkn.mint(msg.sender,1);
         Assert.ok(true, "");
     }
 }
