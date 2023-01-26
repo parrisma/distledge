@@ -1,5 +1,7 @@
-// contracts/OceanToken.sol
 // SPDX-License-Identifier: MIT
+
+/* 
+**/
 
 // Base contract for ERC20 Based Stable Coin
 
@@ -37,21 +39,6 @@ abstract contract ERC20StableCoin is ERC20Pausable {
         }
     }
 
-    function dummy() public {
-           console.logString(
-            string.concat(
-                "DD msg.sender: ",
-                Strings.toHexString(uint160(msg.sender), 20)
-            )
-        );
-        console.logString(
-            string.concat(
-                "DD owner: ",
-                Strings.toHexString(uint160(this.ownerAddress()), 20)
-            )
-        );     
-    }
-
     // Un pause all change activity on the contract
     function uppause() public onlyOwner {
         if (paused()) {
@@ -87,7 +74,7 @@ abstract contract ERC20StableCoin is ERC20Pausable {
      * The number of units per one of the Token
      */
     function unitsPerToken() public view virtual returns (uint256) {
-        return 10**decimals();
+        return 10 ** decimals();
     }
 
     function ownerAddress() public view returns (address) {

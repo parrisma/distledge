@@ -1,28 +1,28 @@
-REMIX DEFAULT WORKSPACE
+HARDHAT WORKSPACE
 
-Remix default workspace is present when:
-i. Remix loads for the very first time 
-ii. A new workspace is created with 'Default' template
-iii. There are no files existing in the File Explorer
+Project to explore the use of solidity contracts to trade financial derivatives
 
-This workspace contains 3 directories:
+1. Stable Coins (Tokens)
 
-1. 'contracts': Holds three contracts with increasing levels of complexity.
-2. 'scripts': Contains four typescript files to deploy a contract. It is explained below.
-3. 'tests': Contains one Solidity test file for 'Ballot' contract & one JS test file for 'Storage' contract.
+    Use of ERC20 Tokens to model curreny stable coins.
 
-SCRIPTS
+    This removes volatility exposure of participants from underlying Crypto ccys
 
-The 'scripts' folder has four typescript files which help to deploy the 'Storage' contract using 'web3.js' and 'ethers.js' libraries.
+2. Secure Data Feeds
 
-For the deployment of any other contract, just update the contract's name from 'Storage' to the desired contract and provide constructor arguments accordingly 
-in the file `deploy_with_ethers.ts` or  `deploy_with_web3.ts`
+    Financial derivatives need access to secure and authenticated feeds of reference
+    data. This allows the value of the derivative contract to be calculated in a way
+    that all prticipants can trust the calcuated contract values that depend on those
+    values.
 
-In the 'tests' folder there is a script containing Mocha-Chai unit tests for 'Storage' contract.
+3. Immutable Derivatives Contracts
 
-To run a script, right click on file name in the file explorer and click 'Run'. Remember, Solidity file must already be compiled.
-Output from script will appear in remix terminal.
+    Use of contracts in a NFT style, with one contract instance per bi-party agreement
+    where the contract instance is paramaterised at construction to meet the agreed terms.
+    This is then ack'ed by all parties at which point it becomes an Immutable means to
+    calcuate the value of the agreement until it is terminated / expired / excercised.
 
-Please note, require/import is supported in a limited manner for Remix supported modules.
-For now, modules supported by Remix are ethers, web3, swarmgw, chai, multihashes, remix and hardhat only for hardhat.ethers object/plugin.
-For unsupported modules, an error like this will be thrown: '<module_name> module require is not supported by Remix IDE' will be shown.
+    The fees (premiums) and final value is settled via the stable coin (tokens)
+
+    When the contract is queried it consumes up to date refernce data via the secure
+    authenticated sources and calculates the current value.
