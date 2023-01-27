@@ -10,8 +10,8 @@ contract ERC20USDStableCoin is ERC20StableCoin {
     string private constant _token_name = "USDStableCoin";
     uint8 private constant _2decimal_places = 2; // cents
 
-    constructor(address contract_owner)
-        ERC20StableCoin(contract_owner, _2decimal_places)
+    constructor()
+        ERC20StableCoin(_2decimal_places)
         ERC20(_token_name, _token_symbol)
     {}
 }
