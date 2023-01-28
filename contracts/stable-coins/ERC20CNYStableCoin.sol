@@ -4,9 +4,9 @@ pragma solidity ^0.8.17;
 
 import "./ERC20StableCoin.sol";
 
-contract ERC20USDStableCoin is ERC20StableCoin {
-    string private constant _token_symbol = "USC";
-    string private constant _token_name = "USDStableCoin";
+contract ERC20CNYStableCoin is ERC20StableCoin {
+    string private constant _token_symbol = "CNY";
+    string private constant _token_name = "CNYStableCoin";
     uint8 private constant _2decimal_places = 2; // cents
 
     constructor()

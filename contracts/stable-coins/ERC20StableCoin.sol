@@ -1,15 +1,12 @@
 // SPDX-License-Identifier: MIT
 
-/*
- **/
-
-// Base contract for ERC20 Based Stable Coin
+// Base contract for ERC20 Based Stable Coins
 
 pragma solidity ^0.8.17;
 
+import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
