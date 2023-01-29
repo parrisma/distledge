@@ -48,8 +48,9 @@ contract FXDeal is Ownable, Deal {
 
     /*
      ** @author Mark Parris
-     ** @notice If buyer and seller have approved allowancew to the deal, execute the token swap at given quantity and rate. This is one shot, so if successful execute cannot be called more than once.
+     ** @notice If buyer and seller have approved allowance to the deal, execute the token swap at given quantity and rate. This is one shot, so if successful execute cannot be called more than once.
      ** @return true if deal done.
+     ** ToDo: extend so the deal has a 'time to live' limit, such that deal is only valid for a specified time.
      */
     function execute() public override onlyOwner returns (bool) {
         uint256 sellerAllowance = _sellToken.allowance(_seller, address(this));
@@ -64,7 +65,7 @@ contract FXDeal is Ownable, Deal {
         );
         _sellToken.transferFrom(_seller, _buyer, this.sellQuantity());
         _buyToken.transferFrom(_buyer, _seller, this.buyQuantity());
-        renounceOwnership(); // Deal is one shot, execute be called only once
+        renounceOwnership(); // Deal is one shot, execute can be called only once
         return true;
     }
 

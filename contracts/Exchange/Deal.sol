@@ -12,5 +12,5 @@ abstract contract Deal is Ownable {
     /*
      ** Execute the deal (one shot)
      */
-    function execute() public virtual returns (bool) ;
+    function execute() public virtual returns (bool);
 }

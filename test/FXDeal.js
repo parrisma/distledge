@@ -34,7 +34,7 @@ describe("FXDeal", function () {
             const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
             const Deal = await ethers.getContractFactory("FXDeal");
             const rate = 0; // Bad rate
-            const quantity = 1; // Valid Qunatity
+            const quantity = 1; // Valid Quantity
             await expect(Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
                 "Deal: Conversion rate cannot be zero"
             );
@@ -44,27 +44,27 @@ describe("FXDeal", function () {
             const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
             const Deal = await ethers.getContractFactory("FXDeal");
             const rate = 1; // Valid rate
-            const quantity = 0; // InValid Qunatity
+            const quantity = 0; // InValid Quantity
             await expect(Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
                 "Deal: Quantity must be greater than zero"
             );
         });
 
-        it("Should fail seller adress is not valid", async function () {
+        it("Should fail seller address is not valid", async function () {
             const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
             const Deal = await ethers.getContractFactory("FXDeal");
             const rate = 1; // Valid rate
-            const quantity = 1; // Valid Qunatity
+            const quantity = 1; // Valid Quantity
             await expect(Deal.deploy(ethers.constants.AddressZero, buyer.address, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
                 "Deal: Invalid seller address"
             );
         });
 
-        it("Should fail buyer adress is not valid", async function () {
+        it("Should fail buyer address is not valid", async function () {
             const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
             const Deal = await ethers.getContractFactory("FXDeal");
             const rate = 1; // Valid rate
-            const quantity = 1; // Valid Qunatity
+            const quantity = 1; // Valid Quantity
             await expect(Deal.deploy(seller.address, ethers.constants.AddressZero, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
                 "Deal: Invalid buyer address"
             );
@@ -74,9 +74,9 @@ describe("FXDeal", function () {
             const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
             const Deal = await ethers.getContractFactory("FXDeal");
             const rate = 123; // Valid rate
-            const quantity = 456; // Valid Qunatity
-            //const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
-            //const [buyer_, seller_, token1_, token2_, rate_, quantity_] = await deal.info();
+            const quantity = 456; // Valid Quantity
+            const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
+            const [buyer_, seller_, token1_, token2_, rate_, quantity_] = await deal.info();
             //console.log(typeof(seller_));
             //console.log(typeof(seller));
             //console.log(typeof(token1_));
@@ -86,8 +86,8 @@ describe("FXDeal", function () {
             //expect(buyer_).to.equal(buyer);
             //expect(token1_).to.equal(token1);
             //expect(token2_).to.equal(token2);
-            //expect(rate_).to.equal(rate);
-            //expect(quantity_).to.equal(quantity);
+            expect(rate_).to.equal(rate);
+            expect(quantity_).to.equal(quantity);
         });
     });
 
@@ -100,7 +100,7 @@ describe("FXDeal", function () {
             const quantity = 100;
             const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
 
-            // Grant total supply of each Token to the buyer and seller so thay can 'trade'
+            // Grant total supply of each Token to the buyer and seller so they can 'trade'
             //
             await token1.connect(owner).transfer(seller.address, await token1.totalSupply());
             await token2.connect(owner).transfer(buyer.address, await token2.totalSupply());
@@ -127,6 +127,7 @@ describe("FXDeal", function () {
             expect(await token2.balanceOf(buyer.address)).to.equal(await token1.totalSupply() - await deal.buyQuantity());
 
             // Deal is one shot, no account including the deal-owner should be able to call.
+            // after execute has been called successfully.
             await expect(deal.connect(owner).execute()).to.be.revertedWith(
                 "Ownable: caller is not the owner"
             );

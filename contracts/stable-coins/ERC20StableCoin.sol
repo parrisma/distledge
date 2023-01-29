@@ -12,9 +12,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 abstract contract ERC20StableCoin is Ownable, ERC20Pausable {
     uint8 private _decimals;
+    string private _isoCcyCode;
 
-    constructor(uint8 decimals_) Ownable() Pausable() {
+    constructor(uint8 decimals_, string memory isoCcyCode_)
+        Ownable()
+        Pausable()
+    {
         _decimals = decimals_;
+        _isoCcyCode = isoCcyCode_;
     }
 
     // All minting is to the owner account, the minted funds are then transfered out
@@ -52,6 +57,13 @@ abstract contract ERC20StableCoin is Ownable, ERC20Pausable {
      * The number of units per one of the Token
      */
     function unitsPerToken() public view virtual returns (uint256) {
-        return 10 ** decimals();
+        return 10**decimals();
+    }
+
+    /**
+     * The ISO Curreny Code that the stable coin is backed by
+     */
+    function isoCcyCode() public view virtual returns (uint256) {
+        return 10**decimals();
     }
 }
