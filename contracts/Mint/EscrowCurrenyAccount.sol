@@ -23,7 +23,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         uint256 _quantity;
     }
 
-    mapping(string => Transaction) transactions; // uniqueTransactionId to Transaction details.
+    mapping(bytes32 => Transaction) transactions; // uniqueTransactionId to Transaction details.
 
     ERC20StableCoin private _erc20StableCoin;
     uint256 _balance;
@@ -44,22 +44,61 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
 
     /*
      ** @author Mark Parris
-     ** @notice return the current balance on hand of the real ccy
+     ** @notice Make a note of a confirmed deposit from a registered source
      ** @return true if registered Ok
      */
     function registerDepositTransaction(
         address transactingAddress_,
         uint256 quantity_,
-        string memory uniqueTransactionId
+        bytes32 uniqueTransactionId
     ) public returns (bool) {
+        return
+            registerTransaction(
+                true,
+                transactingAddress_,
+                quantity_,
+                uniqueTransactionId
+            );
+    }
+
+    /*
+     ** @author Mark Parris
+     ** @notice Make a note of a confirmed withdrawal from a registered source
+     ** @return true if registered Ok
+     */
+    function registerWithdrawalTransaction(
+        address transactingAddress_,
+        uint256 quantity_,
+        bytes32 uniqueTransactionId
+    ) public returns (bool) {
+        return
+            registerTransaction(
+                false,
+                transactingAddress_,
+                quantity_,
+                uniqueTransactionId
+            );
+    }
+
+    /*
+     ** @author Mark Parris
+     ** @notice Make a note of a confirmed transaction from a registered source
+     ** @return true if registered Ok
+     */
+    function registerTransaction(
+        bool deposit,
+        address transactingAddress_,
+        uint256 quantity_,
+        bytes32 uniqueTransactionId
+    ) private returns (bool) {
         require(
             transactions[uniqueTransactionId].active = false,
             "Transaction already registered and processed"
         );
         transactions[uniqueTransactionId] = Transaction(
-            true,
-            false,
-            true,
+            true, // Active
+            false, // Not yes processed
+            deposit, // deposit
             transactingAddress_,
             quantity_
         );

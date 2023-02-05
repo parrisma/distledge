@@ -63,7 +63,7 @@ abstract contract ERC20StableCoin is Ownable, ERC20Pausable {
     /**
      * The ISO Curreny Code that the stable coin is backed by
      */
-    function isoCcyCode() public view virtual returns (uint256) {
-        return 10**decimals();
+    function isoCcyCode() public view virtual returns (string memory) {
+        return _isoCcyCode;
     }
 }
