@@ -23,7 +23,7 @@ abstract contract ERC20StableCoin is Ownable, ERC20Pausable {
     }
 
     // All minting is to the owner account, the minted funds are then transfered out
-    function mint(uint8 amount) public onlyOwner whenNotPaused {
+    function mint(uint256 amount) public onlyOwner whenNotPaused {
         super._mint(this.owner(), amount * unitsPerToken());
     }
 

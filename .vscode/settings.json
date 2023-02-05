@@ -2,9 +2,11 @@
     "solidity.defaultCompiler": "localNodeModule",
     "cSpell.words": [
         "arrayify",
+        "Curreny",
         "keccak",
         "nomicfoundation",
         "nomiclabs",
+        "Pausable",
         "solidty"
     ]
 }

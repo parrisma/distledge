@@ -143,8 +143,8 @@ describe("ERC20USDStableCoin", function () {
             expect(await erc20USDStableCoin.balanceOf(otherAccount.address)).to.equal(0.25 * unitsPerToken);
         });
 
-        // TransferFrom owner to token buyer, reveted as no allowance
-        // it will fail even though owner has a sufficent balance.
+        // TransferFrom owner to token buyer, reverted as no allowance
+        // it will fail even though owner has a sufficient balance.
         // ------------------------------------------------------------
         it("TransferFrom owner to other account should revert without allowance", async function () {
             const { erc20USDStableCoin, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20USDStableCoin);
@@ -156,7 +156,7 @@ describe("ERC20USDStableCoin", function () {
             );
         });
 
-        // TransferFrom owner to token buyer with owner sufficent balance
+        // TransferFrom owner to token buyer with owner sufficient balance
         // --------------------------------------------------------------
         it("TransferFrom owner to other account with approved balance", async function () {
             const { erc20USDStableCoin, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20USDStableCoin);
