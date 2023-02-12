@@ -8,7 +8,7 @@ contract VerifySignature {
     function recoverSigner(
         bytes32 _ethSignedMessageHash,
         bytes memory _signature
-    ) public view returns (address) {
+    ) public pure returns (address) {
         (bytes32 r, bytes32 s, uint8 v) = splitSignature(_signature);
         bytes memory prefix = "\x19Ethereum Signed Message:\n32"; // This prefix is added by Etherium when sent.
         bytes32 prefixedHash = keccak256(
@@ -41,10 +41,10 @@ contract VerifySignature {
     function verifiedData(
         uint256 number_,
         string memory message_,
+        uint256 nonce_,
         bytes memory sig
-    ) public view returns (address) {
-        bytes32 hashedMessage = keccak256(abi.encodePacked(number_, message_));
-        console.logBytes32(hashedMessage);
+    ) public pure returns (address) {
+        bytes32 hashedMessage = keccak256(abi.encodePacked(number_, message_, nonce_));
         return recoverSigner(hashedMessage, sig);
     }
 }

@@ -7,11 +7,12 @@ const { expect } = require("chai");
 const crypto = require('crypto');
 
 describe("Escrow Currency Account", function () {
-    // We define a fixture to reuse the same setup in every test.
-    // We use loadFixture to run this setup once, snapshot that state,
-    // and reset Hardhat Network to that snapshot in every test.
+    /* We define a fixture to reuse the same setup in every test.
+    ** We use loadFixture to run this setup once, snapshot that state,
+    ** and reset Hardhat Network to that snapshot in every test.
+    */
     async function deployECA() {
-        // Contracts are deployed using the first signer/account by default
+        // remember contracts are deployed using the first signer/account by default (owner account)
         const VerifySignature = await ethers.getContractFactory("VerifySignature");
         const verifySig = await VerifySignature.deploy();
         return { verifySig }
@@ -43,11 +44,12 @@ describe("Escrow Currency Account", function () {
             // The message we are going to sign and verify is a string and a number, but could be anything
             const num_ = 4672334421876;
             const msg_ = "Hello World!";
+            const nonce_ = Math.floor(Date.now() + (10000 * Math.random())); // A randomized by monotonically incrementing value so hash cannot be re-used
 
             /* We have to pack the message in the same way that Solidity will when the parameters arrive in
             ** the remote solidity call. 
             */
-            const secretMessage = ethers.utils.solidityPack(["uint256", "string"], [num_, msg_]);
+            const secretMessage = ethers.utils.solidityPack(["uint256", "string", "uint256"], [num_, msg_, nonce_]);
 
             /* We now hash the message, and we will sign the hash of the message rather than the raw
             ** raw encoded (packed) message
@@ -87,11 +89,12 @@ describe("Escrow Currency Account", function () {
             // The message we are going to sign and verify is a string and a number, but could be anything
             const num_ = 4672334421876;
             const msg_ = "Hello World!";
+            const nonce_ = Math.floor(Date.now() + (10000 * Math.random())); // A randomized by monotonically incrementing value so hash cannot be re-used
 
             /* We have to pack the message in the same way that Solidity will when the parameters arrive in
             ** the remote solidity call. 
             */
-            const secretMessage = ethers.utils.solidityPack(["uint256", "string"], [num_, msg_]);
+            const secretMessage = ethers.utils.solidityPack(["uint256", "string", "uint256"], [num_, msg_, nonce_]);
 
             /* We now hash the message, and we will sign the hash of the message rather than the raw
             ** raw encoded (packed) message
@@ -118,7 +121,7 @@ describe("Escrow Currency Account", function () {
             ** arbitrary parameters to a solidity contract and it will be able to verify the parameters are from a known
             ** account.
             */
-            const solidityRecoveredSigner = await verifySig.verifiedData(num_, msg_, ethers.utils.arrayify(sig));
+            const solidityRecoveredSigner = await verifySig.verifiedData(num_, msg_, nonce_, ethers.utils.arrayify(sig));
 
             /*
             ** The recovered signed should match the owner account address that signed the message.
