@@ -66,4 +66,8 @@ abstract contract ERC20StableCoin is Ownable, ERC20Pausable {
     function isoCcyCode() public view virtual returns (string memory) {
         return _isoCcyCode;
     }
+
+    function ping() public view virtual returns (address) {
+        return msg.sender;
+    }
 }

@@ -34,6 +34,8 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         Ownable()
         Pausable()
     {
+        super._pause(); // Started in Paused state to allow for full validation of Token ownership.
+
         require(
             reserverPercent_ >= 1 && reserverPercent_ <= 100,
             "Rserver percent (%) must be > 0 and < 100"
@@ -45,24 +47,27 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         _physicalBalance = 0;
 
         require(
-            _erc20StableCoin.owner() == owner(),
-            "Escrow Account must be the owner of the given token"
-        );
-
-        require(
-            _physicalBalance == _erc20StableCoin.totalSupply(),
+            isBalanced() == true,
             "escrow balance and coin supply must be equal at inception."
         );
     }
 
     /*
      ** @author Mark Parris
-     ** @notice Return true if account is in paused state.
-     ** @return true if registered ok
+     ** @notice Un pause the contract if all control conditions are met
+     ** @return true when un paused.
      */
-    function inPausedState() public view returns (bool) {
-        console.log(owner());
-        return super.paused();
+    function unPause() public onlyOwner whenPaused returns (bool) {
+        require(
+            _erc20StableCoin.owner() == address(this),
+            "EscrowCurrenyAccount not owner of managed token"
+        );
+        require(
+            isBalanced() == true,
+            "escrow balance and coin supply must be equal at inception."
+        );
+        super._unpause();
+        return true;
     }
 
     /*
@@ -76,10 +81,19 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
 
     /*
      ** @author Mark Parris
+     ** @notice return the address of the token being managed
+     ** @return the address of the managed token
+     */
+    function managedTokenAddress() public view onlyOwner returns (address) {
+        return address(_erc20StableCoin);
+    }
+
+    /*
+     ** @author Mark Parris
      ** @notice return true if there is sufficent physical balance to back the toke.
      ** @return true if registered ok
      */
-    function isBalanced() public view whenNotPaused returns (bool) {
+    function isBalanced() public view returns (bool) {
         return _physicalBalance >= _erc20StableCoin.totalSupply();
     }
 
@@ -132,23 +146,21 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         uint256 quantity_,
         string memory uniqueTransactionId_
     ) private whenNotPaused onlyOwner returns (bool) {
-        require(quantity_ > 0, "Trasaction quantity must be greater than zero");
+        require(
+            quantity_ > 0,
+            "Transaction quantity must be greater than zero"
+        );
         require(
             transactingAddress_ != address(0),
-            "Transction counterparty address must be valid"
+            "Transaction counter-party address must be valid"
         );
 
+        uint256 tokenQty = quantity_ * _unitsPerToken;
         if (deposit) {
-            console.log(msg.sender);
-            console.log(_erc20StableCoin.owner());
-            console.log(owner());
-            //_erc20StableCoin.mint(quantity_);
-            //_erc20StableCoin.approve(owner(), 1 * _unitsPerToken);
-            //_erc20StableCoin.transferFrom(
-            //    owner(),
-            //    transactingAddress_,
-            //    1 * _unitsPerToken
-            //);
+            _erc20StableCoin.mint(quantity_);
+            _erc20StableCoin.approve(owner(), tokenQty);
+            _erc20StableCoin.transfer(transactingAddress_, tokenQty);
+            _physicalBalance = _physicalBalance + tokenQty;
             emit Deposit(
                 transactingAddress_,
                 quantity_,
@@ -156,6 +168,14 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
                 _physicalBalance
             );
         } else {
+            require(
+                _physicalBalance >= tokenQty,
+                "Insufficent escrow balance for token withdrawal"
+            );
+            // TODO: fix withdrawal.
+            _erc20StableCoin.transferFrom(transactingAddress_, address(this), tokenQty);
+            _physicalBalance = _physicalBalance - tokenQty;
+            _erc20StableCoin.burn(quantity_);
             emit Withdrawal(
                 transactingAddress_,
                 quantity_,
@@ -164,5 +184,14 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
             );
         }
         return true;
+    }
+
+    /*
+     ** @author Mark Parris
+     ** @notice Return the address of the contract instance.
+     ** @return the contract instance address.
+     */
+    function contractAddress() public view onlyOwner returns (address) {
+        return address(this);
     }
 }
