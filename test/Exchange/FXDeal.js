@@ -1,3 +1,6 @@
+/*
+** Test-set Exchange
+*/
 const {
     time,
     loadFixture,
@@ -6,9 +9,10 @@ const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
 
 describe("FXDeal", function () {
-    // We define a fixture to reuse the same setup in every test.
-    // We use loadFixture to run this setup once, snapshot that state,
-    // and reset Hardhat Network to that snapshot in every test.
+    /* We define a fixture to reuse the same setup in every test.
+    ** We use loadFixture to run this setup once, snapshot that state,
+    ** and reset Hardhat Network to that snapshot in every test.
+    */ 
     async function deployFXDeal() {
         // Contracts are deployed using the first signer/account by default
         const [owner, buyer, seller] = await ethers.getSigners();
@@ -77,15 +81,6 @@ describe("FXDeal", function () {
             const quantity = 456; // Valid Quantity
             const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
             const [buyer_, seller_, token1_, token2_, rate_, quantity_] = await deal.info();
-            //console.log(typeof(seller_));
-            //console.log(typeof(seller));
-            //console.log(typeof(token1_));
-            //console.log(typeof(token1));
-            //console.log(typeof(rate_));
-            //expect(seller_).to.equal(seller);
-            //expect(buyer_).to.equal(buyer);
-            //expect(token1_).to.equal(token1);
-            //expect(token2_).to.equal(token2);
             expect(rate_).to.equal(rate);
             expect(quantity_).to.equal(quantity);
         });
