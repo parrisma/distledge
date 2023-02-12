@@ -24,12 +24,12 @@ abstract contract ERC20StableCoin is Ownable, ERC20Pausable {
 
     // All minting is to the owner account, the minted funds are then transfered out
     function mint(uint256 amount) public onlyOwner whenNotPaused {
-        super._mint(this.owner(), amount * unitsPerToken());
+        super._mint(owner(), amount);
     }
 
     // All burning is from the owner account, based on return (transfer in) of funds
     function burn(uint256 amount) public onlyOwner whenNotPaused {
-        super._burn(this.owner(), amount * unitsPerToken());
+        super._burn(owner(), amount);
     }
 
     // Pause all change activity on the contract

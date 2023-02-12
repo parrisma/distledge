@@ -155,12 +155,11 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
             "Transaction counter-party address must be valid"
         );
 
-        uint256 tokenQty = quantity_ * _unitsPerToken;
         if (deposit) {
             _erc20StableCoin.mint(quantity_);
-            _erc20StableCoin.approve(owner(), tokenQty);
-            _erc20StableCoin.transfer(transactingAddress_, tokenQty);
-            _physicalBalance = _physicalBalance + tokenQty;
+            _erc20StableCoin.approve(owner(), quantity_);
+            _erc20StableCoin.transfer(transactingAddress_, quantity_);
+            _physicalBalance = _physicalBalance + quantity_;
             emit Deposit(
                 transactingAddress_,
                 quantity_,
@@ -169,12 +168,16 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
             );
         } else {
             require(
-                _physicalBalance >= tokenQty,
+                _physicalBalance >= quantity_,
                 "Insufficent escrow balance for token withdrawal"
             );
             // TODO: fix withdrawal.
-            _erc20StableCoin.transferFrom(transactingAddress_, address(this), tokenQty);
-            _physicalBalance = _physicalBalance - tokenQty;
+            _erc20StableCoin.transferFrom(
+                transactingAddress_,
+                address(this),
+                quantity_
+            );
+            _physicalBalance = _physicalBalance - quantity_;
             _erc20StableCoin.burn(quantity_);
             emit Withdrawal(
                 transactingAddress_,
@@ -183,6 +186,20 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
                 _physicalBalance
             );
         }
+        return true;
+    }
+
+    /*
+     ** @author Mark Parris
+     ** @notice Return the address of the contract instance.
+     ** @return the contract instance address.
+     */
+    function txfr(
+        address from,
+        address to,
+        uint256 qty
+    ) public returns (bool) {
+        _erc20StableCoin.transferFrom(from, to, qty);
         return true;
     }
 

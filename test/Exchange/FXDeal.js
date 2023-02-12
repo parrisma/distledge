@@ -21,13 +21,13 @@ describe("FXDeal", function () {
         const token1 = await ERC20USDStableCoin.deploy();
         const mintAmountToken1 = 100;
         token1.mint(mintAmountToken1); // initial supply
-        expect(await token1.totalSupply()).to.equal(mintAmountToken1 * await token1.unitsPerToken());
+        expect(await token1.totalSupply()).to.equal(mintAmountToken1);
 
         const ERC20CNYStableCoin = await ethers.getContractFactory("ERC20CNYStableCoin");
         const token2 = await ERC20CNYStableCoin.deploy();
         const mintAmountToken2 = 100;
         token2.mint(mintAmountToken2); // initial supply
-        expect(await token2.totalSupply()).to.equal(mintAmountToken2 * await token2.unitsPerToken());
+        expect(await token2.totalSupply()).to.equal(mintAmountToken2);
 
         return { owner, seller, buyer, token1, token2 };
     }
