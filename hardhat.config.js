@@ -5,7 +5,6 @@ require("dotenv").config()
 //Assign environment variables for local use.
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL
 const PRIVATE_KEY = process.env.PRIVATE_KEY
-const AAPL_USD_ADDRESS = process.env.AAPL_USD_ADDRESS
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -20,8 +19,7 @@ module.exports = {
         url: GOERLI_RPC_URL,  //test network RPC URL is defined in .env file.
         accounts: [PRIVATE_KEY], //Personal account private key must be defined in .env file.
         chainId: 5,
-        blockConfirmations: 6,
-        dataFeed: AAPL_USD_ADDRESS //From https://docs.chain.link/data-feeds/price-feeds/addresses        
+        blockConfirmations: 6
       }
   },
   etherscan:{
