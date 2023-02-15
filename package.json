@@ -8,7 +8,9 @@
   "dependencies": {
     "@chainlink/contracts": "^0.6.1",
     "@openzeppelin/contracts": "^4.8.1",
-    "eslint": "^8.32.0",    
+    "dotenv": "^16.0.3",
+    "eslint": "^8.32.0",
+    "hardhat": "^2.12.7",
     "solc": "^0.8.17",
     "uuid": "^9.0.0"
   }

@@ -22,7 +22,7 @@ contract EquityPrice {
     function getPrice() public view returns(int256){
         (
             /* uint80 roundID */,
-            int price,
+            int256 price,
             /*uint startedAt*/,
             /*uint timeStamp*/,
             /*uint80 answeredInRound*/
