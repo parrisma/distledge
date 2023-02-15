@@ -7,12 +7,13 @@ require('dotenv').config();
 //API KEY for etherscan where an official website to explore smart contract on the blockchain
 //It must be saved privately in the .env file
 const ETHERSCAN_API_KEY=process.env.ETHERSCAN_API_KEY;
+const DATA_FEED_ADDRESS=process.env.AAPL_USD_ADDRESS;   //From https://docs.chain.link/data-feeds/price-feeds/addresses        
 
 async function main(){
         
     //Deploy
     const name="EquityPrice";    
-    const dataFeedAddress=network.config.dataFeed;
+    const dataFeedAddress=DATA_FEED_ADDRESS;
     const contract= await ethers.getContractFactory(name);
     console.log(`Deploying Contract ${name} in network ${network.name} with chainid[${network.config.chainId}]...from ${dataFeedAddress}...`);    
     const deployed=await contract.deploy(dataFeedAddress);
