@@ -20,13 +20,7 @@ contract EquityPrice {
 
     //Get lastest price from chainlink-data-feed which provides a secure, reliable, and decentralized source of off-chain data
     function getPrice() public view returns(int256){
-        (
-            /* uint80 roundID */,
-            int256 price,
-            /*uint startedAt*/,
-            /*uint timeStamp*/,
-            /*uint80 answeredInRound*/
-        )= priceFeed.latestRoundData();
+        (,int256 price,,,) = priceFeed.latestRoundData();
         return price;
-    }        
+    }
 }
