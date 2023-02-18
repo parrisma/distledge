@@ -36,6 +36,26 @@ describe("ERC20USDStableCoin", function () {
             const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
             expect(await erc20USDStableCoin.paused()).to.equal(false);
         });
+
+        it("Should have unit per token 100 for USD stable coin", async function () {
+            const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
+            expect(await erc20USDStableCoin.unitsPerToken()).to.equal(100);
+        });
+
+        it("Should have decimal 2 for USD stable coin", async function () {
+            const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
+            expect(await erc20USDStableCoin.decimals()).to.equal(2);
+        });
+
+        it("Should have iso code 'USD' for USD stable coin", async function () {
+            const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
+            expect(await erc20USDStableCoin.isoCcyCode()).to.equal("USD");
+        });
+
+        it("Should return message address when ping contract", async function () {
+            const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
+            expect(await erc20USDStableCoin.ping()).to.equal(owner.address);
+        });
     });
 
     describe("MintAndBurn", function () {
