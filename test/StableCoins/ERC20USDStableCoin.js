@@ -87,6 +87,24 @@ describe("ERC20USDStableCoin", function () {
             expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(qty);
         });
 
+        // Mint twice totals checks
+        // ------------------
+        it("TotalSupply and Owner balance should be sum units after minting twice", async function () {
+            const { erc20USDStableCoin, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20USDStableCoin);
+            const mintQty1 = 1 * unitsPerToken
+            const mintQty2 = 2 * unitsPerToken
+            const mintQty3 = 3 * unitsPerToken
+            await erc20USDStableCoin.connect(owner).mint(mintQty1)
+            // after minting we have supply scaled by number of decimals
+            expect(await erc20USDStableCoin.totalSupply()).to.equal(mintQty1);
+            expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(mintQty1);
+            
+            await erc20USDStableCoin.connect(owner).mint(mintQty2)
+            // after minting we have supply scaled by number of decimals
+            expect(await erc20USDStableCoin.totalSupply()).to.equal(mintQty3);
+            expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(mintQty3);
+        });
+
         // Burn fundamentals
         // -----------------
         it("Should fail as we burn more than supply", async function () {
@@ -94,6 +112,23 @@ describe("ERC20USDStableCoin", function () {
             await expect(erc20USDStableCoin.connect(owner).burn(100)).to.be.revertedWith(
                 "ERC20: burn amount exceeds balance"
             );
+        });
+
+        // Burn some units checks
+        // ------------------
+        it("TotalSupply and Owner should remain units after burning some units", async function () {
+            const { erc20USDStableCoin, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20USDStableCoin);
+
+            const mintQty = 3 * unitsPerToken
+            const burnQty = 1 * unitsPerToken
+            const balanceQty = 2 * unitsPerToken
+            await erc20USDStableCoin.connect(owner).mint(mintQty)
+            expect(await erc20USDStableCoin.totalSupply()).to.equal(mintQty);
+
+            totalSupply = await erc20USDStableCoin.totalSupply();
+            await erc20USDStableCoin.connect(owner).burn(burnQty)
+            expect(await erc20USDStableCoin.totalSupply()).to.equal(balanceQty);
+            expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(balanceQty);
         });
 
         // Burn totals checks
