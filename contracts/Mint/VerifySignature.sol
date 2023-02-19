@@ -41,9 +41,10 @@ contract VerifySignature {
     function verifiedData(
         uint256 number_,
         string memory message_,
+        uint256 nonce_,
         bytes memory sig
     ) public pure returns (address) {
-        bytes32 hashedMessage = keccak256(abi.encodePacked(number_, message_));
+        bytes32 hashedMessage = keccak256(abi.encodePacked(number_, message_, nonce_));
         return recoverSigner(hashedMessage, sig);
     }
 }

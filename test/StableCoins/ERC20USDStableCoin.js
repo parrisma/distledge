@@ -60,10 +60,11 @@ describe("ERC20USDStableCoin", function () {
         // ------------------
         it("TotalSupply and Owner balance should be one unit after minting one", async function () {
             const { erc20USDStableCoin, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20USDStableCoin);
-            await erc20USDStableCoin.connect(owner).mint(1)
+            const qty = 1 * unitsPerToken
+            await erc20USDStableCoin.connect(owner).mint(qty)
             // after minting we have supply scaled by number of decimals
-            expect(await erc20USDStableCoin.totalSupply()).to.equal(1 * unitsPerToken);
-            expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(1 * unitsPerToken);
+            expect(await erc20USDStableCoin.totalSupply()).to.equal(qty);
+            expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(qty);
         });
 
         // Burn fundamentals
@@ -80,11 +81,12 @@ describe("ERC20USDStableCoin", function () {
         it("TotalSupply and Owner should have zero units after burning totalSupply", async function () {
             const { erc20USDStableCoin, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20USDStableCoin);
 
-            await erc20USDStableCoin.connect(owner).mint(1)
-            expect(await erc20USDStableCoin.totalSupply()).to.equal(1 * unitsPerToken);
+            const qty = 1 * unitsPerToken
+            await erc20USDStableCoin.connect(owner).mint(qty)
+            expect(await erc20USDStableCoin.totalSupply()).to.equal(qty);
 
             totalSupply = await erc20USDStableCoin.totalSupply();
-            await erc20USDStableCoin.connect(owner).burn(totalSupply / unitsPerToken)
+            await erc20USDStableCoin.connect(owner).burn(totalSupply)
             expect(await erc20USDStableCoin.totalSupply()).to.equal(0);
             expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(0);
         });
@@ -137,7 +139,8 @@ describe("ERC20USDStableCoin", function () {
         it("Transfer Owner to any other token buyer account", async function () {
             const { erc20USDStableCoin, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20USDStableCoin);
 
-            await erc20USDStableCoin.connect(owner).mint(1)
+            const qty = 1 * unitsPerToken
+            await erc20USDStableCoin.connect(owner).mint(qty)
             await erc20USDStableCoin.connect(owner).transfer(otherAccount.address, 0.25 * unitsPerToken)
             expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(0.75 * unitsPerToken);
             expect(await erc20USDStableCoin.balanceOf(otherAccount.address)).to.equal(0.25 * unitsPerToken);
@@ -149,7 +152,8 @@ describe("ERC20USDStableCoin", function () {
         it("TransferFrom owner to other account should revert without allowance", async function () {
             const { erc20USDStableCoin, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20USDStableCoin);
 
-            await erc20USDStableCoin.connect(owner).mint(1)
+            const qty = 1 * unitsPerToken
+            await erc20USDStableCoin.connect(owner).mint(qty)
             expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(1 * unitsPerToken);
             await expect(erc20USDStableCoin.connect(owner).transferFrom(owner.address, otherAccount.address, 0.25 * unitsPerToken)).to.be.revertedWith(
                 "ERC20: insufficient allowance"
@@ -161,7 +165,8 @@ describe("ERC20USDStableCoin", function () {
         it("TransferFrom owner to other account with approved balance", async function () {
             const { erc20USDStableCoin, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20USDStableCoin);
 
-            await erc20USDStableCoin.connect(owner).mint(1)
+            const qty = 1 * unitsPerToken
+            await erc20USDStableCoin.connect(owner).mint(qty)
             await erc20USDStableCoin.connect(owner).approve(owner.address, 0.25 * unitsPerToken)
             await erc20USDStableCoin.connect(owner).transfer(otherAccount.address, 0.25 * unitsPerToken)
             expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(0.75 * unitsPerToken);

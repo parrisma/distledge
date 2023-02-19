@@ -1,3 +1,6 @@
+/*
+** Test-set Exchange
+*/
 const {
     time,
     loadFixture,
@@ -6,9 +9,10 @@ const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
 
 describe("FXDeal", function () {
-    // We define a fixture to reuse the same setup in every test.
-    // We use loadFixture to run this setup once, snapshot that state,
-    // and reset Hardhat Network to that snapshot in every test.
+    /* We define a fixture to reuse the same setup in every test.
+    ** We use loadFixture to run this setup once, snapshot that state,
+    ** and reset Hardhat Network to that snapshot in every test.
+    */ 
     async function deployFXDeal() {
         // Contracts are deployed using the first signer/account by default
         const [owner, buyer, seller] = await ethers.getSigners();
@@ -17,13 +21,13 @@ describe("FXDeal", function () {
         const token1 = await ERC20USDStableCoin.deploy();
         const mintAmountToken1 = 100;
         token1.mint(mintAmountToken1); // initial supply
-        expect(await token1.totalSupply()).to.equal(mintAmountToken1 * await token1.unitsPerToken());
+        expect(await token1.totalSupply()).to.equal(mintAmountToken1);
 
         const ERC20CNYStableCoin = await ethers.getContractFactory("ERC20CNYStableCoin");
         const token2 = await ERC20CNYStableCoin.deploy();
         const mintAmountToken2 = 100;
         token2.mint(mintAmountToken2); // initial supply
-        expect(await token2.totalSupply()).to.equal(mintAmountToken2 * await token2.unitsPerToken());
+        expect(await token2.totalSupply()).to.equal(mintAmountToken2);
 
         return { owner, seller, buyer, token1, token2 };
     }
@@ -77,15 +81,6 @@ describe("FXDeal", function () {
             const quantity = 456; // Valid Quantity
             const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
             const [buyer_, seller_, token1_, token2_, rate_, quantity_] = await deal.info();
-            //console.log(typeof(seller_));
-            //console.log(typeof(seller));
-            //console.log(typeof(token1_));
-            //console.log(typeof(token1));
-            //console.log(typeof(rate_));
-            //expect(seller_).to.equal(seller);
-            //expect(buyer_).to.equal(buyer);
-            //expect(token1_).to.equal(token1);
-            //expect(token2_).to.equal(token2);
             expect(rate_).to.equal(rate);
             expect(quantity_).to.equal(quantity);
         });
