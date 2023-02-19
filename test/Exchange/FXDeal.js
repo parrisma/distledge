@@ -12,7 +12,7 @@ describe("FXDeal", function () {
     /* We define a fixture to reuse the same setup in every test.
     ** We use loadFixture to run this setup once, snapshot that state,
     ** and reset Hardhat Network to that snapshot in every test.
-    */ 
+    */
     async function deployFXDeal() {
         // Contracts are deployed using the first signer/account by default
         const [owner, buyer, seller] = await ethers.getSigners();
@@ -86,6 +86,27 @@ describe("FXDeal", function () {
         });
     });
 
+    //Sell USDS Buy CNYS
+    describe("FXDeals allowance", function () {
+        it("Should fail if seller allowance is smaller then the sell quantity", async function () {
+            const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
+
+            const Deal = await ethers.getContractFactory("FXDeal");
+            const rate = 50; // 50%
+            const quantity = 100;
+            const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
+
+            //token1=sell
+            await token1.connect(seller).approve(deal.address, 50);
+            await expect(deal.connect(owner).execute()).to.be.revertedWith("Seller has not granted sufficent allowance for Deal");
+
+            await token1.connect(seller).approve(deal.address, 0);
+            await expect(deal.connect(owner).execute()).to.be.revertedWith("Seller has not granted sufficent allowance for Deal");
+
+        });
+
+    });
+
     describe("Good FXDeals", function () {
         it("Simple deal", async function () {
             const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
@@ -109,7 +130,7 @@ describe("FXDeal", function () {
 
             await token2.connect(buyer).approve(deal.address, Number(await deal.buyQuantity()));
             expect(await token2.allowance(buyer.address, deal.address)).to.equal(Number(await deal.buyQuantity()));
-        
+
             await deal.connect(owner).execute();
 
             expect(await token1.balanceOf(owner.address)).to.equal(0); // Owner should never have residual balance
