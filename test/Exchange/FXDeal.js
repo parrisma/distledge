@@ -12,7 +12,7 @@ describe("FXDeal", function () {
     /* We define a fixture to reuse the same setup in every test.
     ** We use loadFixture to run this setup once, snapshot that state,
     ** and reset Hardhat Network to that snapshot in every test.
-    */ 
+    */
     async function deployFXDeal() {
         // Contracts are deployed using the first signer/account by default
         const [owner, buyer, seller] = await ethers.getSigners();
@@ -34,23 +34,23 @@ describe("FXDeal", function () {
 
     describe("Construct FXDeal", function () {
 
-        it("Should fail rate is zero", async function () {
+        it("FXDeal: Should fail rate is zero", async function () {
             const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
             const Deal = await ethers.getContractFactory("FXDeal");
             const rate = 0; // Bad rate
             const quantity = 1; // Valid Quantity
             await expect(Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
-                "Deal: Conversion rate cannot be zero"
+                "FXDeal: Conversion rate cannot be zero"
             );
         });
 
-        it("Should fail quantity is zero", async function () {
+        it("FXDeal: Should fail quantity is zero", async function () {
             const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
             const Deal = await ethers.getContractFactory("FXDeal");
             const rate = 1; // Valid rate
             const quantity = 0; // InValid Quantity
             await expect(Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
-                "Deal: Quantity must be greater than zero"
+                "FXDeal: Quantity must be greater than zero"
             );
         });
 
@@ -60,7 +60,7 @@ describe("FXDeal", function () {
             const rate = 1; // Valid rate
             const quantity = 1; // Valid Quantity
             await expect(Deal.deploy(ethers.constants.AddressZero, buyer.address, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
-                "Deal: Invalid seller address"
+                "FXDeal: Invalid seller address"
             );
         });
 
@@ -70,7 +70,7 @@ describe("FXDeal", function () {
             const rate = 1; // Valid rate
             const quantity = 1; // Valid Quantity
             await expect(Deal.deploy(seller.address, ethers.constants.AddressZero, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
-                "Deal: Invalid buyer address"
+                "FXDeal: Invalid buyer address"
             );
         });
 
@@ -84,6 +84,52 @@ describe("FXDeal", function () {
             expect(rate_).to.equal(rate);
             expect(quantity_).to.equal(quantity);
         });
+    });
+
+    //Sell USDS Buy CNYS
+    describe("FXDeals allowance", function () {
+        it("Should fail if seller allowance is smaller then the sell quantity", async function () {
+            const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
+
+            const Deal = await ethers.getContractFactory("FXDeal");
+            const rate = 50; // 50%
+            const quantity = 100;
+            const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
+
+            //token1=sell
+            await token1.connect(seller).approve(deal.address, 50);
+            await expect(deal.connect(owner).execute()).to.be.revertedWith("FXDeal: Seller has not granted sufficent allowance for Deal");
+
+        });
+
+        it("Should fail if buyer allowance is good but no seller allowance set.", async function () {
+            const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
+
+            const Deal = await ethers.getContractFactory("FXDeal");
+            const rate = 50; // 50%
+            const quantity = 100;
+            const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
+
+            await token2.connect(buyer).approve(deal.address, 50);
+            await expect(deal.connect(owner).execute()).to.be.revertedWith("FXDeal: Seller has not granted sufficent allowance for Deal");
+
+        });
+
+        it("Should fail if buyer allowance is smaller then the buy quantity, but seller allowance is good.", async function () {
+            const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
+
+            const Deal = await ethers.getContractFactory("FXDeal");
+            const rate = 50; // 50%
+            const quantity = 100;
+            const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
+
+            await token1.connect(seller).approve(deal.address, 100);
+
+            await token2.connect(buyer).approve(deal.address, 49);
+            await expect(deal.connect(owner).execute()).to.be.revertedWith("FXDeal: Buyer has not granted sufficent allowance for Deal");
+
+        });
+
     });
 
     describe("Good FXDeals", function () {
@@ -109,7 +155,7 @@ describe("FXDeal", function () {
 
             await token2.connect(buyer).approve(deal.address, Number(await deal.buyQuantity()));
             expect(await token2.allowance(buyer.address, deal.address)).to.equal(Number(await deal.buyQuantity()));
-        
+
             await deal.connect(owner).execute();
 
             expect(await token1.balanceOf(owner.address)).to.equal(0); // Owner should never have residual balance

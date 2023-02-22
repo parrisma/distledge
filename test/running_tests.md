@@ -10,11 +10,11 @@
 
 ### Run all tests
 
-    npx run test
+    npx hardhat test
 
 ### Run specific tests
 
-    npx run test --grep FXDeal
+    npx hardhat test --grep FXDeal
     
     npx hardhat test --grep "Link Token"
 

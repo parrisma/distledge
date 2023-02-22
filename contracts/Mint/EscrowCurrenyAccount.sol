@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "../stable-coins/ERC20StableCoin.sol";
 
-/*
+/**
  ** @author Mark Parris
  ** @title Simulate an Escrow Curreny Account that can verify deposits and withdrawals that back a stable coin token
  */
@@ -52,8 +52,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         );
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice Un pause the contract if all control conditions are met
      ** @return true when un paused.
      */
@@ -70,8 +69,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         return true;
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice regsiter a deposit transaction verified by unique transaction id
      ** @return true if registered ok
      */
@@ -79,8 +77,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         return _physicalBalance;
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice return the address of the token being managed
      ** @return the address of the managed token
      */
@@ -88,8 +85,15 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         return address(_erc20StableCoin);
     }
 
-    /*
-     ** @author Mark Parris
+     /**
+     ** @notice return the name of the token being managed
+     ** @return the name of the managed token
+     */
+    function managedTokenName() public view onlyOwner returns (string memory) {
+        return _erc20StableCoin.name();
+    }
+
+    /**
      ** @notice return true if there is sufficent physical balance to back the toke.
      ** @return true if registered ok
      */
@@ -97,8 +101,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         return _physicalBalance >= _erc20StableCoin.totalSupply();
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice Process a deposit transaction & mint tokens as needed
      ** @return true if processed Ok
      */
@@ -116,8 +119,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
             );
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice Process a withdrawal & burn tokens as needed
      ** @return true if processed Ok
      */
@@ -135,8 +137,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
             );
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice Process the given transaction
      ** @return true if registered Ok
      */
@@ -171,7 +172,6 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
                 _physicalBalance >= quantity_,
                 "Insufficent escrow balance for token withdrawal"
             );
-            // TODO: fix withdrawal.
             _erc20StableCoin.transferFrom(
                 transactingAddress_,
                 address(this),
@@ -189,8 +189,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         return true;
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice Return the address of the contract instance.
      ** @return the contract instance address.
      */
@@ -203,8 +202,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         return true;
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice Return the address of the contract instance.
      ** @return the contract instance address.
      */
