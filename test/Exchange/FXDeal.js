@@ -34,23 +34,23 @@ describe("FXDeal", function () {
 
     describe("Construct FXDeal", function () {
 
-        it("Should fail rate is zero", async function () {
+        it("FXDeal: Should fail rate is zero", async function () {
             const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
             const Deal = await ethers.getContractFactory("FXDeal");
             const rate = 0; // Bad rate
             const quantity = 1; // Valid Quantity
             await expect(Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
-                "Deal: Conversion rate cannot be zero"
+                "FXDeal: Conversion rate cannot be zero"
             );
         });
 
-        it("Should fail quantity is zero", async function () {
+        it("FXDeal: Should fail quantity is zero", async function () {
             const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
             const Deal = await ethers.getContractFactory("FXDeal");
             const rate = 1; // Valid rate
             const quantity = 0; // InValid Quantity
             await expect(Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
-                "Deal: Quantity must be greater than zero"
+                "FXDeal: Quantity must be greater than zero"
             );
         });
 
@@ -60,7 +60,7 @@ describe("FXDeal", function () {
             const rate = 1; // Valid rate
             const quantity = 1; // Valid Quantity
             await expect(Deal.deploy(ethers.constants.AddressZero, buyer.address, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
-                "Deal: Invalid seller address"
+                "FXDeal: Invalid seller address"
             );
         });
 
@@ -70,7 +70,7 @@ describe("FXDeal", function () {
             const rate = 1; // Valid rate
             const quantity = 1; // Valid Quantity
             await expect(Deal.deploy(seller.address, ethers.constants.AddressZero, token1.address, token2.address, quantity, rate)).to.be.revertedWith(
-                "Deal: Invalid buyer address"
+                "FXDeal: Invalid buyer address"
             );
         });
 

@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "../stable-coins/ERC20StableCoin.sol";
 import "./Deal.sol";
 
-/*
+/**
 ** @author Mark Parris
 ** @title A Token FX deal (token swap) quanity of sellToken swapped for quantity * rate of buyToken
 ** @param seller - address of seller who will get quantity * rate of buyToken
@@ -33,10 +33,10 @@ contract FXDeal is Ownable, Deal {
         uint256 quantity_,
         uint256 rate_
     ) Ownable() {
-        require(rate_ > 0, "Deal: Conversion rate cannot be zero");
-        require(quantity_ > 0, "Deal: Quantity must be greater than zero");
-        require(seller_ != address(0), "Deal: Invalid seller address");
-        require(buyer_ != address(0), "Deal: Invalid buyer address");
+        require(rate_ > 0, "FXDeal: Conversion rate cannot be zero");
+        require(quantity_ > 0, "FXDeal: Quantity must be greater than zero");
+        require(seller_ != address(0), "FXDeal: Invalid seller address");
+        require(buyer_ != address(0), "FXDeal: Invalid buyer address");
 
         _seller = seller_;
         _buyer = buyer_;
@@ -46,8 +46,7 @@ contract FXDeal is Ownable, Deal {
         _quantity = quantity_;
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice If buyer and seller have approved allowance to the deal, execute the token swap at given quantity and rate. This is one shot, so if successful execute cannot be called more than once.
      ** @return true if deal done.
      ** ToDo: extend so the deal has a 'time to live' limit, such that deal is only valid for a specified time.
@@ -57,11 +56,11 @@ contract FXDeal is Ownable, Deal {
         uint256 buyerAllowance = _buyToken.allowance(_buyer, address(this));
         require(
             sellerAllowance >= this.sellQuantity(),
-            "Seller has not granted sufficent allowance for Deal"
+            "FXDeal: Seller has not granted sufficent allowance for Deal"
         );
         require(
             buyerAllowance >= this.buyQuantity(),
-            "Buyer has not granted sufficent allowance for Deal"
+            "FXDeal: Buyer has not granted sufficent allowance for Deal"
         );
         _sellToken.transferFrom(_seller, _buyer, this.sellQuantity());
         _buyToken.transferFrom(_buyer, _seller, this.buyQuantity());
@@ -69,8 +68,7 @@ contract FXDeal is Ownable, Deal {
         return true;
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice Describes the full details of the deal.
      ** @return Seller, Buyer, Sell Token, Buy Token, Rate and Quantity
      */
@@ -89,8 +87,7 @@ contract FXDeal is Ownable, Deal {
         return (_seller, _buyer, _sellToken, _buyToken, _rate, _quantity);
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice Gives the quantity of the buyToken recived by the seller
      ** @return The token quantity recived by the buyer = quantity * rate
      */
@@ -98,8 +95,7 @@ contract FXDeal is Ownable, Deal {
         return (_quantity * _rate) / 100;
     }
 
-    /*
-     ** @author Mark Parris
+    /**
      ** @notice Gives the quantity of the SellToken recived by the buyer
      ** @return The token quantity recived by the seller = quantity
      */

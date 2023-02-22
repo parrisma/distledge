@@ -129,7 +129,7 @@ contract SimpleOption is OptionContract {
         _pause();
         _alive = false;
         emit Exercised(_buyer, _seller, _uniqueId);
-        _buyer = address(0); // Contract is dead forver as
+        _buyer = address(0); // Contract is dead forver
         return true;
     }
 }
