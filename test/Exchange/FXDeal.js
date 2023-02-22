@@ -100,8 +100,33 @@ describe("FXDeal", function () {
             await token1.connect(seller).approve(deal.address, 50);
             await expect(deal.connect(owner).execute()).to.be.revertedWith("Seller has not granted sufficent allowance for Deal");
 
-            await token1.connect(seller).approve(deal.address, 0);
+        });
+
+        it("Should fail if buyer allowance is good but no seller allowance set.", async function () {
+            const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
+
+            const Deal = await ethers.getContractFactory("FXDeal");
+            const rate = 50; // 50%
+            const quantity = 100;
+            const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
+
+            await token2.connect(buyer).approve(deal.address, 50);
             await expect(deal.connect(owner).execute()).to.be.revertedWith("Seller has not granted sufficent allowance for Deal");
+
+        });
+
+        it("Should fail if buyer allowance is smaller then the buy quantity, but seller allowance is good.", async function () {
+            const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
+
+            const Deal = await ethers.getContractFactory("FXDeal");
+            const rate = 50; // 50%
+            const quantity = 100;
+            const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
+
+            await token1.connect(seller).approve(deal.address, 100);
+
+            await token2.connect(buyer).approve(deal.address, 49);
+            await expect(deal.connect(owner).execute()).to.be.revertedWith("Buyer has not granted sufficent allowance for Deal");
 
         });
 
