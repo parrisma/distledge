@@ -1,6 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("@nomiclabs/hardhat-web3");
-require("@nomiclabs/hardhat-waffle");
 require("dotenv").config();
 
 //Assign environment variables for local use.

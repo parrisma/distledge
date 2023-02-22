@@ -98,7 +98,7 @@ describe("FXDeal", function () {
 
             //token1=sell
             await token1.connect(seller).approve(deal.address, 50);
-            await expect(deal.connect(owner).execute()).to.be.revertedWith("Seller has not granted sufficent allowance for Deal");
+            await expect(deal.connect(owner).execute()).to.be.revertedWith("FXDeal: Seller has not granted sufficent allowance for Deal");
 
         });
 
@@ -111,7 +111,7 @@ describe("FXDeal", function () {
             const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
 
             await token2.connect(buyer).approve(deal.address, 50);
-            await expect(deal.connect(owner).execute()).to.be.revertedWith("Seller has not granted sufficent allowance for Deal");
+            await expect(deal.connect(owner).execute()).to.be.revertedWith("FXDeal: Seller has not granted sufficent allowance for Deal");
 
         });
 
@@ -126,7 +126,7 @@ describe("FXDeal", function () {
             await token1.connect(seller).approve(deal.address, 100);
 
             await token2.connect(buyer).approve(deal.address, 49);
-            await expect(deal.connect(owner).execute()).to.be.revertedWith("Buyer has not granted sufficent allowance for Deal");
+            await expect(deal.connect(owner).execute()).to.be.revertedWith("FXDeal: Buyer has not granted sufficent allowance for Deal");
 
         });
 
