@@ -26,7 +26,7 @@ contract EquityPrice is RefernceLevel {
 
         require(
             price >= 0,
-            "EquityPrice: bad data feed, prices must be greater(equals) than zero"
+            "EquityPrice: bad data feed, the price must be greater than or equals to zero"
         );
         return uint256(price);
     }

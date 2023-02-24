@@ -34,7 +34,7 @@ describe("EquityPrice", function () {
     return { mockPriceSource, equityPrice, ticker };
   }
 
-  it("Equity Price is equal to initial value and update", async function () {
+  it("Equity Price is equal to initial price value and test updated price", async function () {
     // Deploy
     const { mockPriceSource, equityPrice, ticker } = await loadFixture(
       deployEquityPrice
@@ -51,7 +51,7 @@ describe("EquityPrice", function () {
     expect(await equityPrice.getPrice()).to.equal(revised);
   });
 
-  it("Equity Price rejected when negative", async function () {
+  it("Equity Price will reject when negative price", async function () {
     // Deploy
     const { mockPriceSource, equityPrice, ticker } = await loadFixture(
       deployEquityPrice
@@ -61,18 +61,19 @@ describe("EquityPrice", function () {
     const expectedPx = -1;
     await mockPriceSource.updateAnswer(expectedPx);
     await expect(equityPrice.getPrice()).to.be.revertedWith(
-      "EquityPrice: bad data feed, prices must be greater(equals) than zero"
+      "EquityPrice: bad data feed, the price must be greater than or equals to zero"
     );
   });
 
-  it("Equity Price accepted when zero", async function () {
+  it("Equity Price accepted when zero price", async function () {
     // Deploy
     const { mockPriceSource, equityPrice, ticker } = await loadFixture(
       deployEquityPrice
     );
 
+    // boundary value price
     const expectedPx = 0;
     await mockPriceSource.updateAnswer(expectedPx);
-    expect(await equityPrice.getPrice()).to.equal(0);
+    expect(await equityPrice.getPrice()).to.equal(expectedPx);
   });
 });
