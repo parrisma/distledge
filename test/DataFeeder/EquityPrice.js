@@ -18,7 +18,10 @@ describe("EquityPrice", function () {
     const mockPriceInitial = 50;
 
     mockV3Aggregator = await ethers.getContractFactory("MockV3Aggregator");
-    mockPriceSource = await mockV3Aggregator.deploy(mockPriceDecimals, mockPriceInitial);
+    mockPriceSource = await mockV3Aggregator.deploy(
+      mockPriceDecimals,
+      mockPriceInitial
+    );
 
     // Equity Price to test
     const ticker = "TCKR";
@@ -33,7 +36,9 @@ describe("EquityPrice", function () {
 
   it("Equity Price is equal to initial value and update", async function () {
     // Deploy
-    const { mockPriceSource, equityPrice, ticker } = await loadFixture(deployEquityPrice);
+    const { mockPriceSource, equityPrice, ticker } = await loadFixture(
+      deployEquityPrice
+    );
 
     //Define the mocked price.
     const expectedPx = 50;
@@ -48,13 +53,26 @@ describe("EquityPrice", function () {
 
   it("Equity Price rejected when negative", async function () {
     // Deploy
-    const { mockPriceSource, equityPrice, ticker } = await loadFixture(deployEquityPrice);
+    const { mockPriceSource, equityPrice, ticker } = await loadFixture(
+      deployEquityPrice
+    );
 
     //Define the bad price.
     const expectedPx = -1;
     await mockPriceSource.updateAnswer(expectedPx);
     await expect(equityPrice.getPrice()).to.be.revertedWith(
-      "EquityPrice: bad data feed, prices must be greater than zero"
+      "EquityPrice: bad data feed, prices must be greater(equals) than zero"
     );
+  });
+
+  it("Equity Price accepted when zero", async function () {
+    // Deploy
+    const { mockPriceSource, equityPrice, ticker } = await loadFixture(
+      deployEquityPrice
+    );
+
+    const expectedPx = 0;
+    await mockPriceSource.updateAnswer(expectedPx);
+    expect(await equityPrice.getPrice()).to.equal(0);
   });
 });
