@@ -18,7 +18,10 @@ describe("EquityPrice", function () {
     const mockPriceInitial = 50;
 
     mockV3Aggregator = await ethers.getContractFactory("MockV3Aggregator");
-    mockPriceSource = await mockV3Aggregator.deploy(mockPriceDecimals, mockPriceInitial);
+    mockPriceSource = await mockV3Aggregator.deploy(
+      mockPriceDecimals,
+      mockPriceInitial
+    );
 
     // Equity Price to test
     const ticker = "TCKR";
@@ -30,11 +33,17 @@ describe("EquityPrice", function () {
 
     return { mockPriceSource, equityPrice, ticker };
   }
-
-  it("Equity Price is equal to initial value and update", async function () {
+  let mockPriceSource;
+  let equityPrice;
+  let ticker;
+  beforeEach(async () => {
     // Deploy
-    const { mockPriceSource, equityPrice, ticker } = await loadFixture(deployEquityPrice);
+    ({ mockPriceSource, equityPrice, ticker } = await loadFixture(
+      deployEquityPrice
+    ));
+  });
 
+  it("Equity Price is equal to initial price value and test updated price", async function () {
     //Define the mocked price.
     const expectedPx = 50;
     expect(await equityPrice.getPrice()).to.equal(expectedPx);
@@ -46,15 +55,19 @@ describe("EquityPrice", function () {
     expect(await equityPrice.getPrice()).to.equal(revised);
   });
 
-  it("Equity Price rejected when negative", async function () {
-    // Deploy
-    const { mockPriceSource, equityPrice, ticker } = await loadFixture(deployEquityPrice);
-
+  it("Equity Price will reject when negative price", async function () {
     //Define the bad price.
     const expectedPx = -1;
     await mockPriceSource.updateAnswer(expectedPx);
     await expect(equityPrice.getPrice()).to.be.revertedWith(
-      "EquityPrice: bad data feed, prices must be greater than zero"
+      "EquityPrice: bad data feed, the price must be greater than or equals to zero"
     );
+  });
+
+  it("Equity Price accepted when zero price", async function () {
+    // boundary value price
+    const expectedPx = 0;
+    await mockPriceSource.updateAnswer(expectedPx);
+    expect(await equityPrice.getPrice()).to.equal(expectedPx);
   });
 });
