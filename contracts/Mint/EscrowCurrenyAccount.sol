@@ -85,6 +85,14 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         return address(_erc20StableCoin);
     }
 
+     /**
+     ** @notice return the name of the token being managed
+     ** @return the name of the managed token
+     */
+    function managedTokenName() public view onlyOwner returns (string memory) {
+        return _erc20StableCoin.name();
+    }
+
     /**
      ** @notice return true if there is sufficent physical balance to back the toke.
      ** @return true if registered ok
@@ -164,7 +172,6 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
                 _physicalBalance >= quantity_,
                 "Insufficent escrow balance for token withdrawal"
             );
-            // TODO: fix withdrawal.
             _erc20StableCoin.transferFrom(
                 transactingAddress_,
                 address(this),

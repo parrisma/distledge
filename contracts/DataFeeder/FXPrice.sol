@@ -3,11 +3,10 @@ pragma solidity ^0.8.17;
 
 import "./ReferenceLevel.sol";
 
-contract EquityPrice is RefernceLevel {
-    constructor(
-        string memory ticker_,
-        address priceFeedAddress_
-    ) RefernceLevel(ticker_, priceFeedAddress_) {}
+contract FXPrice is RefernceLevel {
+    constructor(string memory ticker_, address priceFeedAddress_)
+        RefernceLevel(ticker_, priceFeedAddress_)
+    {}
 
     /**
      ** @notice Get unique ticker name of the refernce level source
@@ -23,11 +22,7 @@ contract EquityPrice is RefernceLevel {
      */
     function getPrice() public view override returns (uint256) {
         (, int256 price, , , ) = _priceFeed.latestRoundData();
-
-        require(
-            price >= 0,
-            "EquityPrice: bad data feed, the price must be greater than or equals to zero"
-        );
+        require(price >= 0, "FXPrice: bad data feed, prices must be greater than zero");
         return uint256(price);
     }
 }

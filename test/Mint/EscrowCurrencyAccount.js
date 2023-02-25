@@ -254,7 +254,6 @@ describe("Escrow Currency Account", function () {
                 );
 
 
-            // TODO: Fix this test, currently failing with 'insufficient allowance'
             const escrowContractAddr = await escrowCurrenyAccount.connect(escrow).contractAddress();
             await erc20USDStableCoin.connect(player1).approve(escrowContractAddr, withdrawQty); // Permission transfer between player and escrow
             expect(await erc20USDStableCoin.allowance(player1.address, escrowContractAddr)).to.equal(withdrawQty); // escrow contract should have allowance to txfr
