@@ -1,6 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("@nomiclabs/hardhat-web3");
 require("dotenv").config();
+require("hardhat-deploy");
 
 //Assign environment variables for local use.
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL;
