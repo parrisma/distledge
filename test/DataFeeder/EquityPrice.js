@@ -33,13 +33,17 @@ describe("EquityPrice", function () {
 
     return { mockPriceSource, equityPrice, ticker };
   }
+  let mockPriceSource;
+  let equityPrice;
+  let ticker;
+  beforeEach(async () => {
+    // Deploy
+    ({ mockPriceSource, equityPrice, ticker } = await loadFixture(
+      deployEquityPrice
+    ));
+  });
 
   it("Equity Price is equal to initial price value and test updated price", async function () {
-    // Deploy
-    const { mockPriceSource, equityPrice, ticker } = await loadFixture(
-      deployEquityPrice
-    );
-
     //Define the mocked price.
     const expectedPx = 50;
     expect(await equityPrice.getPrice()).to.equal(expectedPx);
@@ -52,11 +56,6 @@ describe("EquityPrice", function () {
   });
 
   it("Equity Price will reject when negative price", async function () {
-    // Deploy
-    const { mockPriceSource, equityPrice, ticker } = await loadFixture(
-      deployEquityPrice
-    );
-
     //Define the bad price.
     const expectedPx = -1;
     await mockPriceSource.updateAnswer(expectedPx);
@@ -66,11 +65,6 @@ describe("EquityPrice", function () {
   });
 
   it("Equity Price accepted when zero price", async function () {
-    // Deploy
-    const { mockPriceSource, equityPrice, ticker } = await loadFixture(
-      deployEquityPrice
-    );
-
     // boundary value price
     const expectedPx = 0;
     await mockPriceSource.updateAnswer(expectedPx);
