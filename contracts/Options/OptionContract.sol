@@ -122,8 +122,7 @@ abstract contract OptionContract is Ownable, Pausable {
             "OptionContract: Buyer must pre-authorise transfer of premium"
         );
 
-        _premiumToken.transferFrom(_buyer, address(this), _premium);
-        _premiumToken.transfer(_seller, _premium);
+        _premiumToken.transferFrom(_buyer, _seller, _premium);
         _alive = true;
         _unpause();
 
@@ -165,8 +164,7 @@ abstract contract OptionContract is Ownable, Pausable {
             _settlementToken.allowance(_seller, address(this)) >= amount,
             "OptionContract: Seller must pre-authorise transfer of settlement"
         );
-        _settlementToken.transferFrom(_seller, address(this), amount);
-        _settlementToken.transfer(_buyer, amount);
+        _settlementToken.transferFrom(_seller, _buyer, amount);
         return (true);
     }
 
