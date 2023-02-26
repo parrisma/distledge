@@ -2,13 +2,16 @@
 
 pragma solidity ^0.8.17;
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract VerifySignature {
+library VerifySigner {
+    /**
+     * @dev A modifier that verifies given data is signed
+     *
+     */
     function recoverSigner(
         bytes32 _ethSignedMessageHash,
         bytes memory _signature
-    ) public pure returns (address) {
+    ) private pure returns (address) {
         (bytes32 r, bytes32 s, uint8 v) = splitSignature(_signature);
         bytes memory prefix = "\x19Ethereum Signed Message:\n32"; // This prefix is added by Etherium when sent.
         bytes32 prefixedHash = keccak256(
@@ -18,7 +21,7 @@ contract VerifySignature {
     }
 
     function splitSignature(bytes memory sig)
-        public
+        private
         pure
         returns (
             bytes32 r,
@@ -38,13 +41,12 @@ contract VerifySignature {
         }
     }
 
-    function verifiedData(
-        uint256 number_,
-        string memory message_,
-        uint256 nonce_,
+    function checkVerifiedSender(
+        address expectedSender,
+        bytes32 hashedData,
         bytes memory sig
-    ) public pure returns (address) {
-        bytes32 hashedMessage = keccak256(abi.encodePacked(number_, message_, nonce_));
-        return recoverSigner(hashedMessage, sig);
+    ) public pure returns (bool) {
+        address signer = recoverSigner(hashedData, sig);
+        return (expectedSender == signer);
     }
 }
