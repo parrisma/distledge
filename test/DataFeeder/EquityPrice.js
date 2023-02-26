@@ -8,39 +8,16 @@ const { ethers } = require("hardhat");
 const crypto = require("crypto");
 
 describe("EquityPrice", function () {
-  async function deployEquityPrice() {
-    //Get the virtual singer
-    const [deployerOfContract] = await ethers.getSigners();
-
-    // Fetch application binary interface of AggregatorV3Interface
-    const contractMeta = require("../../artifacts/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol/AggregatorV3Interface.json");
-    const mockPriceDecimals = 2;
-    const mockPriceInitial = 50;
-
-    mockV3Aggregator = await ethers.getContractFactory("MockV3Aggregator");
-    mockPriceSource = await mockV3Aggregator.deploy(
-      mockPriceDecimals,
-      mockPriceInitial
-    );
-
-    // Equity Price to test
-    const ticker = "TCKR";
-    const equityPriceContract = await ethers.getContractFactory("EquityPrice");
-    const equityPrice = await equityPriceContract.deploy(
-      ticker,
-      mockPriceSource.address
-    );
-
-    return { mockPriceSource, equityPrice, ticker };
-  }
-  let mockPriceSource;
   let equityPrice;
-  let ticker;
+  let mockPriceSource;
+  let deployer;
+  const ticker = "TCKR";
   beforeEach(async () => {
+    deployer = (await getNamedAccounts()).deployer;
     // Deploy
-    ({ mockPriceSource, equityPrice, ticker } = await loadFixture(
-      deployEquityPrice
-    ));
+    await deployments.fixture(["EquityPrice"]);
+    equityPrice = await ethers.getContract("EquityPrice", deployer);
+    mockPriceSource = await ethers.getContract("MockV3Aggregator", deployer);
   });
 
   it("Equity Price is equal to initial price value and test updated price", async function () {
