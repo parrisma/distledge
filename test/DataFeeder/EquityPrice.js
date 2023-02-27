@@ -32,7 +32,7 @@ describe("EquityPrice", function () {
     expect(await equityPrice.getPrice()).to.equal(revised);
   });
 
-  it("Equity Price will reject when negative price", async function () {
+  it("Equity Price will be rejected when price is negative figure", async function () {
     //Define the bad price.
     const expectedPx = -1;
     await mockPriceSource.updateAnswer(expectedPx);
@@ -41,7 +41,7 @@ describe("EquityPrice", function () {
     );
   });
 
-  it("Equity Price accepted when zero price", async function () {
+  it("Equity Price will be accepted when price equals to zero", async function () {
     // boundary value price
     const expectedPx = 0;
     await mockPriceSource.updateAnswer(expectedPx);
