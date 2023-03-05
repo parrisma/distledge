@@ -156,7 +156,7 @@ abstract contract OptionContract is Ownable, Pausable {
      */
     function _settle(
         uint256 amount
-    ) internal onlySeller whenLive returns (bool) {
+    ) internal onlyBuyer whenLive returns (bool) {
         require(
             _settlementToken.allowance(_seller, address(this)) >= amount,
             "OptionContract: Seller must pre-authorise transfer of settlement"
