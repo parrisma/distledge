@@ -58,6 +58,7 @@ contract SimpleOption is OptionContract {
     function terms()
         public
         view
+        virtual
         override
         onlyBuyerOrSeller
         returns (string memory)
@@ -87,6 +88,7 @@ contract SimpleOption is OptionContract {
     function valuation()
         public
         view
+        virtual
         override
         whenNotPaused
         onlyBuyerOrSeller
