@@ -21,7 +21,7 @@ abstract contract ERC20StableShare is Ownable, ERC20Pausable {
         string memory isinCode_,
         string memory token_symbol_,
         string memory token_name_
-    ) Ownable() Pausable() {
+    ) ERC20(_token_name, _token_symbol) Ownable() Pausable() {
         _decimals = decimals_;
         _isinCode = isinCode_;
         _token_symbol = token_symbol_;
@@ -62,7 +62,9 @@ abstract contract ERC20StableShare is Ownable, ERC20Pausable {
     /**
      * The number of shares per Token
      */
-    function unitsPerToken() public virtual returns (uint256) {}
+    function unitsPerToken() public virtual returns (uint256) {
+        return 10 ** _decimals;
+    }
 
     /**
      * The ISO Curreny Code that the stable coin is backed by
