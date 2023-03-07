@@ -8,15 +8,16 @@ import "../stable-coins/ERC20StableCoin.sol";
 import "./Deal.sol";
 
 /**
-** @author Mark Parris
-** @title A Token FX deal (token swap) quanity of sellToken swapped for quantity * rate of buyToken
-** @param seller - address of seller who will get quantity * rate of buyToken
-** @param buyer - address of buyer who will get quantoty of sellToken
-** @param sellToken - the token being sold 
-** @param buyToken - the token being bought at given rate 
-** @param quantity - the quantity of the deal
-** @param rate - the rate of the FX as a % where 100% = 100% and 55% = 55 etc.
-*/
+ ** @author Mark Parris
+ ** @title A Token FX deal (token swap) quanity of sellToken swapped for quantity * rate of buyToken
+ ** @param _seller - address of seller who will get quantity * rate of buyToken
+ ** @param _buyer - address of buyer who will get quantoty of sellToken
+ ** @param _sellToken - the token being sold
+ ** @param _buyToken - the token being bought at given rate
+ ** @param _quantity - the quantity of the deal
+ ** @param _rate - the rate of the FX as a % where 100% = 100% and 55% = 55 etc.
+ ** @param _timeToLive - the time at which deal expires and cannot be executed
+ */
 contract FXDeal is Ownable, Deal {
     address private _seller;
     address private _buyer;
@@ -24,6 +25,7 @@ contract FXDeal is Ownable, Deal {
     ERC20StableCoin private _buyToken;
     uint256 private _quantity;
     uint256 private _rate;
+    uint256 private _timeToLive;
 
     constructor(
         address seller_,
@@ -44,6 +46,7 @@ contract FXDeal is Ownable, Deal {
         _buyToken = buyToken_;
         _rate = rate_;
         _quantity = quantity_;
+        _timeToLive = block.timestamp + 2 minutes; // deal only valid for 2 mins
     }
 
     /**
@@ -52,6 +55,7 @@ contract FXDeal is Ownable, Deal {
      ** ToDo: extend so the deal has a 'time to live' limit, such that deal is only valid for a specified time.
      */
     function execute() public override onlyOwner returns (bool) {
+        require(timeToLive() > 0, "FXDeal: Deal has expired");
         uint256 sellerAllowance = _sellToken.allowance(_seller, address(this));
         uint256 buyerAllowance = _buyToken.allowance(_buyer, address(this));
         require(
@@ -101,5 +105,32 @@ contract FXDeal is Ownable, Deal {
      */
     function sellQuantity() public view returns (uint256) {
         return _quantity;
+    }
+
+    /**
+     ** @dev A ticker (symbol) for the deal
+     */
+    function ticker() public view override returns (string memory) {
+        return (string.concat(_sellToken.isoCcyCode(), _buyToken.isoCcyCode()));
+    }
+
+    /**
+     ** @notice The seller offering the deal.
+     ** @return address of seller offering the deal
+     */
+    function seller() public view override returns (address) {
+        return (_seller);
+    }
+
+    /**
+     ** @notice The number of seconds the deal has remaining before it cannot be executed
+     ** @return Number of seconds before deal cannot be executed.
+     */
+    function timeToLive() public view override returns (uint256) {
+        uint256 timeInSecondsRemaining = 0;
+        if (_timeToLive > block.timestamp) {
+            timeInSecondsRemaining = _timeToLive - block.timestamp;
+        }
+        return (timeInSecondsRemaining);
     }
 }

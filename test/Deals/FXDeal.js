@@ -8,7 +8,7 @@ const {
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
 
-describe("FXDeal", function () {
+describe("FXDeal Test Suite", function () {
     /* We define a fixture to reuse the same setup in every test.
     ** We use loadFixture to run this setup once, snapshot that state,
     ** and reset Hardhat Network to that snapshot in every test.
@@ -83,6 +83,39 @@ describe("FXDeal", function () {
             const [buyer_, seller_, token1_, token2_, rate_, quantity_] = await deal.info();
             expect(rate_).to.equal(rate);
             expect(quantity_).to.equal(quantity);
+            expect(await deal.seller()).to.equal(seller.address);
+        });
+
+        it("Should return valid ticker", async function () {
+            const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
+            const Deal = await ethers.getContractFactory("FXDeal");
+            const rate = 123; // Valid rate
+            const quantity = 456; // Valid Quantity
+            const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
+            const [buyer_, seller_, token1_, token2_, rate_, quantity_] = await deal.info();
+            expect(await deal.ticker()).to.equal(await token1.isoCcyCode() + await token2.isoCcyCode());
+        });
+
+        it("Should return correct time to live", async function () {
+            const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
+            const Deal = await ethers.getContractFactory("FXDeal");
+            const rate = 123; // Valid rate
+            const quantity = 456; // Valid Quantity
+            const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
+            const [buyer_, seller_, token1_, token2_, rate_, quantity_] = await deal.info();
+            expect(await deal.timeToLive()).to.be.greaterThan(0);
+        });
+
+        it("Should raise when deal has expired", async function () {
+            const { owner, buyer, seller, token1, token2 } = await loadFixture(deployFXDeal);
+            const Deal = await ethers.getContractFactory("FXDeal");
+            const rate = 123; // Valid rate
+            const quantity = 456; // Valid Quantity
+            const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
+            const [buyer_, seller_, token1_, token2_, rate_, quantity_] = await deal.info();
+            await time.increase((2 * 60) + 1); // move time on by 2 mins (120+1 secs)
+            expect(await deal.timeToLive()).to.equal(0); // default time to live is 2 mins
+            await expect(deal.connect(owner).execute()).to.be.revertedWith("FXDeal: Deal has expired");
         });
     });
 

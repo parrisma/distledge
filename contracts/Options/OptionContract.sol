@@ -122,8 +122,7 @@ abstract contract OptionContract is Ownable, Pausable {
             "OptionContract: Buyer must pre-authorise transfer of premium"
         );
 
-        _premiumToken.transferFrom(_buyer, address(this), _premium);
-        _premiumToken.transfer(_seller, _premium);
+        _premiumToken.transferFrom(_buyer, _seller, _premium);
         _alive = true;
         _unpause();
 
@@ -155,18 +154,14 @@ abstract contract OptionContract is Ownable, Pausable {
      ** @notice Settle the given amount
      ** @return true when done.
      */
-    function _settle(uint256 amount)
-        internal
-        onlySeller
-        whenLive
-        returns (bool)
-    {
+    function _settle(
+        uint256 amount
+    ) internal onlyBuyer whenLive returns (bool) {
         require(
             _settlementToken.allowance(_seller, address(this)) >= amount,
             "OptionContract: Seller must pre-authorise transfer of settlement"
         );
-        _settlementToken.transferFrom(_seller, address(this), amount);
-        _settlementToken.transfer(_buyer, amount);
+        _settlementToken.transferFrom(_seller, _buyer, amount);
         return (true);
     }
 
@@ -190,10 +185,7 @@ abstract contract OptionContract is Ownable, Pausable {
      ** @notice Throws if not registered seller
      **/
     modifier onlySeller() {
-        require(
-            msg.sender == _seller || msg.sender == _buyer,
-            "OptionContract: Only Seller or Buyer"
-        );
+        _checkSeller();
         _;
     }
 
@@ -231,6 +223,16 @@ abstract contract OptionContract is Ownable, Pausable {
         require(
             _buyer == _msgSender(),
             "OptionContract: caller is not the buyer"
+        );
+    }
+
+    /**
+     * @notice Throws if the sender is not the seller.
+     */
+    function _checkSeller() internal view virtual {
+        require(
+            _seller == _msgSender(),
+            "OptionContract: caller is not the seller"
         );
     }
 }

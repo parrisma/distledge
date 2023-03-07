@@ -8,38 +8,19 @@ const { ethers } = require("hardhat");
 const crypto = require("crypto");
 
 describe("EquityPrice", function () {
-  async function deployEquityPrice() {
-    //Get the virtual singer
-    const [deployerOfContract] = await ethers.getSigners();
-
-    // Fetch application binary interface of AggregatorV3Interface
-    const contractMeta = require("../../artifacts/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol/AggregatorV3Interface.json");
-    const mockPriceDecimals = 2;
-    const mockPriceInitial = 50;
-
-    mockV3Aggregator = await ethers.getContractFactory("MockV3Aggregator");
-    mockPriceSource = await mockV3Aggregator.deploy(
-      mockPriceDecimals,
-      mockPriceInitial
-    );
-
-    // Equity Price to test
-    const ticker = "TCKR";
-    const equityPriceContract = await ethers.getContractFactory("EquityPrice");
-    const equityPrice = await equityPriceContract.deploy(
-      ticker,
-      mockPriceSource.address
-    );
-
-    return { mockPriceSource, equityPrice, ticker };
-  }
+  let equityPrice;
+  let mockPriceSource;
+  let deployer;
+  const ticker = "TCKR";
+  beforeEach(async () => {
+    deployer = (await getNamedAccounts()).deployer;
+    // Deploy
+    await deployments.fixture(["EquityPrice"]);
+    equityPrice = await ethers.getContract("EquityPrice", deployer);
+    mockPriceSource = await ethers.getContract("MockV3Aggregator", deployer);
+  });
 
   it("Equity Price is equal to initial price value and test updated price", async function () {
-    // Deploy
-    const { mockPriceSource, equityPrice, ticker } = await loadFixture(
-      deployEquityPrice
-    );
-
     //Define the mocked price.
     const expectedPx = 50;
     expect(await equityPrice.getPrice()).to.equal(expectedPx);
@@ -51,12 +32,7 @@ describe("EquityPrice", function () {
     expect(await equityPrice.getPrice()).to.equal(revised);
   });
 
-  it("Equity Price will reject when negative price", async function () {
-    // Deploy
-    const { mockPriceSource, equityPrice, ticker } = await loadFixture(
-      deployEquityPrice
-    );
-
+  it("Equity Price will be rejected when price is negative figure", async function () {
     //Define the bad price.
     const expectedPx = -1;
     await mockPriceSource.updateAnswer(expectedPx);
@@ -65,12 +41,7 @@ describe("EquityPrice", function () {
     );
   });
 
-  it("Equity Price accepted when zero price", async function () {
-    // Deploy
-    const { mockPriceSource, equityPrice, ticker } = await loadFixture(
-      deployEquityPrice
-    );
-
+  it("Equity Price will be accepted when price equals to zero", async function () {
     // boundary value price
     const expectedPx = 0;
     await mockPriceSource.updateAnswer(expectedPx);
