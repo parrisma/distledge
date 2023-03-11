@@ -29,7 +29,7 @@ describe("Secure Level Test Suite", function () {
         return { secureLevel, owner, secure_source, other_source }
     }
 
-    async function signedMessage(owner) {
+    async function signedMessage() {
         // Create a signed message
         const value = 4672334421876;
         const nonce = Math.floor(Date.now());
