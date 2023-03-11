@@ -13,7 +13,7 @@ import "../Libs/VerifySigner.sol";
  */
 contract SecureLevel is Ownable {
     event ChangeOfSource(address current_, address new_);
-    event LevelUpdated(address updatedBy_, uint256 value_, uint256 updateTime);
+    event LevelUpdated(uint256 value_);
 
     using VerifySigner for *;
     address _expectedSigner;
@@ -28,6 +28,7 @@ contract SecureLevel is Ownable {
         _symbol = symbol_;
         _description = description_;
         _live = false;
+        _value = 0;
     }
 
     /**
@@ -50,7 +51,7 @@ contract SecureLevel is Ownable {
         uint256 value_,
         uint256 nonce_,
         bytes memory sig
-    ) public {
+    ) public onlySigner {
         /** Hash the params as would have been done by sender, this is required to
          ** verify the params as signed by the given signature.
          */
@@ -66,7 +67,7 @@ contract SecureLevel is Ownable {
         _value = value_;
         _live = true;
         _lastUpdate = block.timestamp;
-        emit LevelUpdated(_expectedSigner, _value, _lastUpdate);
+        emit LevelUpdated(_value);
     }
 
     /**
@@ -92,5 +93,23 @@ contract SecureLevel is Ownable {
         )
     {
         return (_symbol, _description, _live, _value, _lastUpdate);
+    }
+
+    /**
+     * @dev Throws if called by any account other than the expected signer..
+     */
+    modifier onlySigner() {
+        _checkSigner();
+        _;
+    }
+
+    /**
+     * @dev Throws if the sender is not the expected signer.
+     */
+    function _checkSigner() internal view virtual {
+        require(
+            _expectedSigner == _msgSender(),
+            "SecureLevel: caller is not the verified signer"
+        );
     }
 }
