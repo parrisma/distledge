@@ -19,13 +19,6 @@ const { ethers } = require("hardhat");
  */
 describe("Verified Signer Suite", function () {
 
-    async function deployECA() {
-        // remember contracts are deployed using the first signer/account by default (owner account)
-        const VerifySignature = await ethers.getContractFactory("VerifySignature");
-        const verifySig = await VerifySignature.deploy();
-        return { verifySig }
-    }
-
     async function deployVerifiedSigner() {
         // Test Accounts to use.
         const [owner, buyer, seller] = await ethers.getSigners();

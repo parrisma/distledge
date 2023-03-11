@@ -10,7 +10,7 @@ const symbol = "SECS";
 const description = "Secure Source Description";
 
 describe("Secure Level Test Suite", function () {
-    async function deployAccountAndToken() {
+    async function deploySecureLevel() {
         // Get named accounts & deploy SecureLevel contract
         const [owner, secure_source, other_source] = await ethers.getSigners();
 
@@ -40,7 +40,7 @@ describe("Secure Level Test Suite", function () {
 
     describe("Secure Level Basics", async function () {
         it("Construction", async function () {
-            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deploySecureLevel);
             const [symbol_, description_, live_, value_, lastUpdate_] = await secureLevel.getDetails()
             expect(symbol_).to.equal(symbol);
             expect(description_).to.equal(description);
@@ -51,19 +51,19 @@ describe("Secure Level Test Suite", function () {
 
     describe("Secure Level Security and Access control", async function () {
         it("Only owner can change verified source", async function () {
-            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deploySecureLevel);
             await expect(secureLevel.connect(other_source).setExpectedSigner(ethers.constants.AddressZero)).to.be.revertedWith(
                 "Ownable: caller is not the owner"
             );
         })
         it("Bad address passed as verified source", async function () {
-            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deploySecureLevel);
             await expect(secureLevel.connect(owner).setExpectedSigner(ethers.constants.AddressZero)).to.be.revertedWith(
                 "SecureLevel: Bad expected signer address"
             );
         })
         it("Only verified source can set level", async function () {
-            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deploySecureLevel);
             var { value, nonce, secretMessage, secretMessageHash } = await loadFixture(signedMessage);
 
             await secureLevel.connect(owner).setExpectedSigner(secure_source.address);
@@ -77,7 +77,7 @@ describe("Secure Level Test Suite", function () {
 
     describe("Change of secure source", async function () {
         it("Valid change of verified source", async function () {
-            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deploySecureLevel);
             await expect(secureLevel.connect(owner).setExpectedSigner(secure_source.address))
                 .to.emit(secureLevel, 'ChangeOfSource')
                 .withArgs(owner.address, secure_source.address);
@@ -86,7 +86,7 @@ describe("Secure Level Test Suite", function () {
 
     describe("Set level", async function () {
         it("Verified source must sign to set level", async function () {
-            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deploySecureLevel);
             var { value, nonce, secretMessage, secretMessageHash } = await loadFixture(signedMessage);
 
             await secureLevel.connect(owner).setExpectedSigner(secure_source.address);
@@ -103,7 +103,7 @@ describe("Secure Level Test Suite", function () {
         })
 
         it("Set Value and check timestamp", async function () {
-            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deploySecureLevel);
             var { value, nonce, secretMessage, secretMessageHash } = await loadFixture(signedMessage);
 
             await secureLevel.connect(owner).setExpectedSigner(secure_source.address);
@@ -134,7 +134,7 @@ describe("Secure Level Test Suite", function () {
 
     describe("Check update constraints", async function () {
         it("Greater than zero", async function () {
-            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deploySecureLevel);
 
             await secureLevel.connect(owner).setExpectedSigner(secure_source.address);
             await secureLevel.connect(owner).setGreaterThanZero();
@@ -165,7 +165,7 @@ describe("Secure Level Test Suite", function () {
         })
 
         it("Greater than equal zero", async function () {
-            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deploySecureLevel);
 
             await secureLevel.connect(owner).setExpectedSigner(secure_source.address);
             await secureLevel.connect(owner).setGreaterEqualZero();

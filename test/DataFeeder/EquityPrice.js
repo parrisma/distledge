@@ -11,7 +11,7 @@ const description = "Secure Source Description";
 const decimals = 2;
 
 describe("Equity Price Test Suite", function () {
-  async function deployAccountAndToken() {
+  async function deployEquityPrice() {
     // Get named accounts & deploy SecureLevel contract
     const [owner, secure_source, other_source] = await ethers.getSigners();
 
@@ -41,7 +41,7 @@ describe("Equity Price Test Suite", function () {
 
   it("Equity Price Construct and Set", async function () {
 
-    var { equityPrice, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+    var { equityPrice, owner, secure_source, other_source } = await loadFixture(deployEquityPrice);
 
     var expectedPx = 50;
     var { value, nonce, sig } = await signedValue(secure_source, expectedPx);
@@ -58,7 +58,7 @@ describe("Equity Price Test Suite", function () {
 
   it("Equity Price OK when set to zero", async function () {
 
-    var { equityPrice, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+    var { equityPrice, owner, secure_source, other_source } = await loadFixture(deployEquityPrice);
 
     var expectedPx = 0;
     var { value, nonce, sig } = await signedValue(secure_source, expectedPx);
@@ -69,7 +69,7 @@ describe("Equity Price Test Suite", function () {
 
   it("Equity Price will be rejected when price is negative figure", async function () {
     //Define the bad price.
-    var { equityPrice, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+    var { equityPrice, owner, secure_source, other_source } = await loadFixture(deployEquityPrice);
 
     var expectedPx = -1;
     var { value, nonce, sig } = await signedValue(secure_source, expectedPx);
