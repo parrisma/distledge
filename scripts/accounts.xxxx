@@ -1,0 +1,22 @@
+/**
+ * This deployment script deploys all base contracts. The only contracts not deployed are those that are
+ * deployed on demand and are in effect one-shot NFT's
+ */
+const { ethers, network } = require('hardhat');
+const { verify } = require('../utils/verify');
+
+const func = async () => {
+
+    [escrow_manager, stable_coin_issuer, data_vendor, option_seller, option_buyer] = await ethers.getSigners();
+
+    console.log(`\n`);
+    console.log(`Escrow Manager     : [${escrow_manager.address}]`);
+    console.log(`Stable Coin Issuer : [${stable_coin_issuer.address}]`);
+    console.log(`Data Vendor        : [${data_vendor.address}]`);
+    console.log(`Option Seller      : [${option_seller.address}]`);
+    console.log(`Option Buyer       : [${option_buyer.address}]`);
+    console.log(`\n`);
+
+    return escrow_manager;
+}
+module.exports = { func };

@@ -1,0 +1,23 @@
+/**
+ * This deployment script deploys all base contracts. The only contracts not deployed are those that are
+ * deployed on demand and are in effect one-shot NFT's
+ */
+const { ethers, network } = require('hardhat');
+const { verify } = require('../utils/verify');
+const { func } = require('./accounts');
+
+async function main() {
+    const MyContract = await ethers.getContractFactory("ERC20USDStableCoin");
+    const erc20USDStableCoin = await MyContract.attach("0xcA03Dc4665A8C3603cb4Fd5Ce71Af9649dC00d44");
+    console.log(`\nStable coin token for ISO Ccy [${await erc20USDStableCoin.isoCcyCode()}] from address [${erc20USDStableCoin.address}]`);
+    console.log((await func()).address);
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main().catch((error) => {
+    console.log(`\nStarted\n`);
+    console.error(error);
+    process.exitCode = 1;
+    console.log(`\nDone\n`);
+});
