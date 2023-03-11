@@ -111,7 +111,7 @@ describe("Verified Signer Suite", function () {
         });
 
         it("Accept when signer not is as expected", async function () {
-            // get test accouts and a mockVerifiedSigner that uses VerifiedSignerLib
+            // get test accounts and a mockVerifiedSigner that uses VerifiedSignerLib
             const { owner, buyer, seller, mockVerifiedSigner, num_, msg_, nonce_, secretMessageHash } = await loadFixture(deployVerifiedSigner);
 
             /*
@@ -137,11 +137,11 @@ describe("Verified Signer Suite", function () {
         });
 
         it("Reject when signer not as expected", async function () {
-            // get test accouts and a mockVerifiedSigner that uses VerifiedSignerLib
+            // get test accounts and a mockVerifiedSigner that uses VerifiedSignerLib
             const { owner, buyer, seller, mockVerifiedSigner, num_, msg_, nonce_, secretMessageHash } = await loadFixture(deployVerifiedSigner);
 
             /*
-            ** The message is now signed by the *buyer* account, so will mistmatch the seller account
+            ** The message is now signed by the *buyer* account, so will mismatch the seller account
             ** set as the only verified signer.
             */
             const sig = await buyer.signMessage(ethers.utils.arrayify(secretMessageHash)); // Don't forget to arrayify to send bytes
@@ -157,7 +157,7 @@ describe("Verified Signer Suite", function () {
             ** contract will take the params and hash them and then try to recover the signer. So this is how we can send
             ** arbitrary parameters to a solidity contract and it will be able to verify the parameters are from a known
             ** account.
-            ** This is expected to thorw as signed by buyer, but seller required as signer
+            ** This is expected to throw as signed by buyer, but seller required as signer
             */           
             await expect(mockVerifiedSigner.verifiedData(num_, msg_, nonce_, ethers.utils.arrayify(sig))).to.be.revertedWith(
                 "mockVerifiedSigned: Required sender did not sign data"
