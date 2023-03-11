@@ -131,4 +131,71 @@ describe("Secure Level Test Suite", function () {
             expect(lastUpdate_).to.be.lessThan(Math.floor(Date.now()));
         })
     })
+
+    describe("Check update constraints", async function () {
+        it("Greater than zero", async function () {
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+
+            await secureLevel.connect(owner).setExpectedSigner(secure_source.address);
+            await secureLevel.connect(owner).setGreaterThanZero();
+
+            var value = -1;
+            var nonce = Math.floor(Date.now());
+            var secretMessage = ethers.utils.solidityPack(["uint256", "uint256"], [value, nonce]);
+            var secretMessageHash = ethers.utils.keccak256(secretMessage);
+            var sig = await secure_source.signMessage(ethers.utils.arrayify(secretMessageHash));
+            await expect(secureLevel.connect(secure_source).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig))).to.be.revertedWith(
+                "SecureLevel: Constraint set for value update greater than zero"
+            );
+            value = 0;
+            secretMessage = ethers.utils.solidityPack(["uint256", "uint256"], [value, nonce]);
+            secretMessageHash = ethers.utils.keccak256(secretMessage);
+            var sig = await secure_source.signMessage(ethers.utils.arrayify(secretMessageHash));
+            await expect(secureLevel.connect(secure_source).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig))).to.be.revertedWith(
+                "SecureLevel: Constraint set for value update greater than zero"
+            );
+            value = 1;
+            secretMessage = ethers.utils.solidityPack(["uint256", "uint256"], [value, nonce]);
+            secretMessageHash = ethers.utils.keccak256(secretMessage);
+            var sig = await secure_source.signMessage(ethers.utils.arrayify(secretMessageHash));
+            await secureLevel.connect(secure_source).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+            const [actualValue, actualUpdated] = await secureLevel.connect(other_source).getVerifiedValue();
+            expect(actualValue).to.equal(value);
+            expect(actualUpdated).to.be.lessThan(Math.floor(Date.now()));
+        })
+
+        it("Greater than equal zero", async function () {
+            var { secureLevel, owner, secure_source, other_source } = await loadFixture(deployAccountAndToken);
+
+            await secureLevel.connect(owner).setExpectedSigner(secure_source.address);
+            await secureLevel.connect(owner).setGreaterEqualZero();
+
+            var value = -1;
+            var nonce = Math.floor(Date.now());
+            var secretMessage = ethers.utils.solidityPack(["uint256", "uint256"], [value, nonce]);
+            var secretMessageHash = ethers.utils.keccak256(secretMessage);
+            var sig = await secure_source.signMessage(ethers.utils.arrayify(secretMessageHash));
+            await expect(secureLevel.connect(secure_source).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig))).to.be.revertedWith(
+                "SecureLevel: Constraint set for value update greater than or equal to zero"
+            );
+
+            value = 0;
+            secretMessage = ethers.utils.solidityPack(["uint256", "uint256"], [value, nonce]);
+            secretMessageHash = ethers.utils.keccak256(secretMessage);
+            var sig = await secure_source.signMessage(ethers.utils.arrayify(secretMessageHash));
+            await secureLevel.connect(secure_source).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+            var [actualValue, actualUpdated] = await secureLevel.connect(other_source).getVerifiedValue();
+            expect(actualValue).to.equal(value);
+            expect(actualUpdated).to.be.lessThan(Math.floor(Date.now()));
+
+            value = 1;
+            secretMessage = ethers.utils.solidityPack(["uint256", "uint256"], [value, nonce]);
+            secretMessageHash = ethers.utils.keccak256(secretMessage);
+            var sig = await secure_source.signMessage(ethers.utils.arrayify(secretMessageHash));
+            await secureLevel.connect(secure_source).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+            [actualValue, actualUpdated] = await secureLevel.connect(other_source).getVerifiedValue();
+            expect(actualValue).to.equal(value);
+            expect(actualUpdated).to.be.lessThan(Math.floor(Date.now()));
+        })
+    })
 });

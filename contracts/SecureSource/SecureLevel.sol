@@ -13,15 +13,17 @@ import "../Libs/VerifySigner.sol";
  */
 contract SecureLevel is Ownable {
     event ChangeOfSource(address current_, address new_);
-    event LevelUpdated(uint256 value_);
+    event LevelUpdated(int256 value_);
 
     using VerifySigner for *;
     address _expectedSigner;
     string _symbol;
     string _description;
-    uint256 _value;
+    int256 _value;
     uint256 _lastUpdate;
     bool _live;
+    bool _greaterThanZero = false;
+    bool _greaterEqualZero = false;
 
     constructor(string memory symbol_, string memory description_) Ownable() {
         _expectedSigner = msg.sender;
@@ -32,8 +34,8 @@ contract SecureLevel is Ownable {
     }
 
     /**
-     ** @dev Set a new expected signer
-     **/
+     ** @notice Set the address that must sign all value updates
+     */
     function setExpectedSigner(address expectedSigner_) public onlyOwner {
         require(
             expectedSigner_ != address(0),
@@ -45,13 +47,48 @@ contract SecureLevel is Ownable {
     }
 
     /**
-     ** @dev mock method that throws if params not signed by expected signer
-     **/
+     ** @notice Set modifier constrain, all updates must be greater than zero
+     */
+    function setGreaterThanZero() public onlyOwner {
+        _greaterThanZero = true;
+        _greaterEqualZero = false;
+    }
+
+    /**
+     ** @notice Set modifier constrain, all updates must be greater than or equal to zero
+     */
+    function setGreaterEqualZero() public onlyOwner {
+        _greaterThanZero = false;
+        _greaterEqualZero = true;
+    }
+
+    /**
+     ** @notice update modifier to ensure value constraints are honored at point of update
+     */
+    modifier checkConstraints(int256 value) {
+        if (_greaterThanZero) {
+            require(
+                value > 0,
+                "SecureLevel: Constraint set for value update greater than zero"
+            );
+        }
+        if (_greaterEqualZero) {
+            require(
+                value >= 0,
+                "SecureLevel: Constraint set for value update greater than or equal to zero"
+            );
+        }
+        _;
+    }
+
+    /**
+     ** @notice Set a new value, but update must be signed by pre-set verified address
+     */
     function setVerifiedValue(
-        uint256 value_,
+        int256 value_,
         uint256 nonce_,
         bytes memory sig
-    ) public onlySigner {
+    ) public onlySigner checkConstraints(value_) {
         /** Hash the params as would have been done by sender, this is required to
          ** verify the params as signed by the given signature.
          */
@@ -71,16 +108,23 @@ contract SecureLevel is Ownable {
     }
 
     /**
-     ** @dev mock method that throws if params not signed by expected signer
-     **/
-    function getVerifiedValue() public view returns (uint256, uint256) {
+     ** @notice Get the current value and the time is was updated
+     ** @return The current value
+     ** @return The timestamp of the update
+     */
+    function getVerifiedValue() public view returns (int256, uint256) {
         require(true == _live, "SecureLevel: No value has yet been set");
         return (_value, _lastUpdate);
     }
 
     /**
-     ** @dev mock method that throws if params not signed by expected signer
-     **/
+     ** @notice Get all of the contract details.
+     ** @return The symbol
+     ** @return The description
+     ** @return True, if an an update been seen since construction
+     ** @return The current value
+     ** @return The timestamp of the update
+     */
     function getDetails()
         public
         view
@@ -88,7 +132,7 @@ contract SecureLevel is Ownable {
             string memory,
             string memory,
             bool,
-            uint256,
+            int256,
             uint256
         )
     {
@@ -96,7 +140,14 @@ contract SecureLevel is Ownable {
     }
 
     /**
-     * @dev Throws if called by any account other than the expected signer..
+     ** @notice Get the current ticker symbol.
+     **/
+    function getTicker() public view returns (string memory) {
+        return (_symbol);
+    }
+
+    /**
+     ** @notice modifier, throws if called by any account other than the expected signer..
      */
     modifier onlySigner() {
         _checkSigner();
