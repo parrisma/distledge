@@ -77,5 +77,4 @@ describe("Equity Price Test Suite", function () {
       "SecureLevel: Constraint set for value update greater than or equal to zero"
     );
   });
-
 });

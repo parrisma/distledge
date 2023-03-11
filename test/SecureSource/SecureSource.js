@@ -19,8 +19,7 @@ describe("Secure Level Test Suite", function () {
     const verifySignerLib = await VerifySignerLib.deploy();
     await verifySignerLib.deployed();
 
-    const SecureLevel = await ethers.getContractFactory(
-      "contracts/SecureSource/SecureLevel.sol:SecureLevel",
+    const SecureLevel = await ethers.getContractFactory("SecureLevel",
       {
         libraries: {
           VerifySigner: verifySignerLib.address,

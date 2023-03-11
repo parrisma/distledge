@@ -50,6 +50,7 @@ const EUR_to_USD = 1.0 / USD_to_EUR;
 const USD_to_CNY = 6.87;
 const CNY_to_USD = 1.0 / USD_to_CNY;
 const USDEUR_ticker = "USDEUR";
+const USDEUR_Description = "USD to EUR Spot FX Rate"
 
 const depositQtyUSD = 10000000000; // 100.00 USD where token is in 2 DP
 const depositQtyEUR = depositQtyUSD * USD_to_EUR;
@@ -59,12 +60,10 @@ const FXPriceDecimals = 5;
 /**
  * Mock price data source
  */
-var mockV3Aggregator;
-var mockTeslaPriceSource;
-var mockUSDEURFXPriceSource;
 const equityPriceDecimals = 2;
 const teslaPriceFeb2023 = 20831; // $208.31
 const teslaTicker = "TSLA";
+const teslaDescription = "TESLA Regular Stock"
 
 /**
 * SimpleOption
@@ -73,8 +72,8 @@ var simpleOption;
 var premium;
 var notional;
 var strike;
-var teslaPrice;
-var USDEURFXPrice;
+var equityPriceContract;
+var fxPriceContract;
 var premiumToken;
 var settlementToken;
 var uniqueOptionId;
@@ -87,6 +86,43 @@ var settlementAmount;
  * There is probably a better way to set this up, but for now - we will run with this.
  */
 describe("Financial Contract Full Integration Test and Simulation", function () {
+
+    /**
+     * 
+     * @param {The address of the account that needs to sign the price update} signer 
+     * @param {The value to update the price to} value 
+     * @returns The new value of the price, the signing nonce & the signature.
+     */
+    async function signedValue(signer, value) {
+        // Create a signed message
+        const nonce = Math.floor(Date.now());
+        const secretMessage = ethers.utils.solidityPack(["uint256", "uint256"], [value, nonce]);
+        const secretMessageHash = ethers.utils.keccak256(secretMessage);
+        const sig = await signer.signMessage(ethers.utils.arrayify(secretMessageHash)); // Now signed as secure source
+        return { value, nonce, sig }
+    }
+
+    async function deployPriceContracts() {
+        // Deploy Library
+        const VerifySignerLib = await ethers.getContractFactory("VerifySigner");
+        const verifySignerLib = await VerifySignerLib.deploy();
+        await verifySignerLib.deployed();
+
+        const EquityPrice = await ethers.getContractFactory("EquityPrice", {
+            libraries: {
+                VerifySigner: verifySignerLib.address,
+            },
+        });
+
+        const FXPrice = await ethers.getContractFactory("FXPrice", {
+            libraries: {
+                VerifySigner: verifySignerLib.address,
+            },
+        });
+
+        return { EquityPrice, FXPrice }
+    }
+
     /* 
     ** This is an integration suite that also demo's how the Contracts 
     ** come together to model buying and selling financial option contracts
@@ -203,7 +239,6 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
         });
 
         it("Create Option to Trade", async function () {
-
             /**
             ** Create the option contract ready to trade
             **
@@ -212,23 +247,25 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             // Seller creates option contract for sale, linked to a live reference price.
             console.log("\nSeller creates SimpleOption for sale.");
 
+            // Deploy Equity Price contract.
+            var { EquityPrice, FXPrice } = await deployPriceContracts();
+
             // Create and deploy price source for Tesla
             console.log("\nCreate Tesla live (mock) reference level to use in the option contract");
-            mockV3Aggregator = await ethers.getContractFactory("MockV3Aggregator");
-            mockTeslaPriceSource = await mockV3Aggregator.deploy(equityPriceDecimals, teslaPriceFeb2023);
-            const equityPriceContract = await ethers.getContractFactory("EquityPrice");
-            teslaPrice = await equityPriceContract.deploy(teslaTicker, mockTeslaPriceSource.address);
-            expect(await teslaPrice.getPrice()).to.equal(teslaPriceFeb2023);
-            console.log("Equity price feed created with ticker " + await teslaPrice.getTicker() + " with initial price " + await teslaPrice.getPrice() / (10 ** equityPriceDecimals));
+            equityPriceContract = await EquityPrice.connect(data_vendor).deploy(teslaTicker, teslaDescription, data_vendor.address, equityPriceDecimals);
+            var { value, nonce, sig } = await signedValue(data_vendor, teslaPriceFeb2023);
+            await equityPriceContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+            const [actualValue, actualUpdated] = await equityPriceContract.connect(data_vendor).getVerifiedValue();
+            expect(actualValue).to.equal(teslaPriceFeb2023);
+            console.log("Equity price feed created with ticker " + await equityPriceContract.getTicker() + " with initial price " + actualValue / (10 ** equityPriceDecimals));
 
             // Create and deploy settlement FX
-            console.log("\nCreate USD EUR FX Price (mock) reference level to use in the option contract for quanto settlement");
-            mockV3Aggregator = await ethers.getContractFactory("MockV3Aggregator");
-            mockUSDEURFXPriceSource = await mockV3Aggregator.deploy(FXPriceDecimals, USD_to_EUR * (10 ** FXPriceDecimals));
-            const fxPriceContract = await ethers.getContractFactory("FXPrice");
-            USDEURFXPrice = await fxPriceContract.deploy(USDEUR_ticker, mockUSDEURFXPriceSource.address);
-            expect(await USDEURFXPrice.getPrice()).to.equal(USD_to_EUR * (10 ** FXPriceDecimals));
-            console.log("FX price feed created with ticker " + await USDEURFXPrice.getTicker() + " with initial price " + await USDEURFXPrice.getPrice() / (10 ** FXPriceDecimals));
+            fxPriceContract = await FXPrice.connect(data_vendor).deploy(USDEUR_ticker, USDEUR_Description, data_vendor.address, FXPriceDecimals);
+            var { value, nonce, sig } = await signedValue(data_vendor, USD_to_EUR * (10 ** FXPriceDecimals));
+            await fxPriceContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+            const [actualFXValue, actualFXUpdated] = await fxPriceContract.connect(data_vendor).getVerifiedValue();
+            expect(actualFXValue).to.equal(USD_to_EUR * (10 ** FXPriceDecimals));
+            console.log("FX price feed created with ticker " + await fxPriceContract.getTicker() + " with initial price " + actualFXValue / (10 ** FXPriceDecimals));
 
             // Create the option contract
             console.log("\nCreating simple in the money option, premium paid in USD Token settled in EUR Token");
@@ -240,8 +277,8 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             premium = 2; // of the premiumToken.
             settlementToken = erc20CNYStableCoin;
             notional = 100; // 1.00 to 2-DP
-            strike = ((await teslaPrice.getPrice() / (10 ** equityPriceDecimals)) - premium) * (10 ** equityPriceDecimals);
-            const fxForSettlement = USDEURFXPrice;
+            var [teslaPrice, teslaPriceUpdate] = await equityPriceContract.connect(data_vendor).getVerifiedValue();
+            strike = ((teslaPrice / (10 ** equityPriceDecimals)) - premium) * (10 ** equityPriceDecimals);
 
             simpleOption = await SimpleOption.connect(option_seller).deploy(uniqueOptionId,
                 name,
@@ -252,11 +289,11 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
                 settlementToken.address,
                 notional,
                 strike,
-                teslaPrice.address,
-                fxForSettlement.address);
+                equityPriceContract.address,
+                fxPriceContract.address);
 
             expect(await simpleOption.id()).to.equal(uniqueOptionId);
-            //console.log("\n" + await simpleOption.connect(option_seller).terms());
+            console.log("\n" + await simpleOption.connect(option_seller).terms());
         });
 
         it("Trade the option", async function () {
@@ -294,20 +331,25 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             /**
             ** As buyer, value the option and then exercise to collect settlement amount if > 0
             */
-            const decimals = Number(await teslaPrice.getDecimals());
-            expect(await simpleOption.connect(option_buyer).valuation()).to.equal(Math.max(0, notional * (await teslaPrice.getPrice() - strike)));
-            console.log("\nTesla has current price of [" + Number(await teslaPrice.getPrice()) + "]");
+            const decimals = Number(await equityPriceContract.getDecimals());
+            var [teslaPrice, teslaPriceUpdate] = await equityPriceContract.connect(data_vendor).getVerifiedValue();
+            expect(await simpleOption.connect(option_buyer).valuation()).to.equal(Math.max(0, notional * (teslaPrice - strike)));
+            console.log("\nTesla has current price of [" + Number(teslaPrice) + "]");
             console.log("simpleOption has valuation [" + Number(await simpleOption.valuation()) + "]");
 
-            await mockTeslaPriceSource.updateAnswer(Number(await teslaPrice.getPrice()) - (15 * (10 ** decimals)));
-            console.log("\nTesla price drops by 20 to [" + Number(await teslaPrice.getPrice()) + "]");
+            var { value, nonce, sig } = await signedValue(data_vendor, Number(teslaPrice) - (15 * (10 ** decimals)));
+            await equityPriceContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+            var [teslaPrice, teslaPriceUpdate] = await equityPriceContract.connect(data_vendor).getVerifiedValue();
+            console.log("\nTesla price drops by 20 to [" + Number(teslaPrice) + "]");
             expect(await simpleOption.connect(option_buyer).valuation()).to.equal(0);
             console.log("simpleOption has new valuation of [" + Number(await simpleOption.valuation()) + "]");
 
-            await mockTeslaPriceSource.updateAnswer(Number(await teslaPrice.getPrice()) + (16 * (10 ** decimals)));
-            console.log("\nTesla price increases by 16 to " + Number(await teslaPrice.getPrice()));
+            var { value, nonce, sig } = await signedValue(data_vendor, Number(teslaPrice) + (16 * (10 ** decimals)));
+            await equityPriceContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+            var [teslaPrice, teslaPriceUpdate] = await equityPriceContract.connect(data_vendor).getVerifiedValue();
+            console.log("\nTesla price increases by 16 to " + Number(teslaPrice));
             console.log("simpleOption has new valuation of [" + Number(await simpleOption.valuation()) + "]");
-            expect(await simpleOption.connect(option_buyer).valuation()).to.equal(Math.max(0, notional * (await teslaPrice.getPrice() - strike)));
+            expect(await simpleOption.connect(option_buyer).valuation()).to.equal(Math.max(0, notional * (Number(teslaPrice) - strike)));
 
             /**
              *  Seller has to do periodic mark to market to adjust settlement to cover buyer exercise
