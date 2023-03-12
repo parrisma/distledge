@@ -1,7 +1,3 @@
-/*
- ** To run this only [> npx hardhat test --grep "Full Simulation"]
- */
-
 const {
   time,
   loadFixture,
