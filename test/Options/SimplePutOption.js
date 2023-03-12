@@ -21,42 +21,7 @@ const { ethers } = require("hardhat");
  */
 describe("Simple Put Option Test Suite", function () {
   let mockAggregator;
-  this.beforeEach(async function () {
-    // mockAggregator = await ethers.getContractFactory(MockAggregatorV3Interface);
-    // mockAggregator = await mockAggregator.deploy(18, 5000000000000000);
-    // await mockAggregator.deployed();
-    // const mockedAggregatorV3Interface = await loadFixture(
-    //   async function deployMockedAggregatorV3Interface() {
-    //     const [owner, otherAccount] = await ethers.getSigners();
-    //     const AggregatorV3Interface = await ethers.getContractFactory(
-    //       "AggregatorV3Interface"
-    //     );
-    //     const aggregatorV3Interface = await AggregatorV3Interface.deploy();
-    //     return { aggregatorV3Interface, owner, otherAccount };
-    //   }
-    // );
-    // const mockedPriceReferenceLevel = await loadFixture(
-    //   async function deployMockedPriceReferenceLevel() {
-    //     const [owner, otherAccount] = await ethers.getSigners();
-    //     const MockedPriceReferenceLevel = await ethers.getContractFactory(
-    //       "MockedPriceReferenceLevel"
-    //     );
-    //     const priceReferenceLevel = await MockedPriceReferenceLevel.deploy(
-    //       "MockedPriceTicker",
-    //       mockAggregator.address
-    //     );
-    //     return { priceReferenceLevel, owner, otherAccount };
-    //   }
-    // );
-  });
-
-  //   describe("Deployment of MockedPriceReferenceLevel", function () {
-  //     it("Should have mocked price reference level return", async function () {
-  //       expect(
-  //         await mockedPriceReferenceLevel.priceReferenceLevel.getTicker()
-  //       ).to.equal("MockedPriceTicker");
-  //     });
-  //   });
+  this.beforeEach(async function () {});
 
   it("Basic construction", async function () {
     expect(true).to.equal(true); // TODO: Write tests.

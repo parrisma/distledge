@@ -60,11 +60,11 @@ contract FXDeal is Ownable, Deal {
         uint256 buyerAllowance = _buyToken.allowance(_buyer, address(this));
         require(
             sellerAllowance >= this.sellQuantity(),
-            "FXDeal: Seller has not granted sufficent allowance for Deal"
+            "FXDeal: Seller has not granted sufficient allowance for Deal"
         );
         require(
             buyerAllowance >= this.buyQuantity(),
-            "FXDeal: Buyer has not granted sufficent allowance for Deal"
+            "FXDeal: Buyer has not granted sufficient allowance for Deal"
         );
         _sellToken.transferFrom(_seller, _buyer, this.sellQuantity());
         _buyToken.transferFrom(_buyer, _seller, this.buyQuantity());
@@ -108,14 +108,15 @@ contract FXDeal is Ownable, Deal {
     }
 
     /**
-     ** @dev A ticker (symbol) for the deal
+     ** @notice Get the ticker (symbol) for the deal
+     ** @return The ticker symbolc as string.
      */
     function ticker() public view override returns (string memory) {
         return (string.concat(_sellToken.isoCcyCode(), _buyToken.isoCcyCode()));
     }
 
     /**
-     ** @notice The seller offering the deal.
+     ** @notice Get the seller offering the deal.
      ** @return address of seller offering the deal
      */
     function seller() public view override returns (address) {
@@ -123,8 +124,8 @@ contract FXDeal is Ownable, Deal {
     }
 
     /**
-     ** @notice The number of seconds the deal has remaining before it cannot be executed
-     ** @return Number of seconds before deal cannot be executed.
+     ** @notice Get the number of seconds the deal has remaining before it cannot be executed
+     ** @return Number of seconds the deal has to live.
      */
     function timeToLive() public view override returns (uint256) {
         uint256 timeInSecondsRemaining = 0;

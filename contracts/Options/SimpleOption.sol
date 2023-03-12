@@ -19,6 +19,7 @@ import "../stable-coins/ERC20StableCoin.sol";
 contract SimpleOption is OptionContract {
     uint256 _notional;
     uint256 _strike;
+    uint256 _updatetime;
     RefernceLevel _referenceLevel;
     RefernceLevel _fxReferenceLevel;
 
@@ -94,10 +95,11 @@ contract SimpleOption is OptionContract {
         onlyBuyerOrSeller
         returns (uint256)
     {
-        if (_strike > _referenceLevel.getPrice()) {
+        int256 price = _referenceLevel.getVerifiedValue();
+        if (_strike > uint256(price)) {
             return 0;
         }
-        uint256 value = (_notional * (_referenceLevel.getPrice() - _strike));
+        uint256 value = (_notional * (uint256(price) - _strike));
         return value;
     }
 
@@ -113,7 +115,8 @@ contract SimpleOption is OptionContract {
         whenNotPaused
         returns (uint256)
     {
-        return valuation() * _fxReferenceLevel.getPrice();
+        int256 price = _referenceLevel.getVerifiedValue();
+        return valuation() * uint256(price);
     }
 
     /**
