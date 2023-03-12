@@ -95,7 +95,7 @@ contract SimpleOption is OptionContract {
         onlyBuyerOrSeller
         returns (uint256)
     {
-        (int256 price, ) = _referenceLevel.getVerifiedValue();
+        int256 price = _referenceLevel.getVerifiedValue();
         if (_strike > uint256(price)) {
             return 0;
         }
@@ -115,7 +115,7 @@ contract SimpleOption is OptionContract {
         whenNotPaused
         returns (uint256)
     {
-        (int256 price, ) = _referenceLevel.getVerifiedValue();
+        int256 price = _referenceLevel.getVerifiedValue();
         return valuation() * uint256(price);
     }
 

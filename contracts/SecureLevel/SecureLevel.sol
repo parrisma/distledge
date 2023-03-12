@@ -110,11 +110,10 @@ contract SecureLevel is Ownable {
     /**
      ** @notice Get the current value and the time is was updated
      ** @return The current value
-     ** @return The timestamp of the update
      */
-    function getVerifiedValue() public view returns (int256, uint256) {
+    function getVerifiedValue() public view returns (int256) {
         require(true == _live, "SecureLevel: No value has yet been set");
-        return (_value, _lastUpdate);
+        return (_value);
     }
 
     /**

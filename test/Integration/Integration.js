@@ -52,7 +52,7 @@ const CNY_to_USD = 1.0 / USD_to_CNY;
 const USDEUR_ticker = "USDEUR";
 const USDEUR_Description = "USD to EUR Spot FX Rate"
 
-const depositQtyUSD = 10000000000; // 100.00 USD where token is in 2 DP
+const depositQtyUSD = 10000000000; // 100.00 USD where token is in 5 (five) DP
 const depositQtyEUR = depositQtyUSD * USD_to_EUR;
 const depositQtyCNY = depositQtyUSD * USD_to_CNY;
 const FXPriceDecimals = 5;
@@ -255,7 +255,7 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             equityPriceContract = await EquityPrice.connect(data_vendor).deploy(teslaTicker, teslaDescription, data_vendor.address, equityPriceDecimals);
             var { value, nonce, sig } = await signedValue(data_vendor, teslaPriceFeb2023);
             await equityPriceContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
-            const [actualValue, actualUpdated] = await equityPriceContract.connect(data_vendor).getVerifiedValue();
+            actualValue = await equityPriceContract.connect(data_vendor).getVerifiedValue();
             expect(actualValue).to.equal(teslaPriceFeb2023);
             console.log("Equity price feed created with ticker " + await equityPriceContract.getTicker() + " with initial price " + actualValue / (10 ** equityPriceDecimals));
 
@@ -263,7 +263,7 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             fxPriceContract = await FXPrice.connect(data_vendor).deploy(USDEUR_ticker, USDEUR_Description, data_vendor.address, FXPriceDecimals);
             var { value, nonce, sig } = await signedValue(data_vendor, USD_to_EUR * (10 ** FXPriceDecimals));
             await fxPriceContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
-            const [actualFXValue, actualFXUpdated] = await fxPriceContract.connect(data_vendor).getVerifiedValue();
+            const actualFXValue = await fxPriceContract.connect(data_vendor).getVerifiedValue();
             expect(actualFXValue).to.equal(USD_to_EUR * (10 ** FXPriceDecimals));
             console.log("FX price feed created with ticker " + await fxPriceContract.getTicker() + " with initial price " + actualFXValue / (10 ** FXPriceDecimals));
 
@@ -277,7 +277,7 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             premium = 2; // of the premiumToken.
             settlementToken = erc20CNYStableCoin;
             notional = 100; // 1.00 to 2-DP
-            var [teslaPrice, teslaPriceUpdate] = await equityPriceContract.connect(data_vendor).getVerifiedValue();
+            var teslaPrice = await equityPriceContract.connect(data_vendor).getVerifiedValue();
             strike = ((teslaPrice / (10 ** equityPriceDecimals)) - premium) * (10 ** equityPriceDecimals);
 
             simpleOption = await SimpleOption.connect(option_seller).deploy(uniqueOptionId,
@@ -332,21 +332,21 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             ** As buyer, value the option and then exercise to collect settlement amount if > 0
             */
             const decimals = Number(await equityPriceContract.getDecimals());
-            var [teslaPrice, teslaPriceUpdate] = await equityPriceContract.connect(data_vendor).getVerifiedValue();
+            var teslaPrice = await equityPriceContract.connect(data_vendor).getVerifiedValue();
             expect(await simpleOption.connect(option_buyer).valuation()).to.equal(Math.max(0, notional * (teslaPrice - strike)));
             console.log("\nTesla has current price of [" + Number(teslaPrice) + "]");
             console.log("simpleOption has valuation [" + Number(await simpleOption.valuation()) + "]");
 
             var { value, nonce, sig } = await signedValue(data_vendor, Number(teslaPrice) - (15 * (10 ** decimals)));
             await equityPriceContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
-            var [teslaPrice, teslaPriceUpdate] = await equityPriceContract.connect(data_vendor).getVerifiedValue();
+            var teslaPrice = await equityPriceContract.connect(data_vendor).getVerifiedValue();
             console.log("\nTesla price drops by 20 to [" + Number(teslaPrice) + "]");
             expect(await simpleOption.connect(option_buyer).valuation()).to.equal(0);
             console.log("simpleOption has new valuation of [" + Number(await simpleOption.valuation()) + "]");
 
             var { value, nonce, sig } = await signedValue(data_vendor, Number(teslaPrice) + (16 * (10 ** decimals)));
             await equityPriceContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
-            var [teslaPrice, teslaPriceUpdate] = await equityPriceContract.connect(data_vendor).getVerifiedValue();
+            var teslaPrice = await equityPriceContract.connect(data_vendor).getVerifiedValue();
             console.log("\nTesla price increases by 16 to " + Number(teslaPrice));
             console.log("simpleOption has new valuation of [" + Number(await simpleOption.valuation()) + "]");
             expect(await simpleOption.connect(option_buyer).valuation()).to.equal(Math.max(0, notional * (Number(teslaPrice) - strike)));

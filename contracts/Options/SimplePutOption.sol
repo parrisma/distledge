@@ -82,7 +82,7 @@ contract SimplePutOption is SimpleOption {
         onlyBuyerOrSeller
         returns (uint256)
     {
-        (int256 price, ) = _referenceLevel.getVerifiedValue();
+        int256 price = _referenceLevel.getVerifiedValue();
         if (_strike < uint256(price)) {
             return 0;
         }

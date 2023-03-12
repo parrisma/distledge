@@ -1,6 +1,6 @@
 const {
-  time,
-  loadFixture,
+    time,
+    loadFixture,
 } = require("@nomicfoundation/hardhat-network-helpers");
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
@@ -118,9 +118,7 @@ describe("Secure Level Test Suite", function () {
                 .withArgs(value);
 
             // Value and timestamp should be current.
-            const [actualValue, actualUpdated] = await secureLevel.connect(other_source).getVerifiedValue();
-            expect(actualValue).to.equal(value);
-            expect(actualUpdated).to.be.lessThan(Math.floor(Date.now()));
+            expect(await secureLevel.connect(other_source).getVerifiedValue()).to.equal(value);
 
             // All values should align after set and be live.
             [symbol_, description_, live_, value_, lastUpdate_] = await secureLevel.getDetails()
@@ -159,9 +157,7 @@ describe("Secure Level Test Suite", function () {
             secretMessageHash = ethers.utils.keccak256(secretMessage);
             var sig = await secure_source.signMessage(ethers.utils.arrayify(secretMessageHash));
             await secureLevel.connect(secure_source).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
-            const [actualValue, actualUpdated] = await secureLevel.connect(other_source).getVerifiedValue();
-            expect(actualValue).to.equal(value);
-            expect(actualUpdated).to.be.lessThan(Math.floor(Date.now()));
+            expect(await secureLevel.connect(other_source).getVerifiedValue()).to.equal(value);
         })
 
         it("Greater than equal zero", async function () {
@@ -184,18 +180,14 @@ describe("Secure Level Test Suite", function () {
             secretMessageHash = ethers.utils.keccak256(secretMessage);
             var sig = await secure_source.signMessage(ethers.utils.arrayify(secretMessageHash));
             await secureLevel.connect(secure_source).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
-            var [actualValue, actualUpdated] = await secureLevel.connect(other_source).getVerifiedValue();
-            expect(actualValue).to.equal(value);
-            expect(actualUpdated).to.be.lessThan(Math.floor(Date.now()));
+            expect(await secureLevel.connect(other_source).getVerifiedValue()).to.equal(value);
 
             value = 1;
             secretMessage = ethers.utils.solidityPack(["uint256", "uint256"], [value, nonce]);
             secretMessageHash = ethers.utils.keccak256(secretMessage);
             var sig = await secure_source.signMessage(ethers.utils.arrayify(secretMessageHash));
             await secureLevel.connect(secure_source).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
-            [actualValue, actualUpdated] = await secureLevel.connect(other_source).getVerifiedValue();
-            expect(actualValue).to.equal(value);
-            expect(actualUpdated).to.be.lessThan(Math.floor(Date.now()));
+            expect(await secureLevel.connect(other_source).getVerifiedValue()).to.equal(value);
         })
     })
 });
