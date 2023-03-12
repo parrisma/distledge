@@ -28,16 +28,18 @@ describe("Simple Option Test Suite", function () {
   // ERC20StableCoin
   let premiumToken; // ERC20USDStableCoin
   let settlementToken; // ERC20CNYStableCoin
-  let mockAggregator;
+  // let mockAggregator;
   let equityPrice;
   let fxPrice;
-  let simpleOption;
+  // let simpleOption;
+  let SimpleOption;
 
   const premium = 10;
   const notional = 100;
   const strike = 1000;
   const defaultTokenBalance = 10000000000000;
 
+  // Setup a contract based on premium in USD, settile in CNY
   beforeEach(async function () {
     // Get accounts
     [
@@ -48,6 +50,7 @@ describe("Simple Option Test Suite", function () {
       option_buyer,
     ] = await ethers.getSigners();
 
+    // Setup premium and settlement tokens
     const ERC20USDStableCoin = await ethers.getContractFactory(
       "ERC20USDStableCoin"
     );
@@ -61,10 +64,10 @@ describe("Simple Option Test Suite", function () {
       stable_coin_issuer
     ).deploy();
 
+    // Setup deposite of seller & buyer accounts
     const EscrowCurrenyAccount = await ethers.getContractFactory(
       "EscrowCurrenyAccount"
     );
-
     const escrowPremiumTokenAccount = await EscrowCurrenyAccount.connect(
       escrow_manager
     ).deploy(premiumToken.address, 1);
@@ -88,7 +91,6 @@ describe("Simple Option Test Suite", function () {
         defaultTokenBalance,
         transId2
       );
-
     const escrowSettlementTokenAccount = await EscrowCurrenyAccount.connect(
       escrow_manager
     ).deploy(settlementToken.address, 1);
@@ -115,29 +117,117 @@ describe("Simple Option Test Suite", function () {
         transId4
       );
 
-    mockAggregator = await ethers.getContractFactory("MockV3Aggregator");
-    const mockForexSource = await mockAggregator
+    // Initialize forex rate and price feed
+    var { EquityPrice, FXPrice } = await deployPriceContracts();
+    fxPrice = await FXPrice.connect(data_vendor).deploy(
+      "USDCNY",
+      "USD/CNY Forex",
+      data_vendor.address,
+      genericDecimals
+    );
+    var { value, nonce, sig } = await signedValue(
+      data_vendor,
+      forexRate * 10 ** genericDecimals
+    );
+    await fxPrice
       .connect(data_vendor)
-      .deploy(genericDecimals, forexRate * 10 ** genericDecimals);
-    const FXPrice = await ethers.getContractFactory("FXPrice");
-    fxPrice = await FXPrice.deploy("USD/CNY", mockForexSource.address); // fxReferenceLevel_ instance
+      .setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+    const actualFXValue = await fxPrice.connect(data_vendor).getVerifiedValue();
+    console.log(
+      "FX price feed created with ticker " +
+        (await fxPrice.getTicker()) +
+        " with initial rate " +
+        actualFXValue / 10 ** genericDecimals
+    );
+
+    equityPrice = await EquityPrice.connect(data_vendor).deploy(
+      "Underlying",
+      "Underlying price",
+      data_vendor.address,
+      genericDecimals
+    );
+    var { value, nonce, sig } = await signedValue(data_vendor, 1000);
+    await equityPrice
+      .connect(data_vendor)
+      .setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+    const actualValue = await equityPrice
+      .connect(data_vendor)
+      .getVerifiedValue();
+    console.log(
+      "Underlying price feed created with ticker " +
+        (await equityPrice.getTicker()) +
+        " with initial price " +
+        actualValue / 10 ** genericDecimals
+    );
+    SimpleOption = await ethers.getContractFactory("SimpleOption");
   });
+
+  async function signedValue(signer, value) {
+    // Create a signed message
+    const nonce = Math.floor(Date.now());
+    const secretMessage = ethers.utils.solidityPack(
+      ["uint256", "uint256"],
+      [value, nonce]
+    );
+    const secretMessageHash = ethers.utils.keccak256(secretMessage);
+    const sig = await signer.signMessage(
+      ethers.utils.arrayify(secretMessageHash)
+    ); // Now signed as secure source
+    return { value, nonce, sig };
+  }
+
+  async function deployPriceContracts() {
+    // Deploy Library
+    const VerifySignerLib = await ethers.getContractFactory("VerifySigner");
+    const verifySignerLib = await VerifySignerLib.deploy();
+    await verifySignerLib.deployed();
+
+    const EquityPrice = await ethers.getContractFactory("EquityPrice", {
+      libraries: {
+        VerifySigner: verifySignerLib.address,
+      },
+    });
+
+    const FXPrice = await ethers.getContractFactory("FXPrice", {
+      libraries: {
+        VerifySigner: verifySignerLib.address,
+      },
+    });
+
+    return { EquityPrice, FXPrice };
+  }
+
+  async function updateEquityPrice(
+    _equityPriceSource,
+    _data_vendor,
+    _underlyingPrice
+  ) {
+    var { value, nonce, sig } = await signedValue(
+      _data_vendor,
+      _underlyingPrice
+    );
+    await _equityPriceSource
+      .connect(_data_vendor)
+      .setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+    const actualValue = await _equityPriceSource
+      .connect(_data_vendor)
+      .getVerifiedValue();
+    console.log(
+      "Underlying price with ticker " +
+        (await _equityPriceSource.getTicker()) +
+        " updated to " +
+        actualValue / 10 ** genericDecimals
+    );
+  }
 
   it("Valuate contract as positive return when spot is greater than strike", async function () {
     // Value of the contract is notional * (underlying price - strike price)
     const underlyingPrice = 1200;
-    const mockUnderlyingPriceSource = await mockAggregator
-      .connect(data_vendor)
-      .deploy(genericDecimals, underlyingPrice);
-    const EquityPrice = await ethers.getContractFactory("EquityPrice");
-    equityPrice = await EquityPrice.deploy(
-      "Underlying",
-      mockUnderlyingPriceSource.address
-    ); // referenceLevel_ instance
+
+    await updateEquityPrice(equityPrice, data_vendor, underlyingPrice);
 
     const uniqueId = crypto.randomUUID();
-    const SimpleOption = await ethers.getContractFactory("SimpleOption");
-    simpleOption = await SimpleOption.connect(option_seller).deploy(
+    var simpleOption = await SimpleOption.connect(option_seller).deploy(
       uniqueId,
       "SimpleOption",
       "SimpleOption",
@@ -170,18 +260,22 @@ describe("Simple Option Test Suite", function () {
   it("Valuate contract as zero when spot is equal to strike", async function () {
     // Value of the contract is notional * (underlying price - strike price)
     const underlyingPrice = 1000;
-    const mockUnderlyingPriceSource = await mockAggregator
+    var { value, nonce, sig } = await signedValue(data_vendor, underlyingPrice);
+    await equityPrice
       .connect(data_vendor)
-      .deploy(genericDecimals, underlyingPrice);
-    const EquityPrice = await ethers.getContractFactory("EquityPrice");
-    equityPrice = await EquityPrice.deploy(
-      "Underlying",
-      mockUnderlyingPriceSource.address
-    ); // referenceLevel_ instance
+      .setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+    const actualValue = await equityPrice
+      .connect(data_vendor)
+      .getVerifiedValue();
+    console.log(
+      "Underlying price with ticker " +
+        (await equityPrice.getTicker()) +
+        " changed to " +
+        actualValue / 10 ** genericDecimals
+    );
 
     const uniqueId = crypto.randomUUID();
-    const SimpleOption = await ethers.getContractFactory("SimpleOption");
-    simpleOption = await SimpleOption.connect(option_seller).deploy(
+    var simpleOption = await SimpleOption.connect(option_seller).deploy(
       uniqueId,
       "SimpleOption",
       "SimpleOption",
@@ -212,18 +306,22 @@ describe("Simple Option Test Suite", function () {
   it("Valuate contract as zero when spot is lower than strike", async function () {
     // Value of the contract is notional * (underlying price - strike price)
     const underlyingPrice = 800;
-    const mockUnderlyingPriceSource = await mockAggregator
+    var { value, nonce, sig } = await signedValue(data_vendor, underlyingPrice);
+    await equityPrice
       .connect(data_vendor)
-      .deploy(genericDecimals, underlyingPrice);
-    const EquityPrice = await ethers.getContractFactory("EquityPrice");
-    equityPrice = await EquityPrice.deploy(
-      "Underlying",
-      mockUnderlyingPriceSource.address
-    ); // referenceLevel_ instance
+      .setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+    const actualValue = await equityPrice
+      .connect(data_vendor)
+      .getVerifiedValue();
+    console.log(
+      "Underlying price with ticker " +
+        (await equityPrice.getTicker()) +
+        " changed to " +
+        actualValue / 10 ** genericDecimals
+    );
 
     const uniqueId = crypto.randomUUID();
-    const SimpleOption = await ethers.getContractFactory("SimpleOption");
-    simpleOption = await SimpleOption.connect(option_seller).deploy(
+    var simpleOption = await SimpleOption.connect(option_seller).deploy(
       uniqueId,
       "SimpleOption",
       "SimpleOption",
