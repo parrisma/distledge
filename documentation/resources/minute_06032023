@@ -1,6 +1,0 @@
-1. Fix the V3 aggregator issue -- Mark
-2. Fix the stable share and Apple stable share contracts -- Ivan
-3. Add uni test for stable share and apple stable share contracts -- Min
-4. Enrich the SimpleOption unit tests -- Jamie
-5. Add unit tests for fxPrice -- Kelvin
-6. Write our own way of introducing prices instead of using chainelinks -- Jason

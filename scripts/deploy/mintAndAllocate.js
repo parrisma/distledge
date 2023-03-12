@@ -1,6 +1,19 @@
 const crypto = require('crypto');
 const { depositQtyUSD, depositQtyEUR, depositQtyCNY } = require("./testConstants.js");
 
+/**
+ * 
+ * @param {*} hre Hardhat runtime environment
+ * @param {account address} escrow_manager - The account that is used to create and manage Escrow contracts
+ * @param {account address} option_buyer - The account that will act as the option buyer in the tests
+ * @param {account address} option_seller - The account that will act as the option seller in the tests
+ * @param {deployed EscrowAccount contract} escrowUSDCurrenyAccount - The deployed USD Escrow Account
+ * @param {deployed EscrowAccount contract} escrowEURCurrenyAccount - The deployed EUR Escrow Account
+ * @param {deployed EscrowAccount contract} escrowCNYCurrenyAccount - The deployed CNY Escrow Account
+ * @param {deployed stable coin contract} erc20USDStableCoin - The deployed USD stable coin
+ * @param {deployed stable coin contract} erc20EURStableCoin - The deployed EUR stable coin
+ * @param {deployed stable coin contract} erc20CNYStableCoin - The deployed CNY stable coin
+ */
 async function mintAndAllocate(hre,
     escrow_manager,
     option_buyer,
