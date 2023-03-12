@@ -9,6 +9,7 @@ const { fxRateDecimals,
 
 /**
  * Deploy a secure off chain FXRate
+ * @param {json} sharedConfig JSON Object in while all shared config is held
  * @param {*} hre Hardhat runtime environment
  * @param {Address} price_issuer The Signer account to use to issue level
  * @param {Address} secure_source The Signer account to use to maintain the level
@@ -41,12 +42,13 @@ async function deployFXRate(hre, price_issuer, secure_source, ticker, descriptio
 
 /**
  * Deploy a test set of FX Rates.
+ * @param {json} sharedConfig JSON Object in while all shared config is held
  * @param {*} hre Hardhat runtime environment
  * @param {Address} price_issuer The Signer account to use to issue level
  * @param {Address} secure_source The Signer account to use to maintain the level
  * @returns {Address} Addresses of the deployed equity price contracts
  */
-async function deployFXRates(hre, price_issuer, secure_source) {
+async function deployFXRates(sharedConfig, hre, price_issuer, secure_source) {
 
     console.log("\nCreate FX Rate contracts");
 
@@ -56,9 +58,24 @@ async function deployFXRates(hre, price_issuer, secure_source) {
     const [UsdCnyFXRateContract] = await deployFXRate(hre, price_issuer, secure_source, USDCNY_ticker, USDCNY_Description, fxRateDecimals, USD_to_CNY * (10 ** fxRateDecimals));
     console.log("FX Rate feed created with ticker " + await UsdCnyFXRateContract.getTicker() + " with initial price " + Number(await UsdCnyFXRateContract.getVerifiedValue()) / (10 ** await UsdCnyFXRateContract.getDecimals()));
 
+    sharedConfig.UsdEurFXRateContract = UsdEurFXRateContract.address;
+    sharedConfig.UsdCnyFXRateContract = UsdCnyFXRateContract.address;
+
+    return [UsdEurFXRateContract, UsdCnyFXRateContract]
+}
+
+/**
+ * 
+ * @param {json} sharedConfig JSON Object in while all shared config is held
+ * @returns The FX rate contracts loaded from the shared config details.
+ */
+async function loadFXRatesFromAddresses(sharedConfig) {
+    const UsdEurFXRateContract = await hre.ethers.getContractAt("EquityPrice", sharedConfig.UsdEurFXRateContract);
+    const UsdCnyFXRateContract = await hre.ethers.getContractAt("EquityPrice", sharedConfig.UsdCnyFXRateContract);
     return [UsdEurFXRateContract, UsdCnyFXRateContract]
 }
 
 module.exports = {
-    deployFXRates
+    deployFXRates,
+    loadFXRatesFromAddresses
 }
