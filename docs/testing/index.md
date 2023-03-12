@@ -24,4 +24,4 @@
 
 This will find all patterns `FXdeal` in the files under test directory and run those tests e.g.
 
-![Test File that will match FXDeal](../documentation/resources/run-test-example.png)
+![Test File that will match FXDeal](../docs/resources/run-test-example.png)
