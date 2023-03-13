@@ -14,9 +14,6 @@ const { ethers } = require("hardhat");
  * TODO: Complete test's use Integration.js for inspiration
  */
 
-const genericDecimals = 2;
-const forexRate = 0.1;
-
 describe("Simple Option Test Suite", function () {
   // Define accounts
   let escrow_manager;
@@ -28,16 +25,116 @@ describe("Simple Option Test Suite", function () {
   // ERC20StableCoin
   let premiumToken; // ERC20USDStableCoin
   let settlementToken; // ERC20CNYStableCoin
-  // let mockAggregator;
+  // Price sources
   let equityPrice;
   let fxPrice;
-  // let simpleOption;
+  // Option factory
   let SimpleOption;
 
+  const genericDecimals = 2;
+  const forexRate = 0.1;
   const premium = 10;
   const notional = 100;
+  const underlyingPrice = 1000;
   const strike = 1000;
   const defaultTokenBalance = 10000000000000;
+
+  it("Valuate contract as positive return when spot is greater than strike", async function () {
+    // Value of the contract is notional * (underlying price - strike price)
+    const currentUnderlyingPrice = 1200;
+    await updateEquityPrice(currentUnderlyingPrice);
+    var simpleOption = await getSimpleOption();
+
+    expect(await simpleOption.connect(option_buyer).valuation()).to.equal(
+      20000
+    );
+  });
+
+  it("Valuate contract as zero when spot is equal to strike", async function () {
+    // Value of the contract is notional * (underlying price - strike price)
+    const currentUnderlyingPrice = 1000;
+    await updateEquityPrice(currentUnderlyingPrice);
+    var simpleOption = await getSimpleOption();
+
+    expect(await simpleOption.connect(option_buyer).valuation()).to.equal(0);
+  });
+
+  it("Valuate contract as zero when spot is lower than strike", async function () {
+    // Value of the contract is notional * (underlying price - strike price)
+    const currentUnderlyingPrice = 800;
+    await updateEquityPrice(currentUnderlyingPrice);
+    var simpleOption = await getSimpleOption();
+
+    expect(await simpleOption.connect(option_buyer).valuation()).to.equal(0);
+  });
+
+  it("Settlement amount changed when underlying price changed", async function () {
+    // Settlement amount of the contract is value * underlying price
+    const currentUnderlyingPrice = 1200;
+    await updateEquityPrice(currentUnderlyingPrice);
+    var simpleOption = await getSimpleOption();
+
+    expect(await simpleOption.connect(option_seller).valuation()).to.equal(
+      20000
+    );
+    expect(
+      await simpleOption.connect(option_seller).settlementAmount()
+    ).to.equal(24000000);
+  });
+
+  it("Balance of seller account reduced after exercise", async function () {
+    var sellerBalanceBeforeExercise = await settlementToken.balanceOf(
+      option_seller.address
+    );
+
+    const currentUnderlyingPrice = 1200;
+    await updateEquityPrice(currentUnderlyingPrice);
+    var simpleOption = await getSimpleOption();
+
+    var settlementAmount = await simpleOption
+      .connect(option_seller)
+      .settlementAmount();
+    await settlementToken
+      .connect(option_seller)
+      .approve(simpleOption.contractAddress(), settlementAmount);
+    console.log("Settlement amount for SimpleOption is " + settlementAmount);
+
+    expect(await simpleOption.connect(option_buyer).exercise()).to.emit(
+      simpleOption,
+      "Exercised"
+    );
+    // Settlement amount of the contract is value * underlying price(24000000)
+    expect(await settlementToken.balanceOf(option_seller.address)).to.equal(
+      Number(sellerBalanceBeforeExercise) - Number(settlementAmount)
+    );
+  });
+
+  it("Balance of buyer account increased after exercise", async function () {
+    var buyerBalanceBeforeExercise = await settlementToken.balanceOf(
+      option_buyer.address
+    );
+
+    const currentUnderlyingPrice = 1200;
+    await updateEquityPrice(currentUnderlyingPrice);
+    var simpleOption = await getSimpleOption();
+
+    var settlementAmount = await simpleOption
+      .connect(option_seller)
+      .settlementAmount();
+    await settlementToken
+      .connect(option_seller)
+      .approve(simpleOption.contractAddress(), settlementAmount);
+    console.log("Settlement amount for SimpleOption is " + settlementAmount);
+
+    expect(await simpleOption.connect(option_buyer).exercise()).to.emit(
+      simpleOption,
+      "Exercised"
+    );
+    // Settlement amount of the contract is value * underlying price(24000000)
+    expect(await settlementToken.balanceOf(option_buyer.address)).to.equal(
+      Number(buyerBalanceBeforeExercise) + Number(settlementAmount)
+    );
+  });
 
   // Setup a contract based on premium in USD, settile in CNY
   beforeEach(async function () {
@@ -146,7 +243,7 @@ describe("Simple Option Test Suite", function () {
       data_vendor.address,
       genericDecimals
     );
-    var { value, nonce, sig } = await signedValue(data_vendor, 1000);
+    var { value, nonce, sig } = await signedValue(data_vendor, underlyingPrice);
     await equityPrice
       .connect(data_vendor)
       .setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
@@ -197,83 +294,40 @@ describe("Simple Option Test Suite", function () {
     return { EquityPrice, FXPrice };
   }
 
-  async function updateEquityPrice(
-    _equityPriceSource,
-    _data_vendor,
-    _underlyingPrice
-  ) {
-    var { value, nonce, sig } = await signedValue(
-      _data_vendor,
-      _underlyingPrice
-    );
-    await _equityPriceSource
-      .connect(_data_vendor)
+  async function updateEquityPrice(underlyingPrice) {
+    var { value, nonce, sig } = await signedValue(data_vendor, underlyingPrice);
+    await equityPrice
+      .connect(data_vendor)
       .setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
-    const actualValue = await _equityPriceSource
-      .connect(_data_vendor)
+    const actualValue = await equityPrice
+      .connect(data_vendor)
       .getVerifiedValue();
     console.log(
       "Underlying price with ticker " +
-        (await _equityPriceSource.getTicker()) +
+        (await equityPrice.getTicker()) +
         " updated to " +
         actualValue / 10 ** genericDecimals
     );
   }
 
-  it("Valuate contract as positive return when spot is greater than strike", async function () {
-    // Value of the contract is notional * (underlying price - strike price)
-    const underlyingPrice = 1200;
-
-    await updateEquityPrice(equityPrice, data_vendor, underlyingPrice);
-
-    const uniqueId = crypto.randomUUID();
-    var simpleOption = await SimpleOption.connect(option_seller).deploy(
-      uniqueId,
-      "SimpleOption",
-      "SimpleOption",
-      option_buyer.address,
-      premium,
-      premiumToken.address,
-      settlementToken.address,
-      notional,
-      strike,
-      equityPrice.address,
-      fxPrice.address
+  async function updateForexRate(currentForexRate) {
+    var { value, nonce, sig } = await signedValue(
+      data_vendor,
+      currentForexRate
     );
-    const [tokenSymbol, premiumAmount] = await simpleOption.premium();
-    await premiumToken
-      .connect(option_buyer)
-      .approve(await simpleOption.contractAddress(), premiumAmount);
-
-    await premiumToken.allowance(
-      option_buyer.address,
-      simpleOption.contractAddress()
-    );
-    // Buyer approve premium transfer, so we can do the deal.
-    simpleOption.connect(option_buyer).acceptTerms();
-
-    expect(await simpleOption.connect(option_buyer).valuation()).to.equal(
-      20000
-    );
-  });
-
-  it("Valuate contract as zero when spot is equal to strike", async function () {
-    // Value of the contract is notional * (underlying price - strike price)
-    const underlyingPrice = 1000;
-    var { value, nonce, sig } = await signedValue(data_vendor, underlyingPrice);
-    await equityPrice
+    await fxPrice
       .connect(data_vendor)
       .setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
-    const actualValue = await equityPrice
-      .connect(data_vendor)
-      .getVerifiedValue();
+    const actualFXValue = await fxPrice.connect(data_vendor).getVerifiedValue();
     console.log(
-      "Underlying price with ticker " +
-        (await equityPrice.getTicker()) +
-        " changed to " +
-        actualValue / 10 ** genericDecimals
+      "Forex rate with ticker " +
+        (await fxPrice.getTicker()) +
+        " updated to " +
+        actualFXValue / 10 ** genericDecimals
     );
+  }
 
+  async function getSimpleOption() {
     const uniqueId = crypto.randomUUID();
     var simpleOption = await SimpleOption.connect(option_seller).deploy(
       uniqueId,
@@ -298,54 +352,7 @@ describe("Simple Option Test Suite", function () {
       simpleOption.contractAddress()
     );
     // Buyer approve premium transfer, so we can do the deal.
-    simpleOption.connect(option_buyer).acceptTerms();
-
-    expect(await simpleOption.connect(option_buyer).valuation()).to.equal(0);
-  });
-
-  it("Valuate contract as zero when spot is lower than strike", async function () {
-    // Value of the contract is notional * (underlying price - strike price)
-    const underlyingPrice = 800;
-    var { value, nonce, sig } = await signedValue(data_vendor, underlyingPrice);
-    await equityPrice
-      .connect(data_vendor)
-      .setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
-    const actualValue = await equityPrice
-      .connect(data_vendor)
-      .getVerifiedValue();
-    console.log(
-      "Underlying price with ticker " +
-        (await equityPrice.getTicker()) +
-        " changed to " +
-        actualValue / 10 ** genericDecimals
-    );
-
-    const uniqueId = crypto.randomUUID();
-    var simpleOption = await SimpleOption.connect(option_seller).deploy(
-      uniqueId,
-      "SimpleOption",
-      "SimpleOption",
-      option_buyer.address,
-      premium,
-      premiumToken.address,
-      settlementToken.address,
-      notional,
-      strike,
-      equityPrice.address,
-      fxPrice.address
-    );
-    const [tokenSymbol, premiumAmount] = await simpleOption.premium();
-    await premiumToken
-      .connect(option_buyer)
-      .approve(await simpleOption.contractAddress(), premiumAmount);
-
-    await premiumToken.allowance(
-      option_buyer.address,
-      simpleOption.contractAddress()
-    );
-    // Buyer approve premium transfer, so we can do the deal.
-    simpleOption.connect(option_buyer).acceptTerms();
-
-    expect(await simpleOption.connect(option_buyer).valuation()).to.equal(0);
-  });
+    await simpleOption.connect(option_buyer).acceptTerms();
+    return simpleOption;
+  }
 });
