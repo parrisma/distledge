@@ -19,7 +19,7 @@ contract ERC20AppleStableShare is ERC20StableShare {
         )
     {}
 
-    function unitsPerToken() public override returns (uint256) {
+    function unitsPerToken() public pure override returns (uint256) {
         return 10 ** _2decimal_places;
     }
 }
