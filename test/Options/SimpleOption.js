@@ -14,9 +14,6 @@ const { ethers } = require("hardhat");
  * TODO: Complete test's use Integration.js for inspiration
  */
 
-const genericDecimals = 2;
-const forexRate = 0.1;
-
 describe("Simple Option Test Suite", function () {
   // Define accounts
   let escrow_manager;
@@ -34,6 +31,8 @@ describe("Simple Option Test Suite", function () {
   // Option factory
   let SimpleOption;
 
+  const genericDecimals = 2;
+  const forexRate = 0.1;
   const premium = 10;
   const notional = 100;
   const underlyingPrice = 1000;
