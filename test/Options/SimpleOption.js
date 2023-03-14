@@ -11,7 +11,7 @@ const { ethers } = require("hardhat");
 /**
  * This suite tests the SimpleOption
  *
- * TODO: Complete test's use Integration.js for inspiration
+ * TODO: Resolve calculation with decimals
  */
 
 describe("Simple Option Test Suite", function () {
@@ -69,7 +69,7 @@ describe("Simple Option Test Suite", function () {
   });
 
   it("Settlement amount changed when underlying price changed", async function () {
-    // Settlement amount of the contract is value * underlying price
+    // Settlement amount of the contract is value * forex rate
     const currentUnderlyingPrice = 1200;
     await updateEquityPrice(currentUnderlyingPrice);
     var simpleOption = await getSimpleOption();
@@ -79,7 +79,24 @@ describe("Simple Option Test Suite", function () {
     );
     expect(
       await simpleOption.connect(option_seller).settlementAmount()
-    ).to.equal(24000000);
+    ).to.equal(200000);
+  });
+
+  it("Settlement amount changed when forex rate changed", async function () {
+    // Settlement amount of the contract is value * forex rate
+    const currentUnderlyingPrice = 1200; // value of the contract will change according to price change
+    await updateEquityPrice(currentUnderlyingPrice);
+
+    const currentForexRate = 0.2 * 10 ** genericDecimals;
+    await updateForexRate(currentForexRate);
+    var simpleOption = await getSimpleOption();
+
+    expect(await simpleOption.connect(option_seller).valuation()).to.equal(
+      20000
+    );
+    expect(
+      await simpleOption.connect(option_seller).settlementAmount()
+    ).to.equal(400000);
   });
 
   it("Balance of seller account reduced after exercise", async function () {
@@ -103,8 +120,12 @@ describe("Simple Option Test Suite", function () {
       simpleOption,
       "Exercised"
     );
-    // Settlement amount of the contract is value * underlying price(24000000)
-    expect(await settlementToken.balanceOf(option_seller.address)).to.equal(
+    // Settlement amount of the contract is value * forex rate(200000)
+    var sellerBalanceAfterExercise = Number(
+      await settlementToken.balanceOf(option_seller.address)
+    );
+    console.log("Current balance of seller " + sellerBalanceAfterExercise);
+    expect(sellerBalanceAfterExercise).to.equal(
       Number(sellerBalanceBeforeExercise) - Number(settlementAmount)
     );
   });
@@ -130,8 +151,12 @@ describe("Simple Option Test Suite", function () {
       simpleOption,
       "Exercised"
     );
-    // Settlement amount of the contract is value * underlying price(24000000)
-    expect(await settlementToken.balanceOf(option_buyer.address)).to.equal(
+    // Settlement amount of the contract is value * forex rate(200000)
+    var buyerBalanceAfterExercise = Number(
+      await settlementToken.balanceOf(option_buyer.address)
+    );
+    console.log("Current balance of buyer " + buyerBalanceAfterExercise);
+    expect(buyerBalanceAfterExercise).to.equal(
       Number(buyerBalanceBeforeExercise) + Number(settlementAmount)
     );
   });
