@@ -84,7 +84,7 @@ contract SimpleOption is OptionContract {
 
     /**
      ** @notice Return the current valuation of the contract
-     ** @return the current value of the contract in the nominated ERC20 Token.
+     ** @return the current value of the contract in the nominated underlying equity
      */
     function valuation()
         public
@@ -116,7 +116,11 @@ contract SimpleOption is OptionContract {
         returns (uint256)
     {
         int256 fxRate = _fxReferenceLevel.getVerifiedValue();
-        return valuation() * uint256(fxRate);
+        return
+            (valuation() * uint256(fxRate) * _settlementToken.unitsPerToken()) /
+            (10 **
+                (_fxReferenceLevel.getDecimals() +
+                    _referenceLevel.getDecimals())); // TODO underflow checking and handling
     }
 
     /**
