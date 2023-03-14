@@ -115,8 +115,8 @@ contract SimpleOption is OptionContract {
         whenNotPaused
         returns (uint256)
     {
-        int256 price = _fxReferenceLevel.getVerifiedValue();
-        return valuation() * uint256(price);
+        int256 fxRate = _fxReferenceLevel.getVerifiedValue();
+        return valuation() * uint256(fxRate);
     }
 
     /**
