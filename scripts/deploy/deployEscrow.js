@@ -1,5 +1,6 @@
 /**
  * Deploy the Escrow contracts and link to the already deployed stable coins
+ * @param {json} sharedConfig JSON Object in while all shared config is held
  * @param {*} hre Hardhat runtime environment
  * @param {Address} escrow_manager The Signer account to use to issue the escrow accounts
  * @param {contract} usdStableCoin The USD Stable Coin Contract
@@ -7,7 +8,7 @@
  * @param {contract} cnyStableCoin The CNY Stable Coin Contract
  * @returns {Address} Of the Escrow contracts that were deployed USD, EUR, CNY
  */
-async function deployAndLinkEscrowAccounts(hre, escrow_manager, usdStableCoin, eurStableCoin, cnyStableCoin) {
+async function deployAndLinkEscrowAccounts(sharedConfig, hre, escrow_manager, usdStableCoin, eurStableCoin, cnyStableCoin) {
 
     const onePercentReserve = 1;
 
@@ -29,6 +30,9 @@ async function deployAndLinkEscrowAccounts(hre, escrow_manager, usdStableCoin, e
     await escrowCNYCurrenyAccount.connect(escrow_manager).unPause();
     console.log("Escrow Account created and managing token [" + await escrowCNYCurrenyAccount.managedTokenAddress() + "] for [" + await escrowCNYCurrenyAccount.managedTokenName() + "]");
 
+    sharedConfig.usdEscrowAccount = escrowUSDCurrenyAccount.address;
+    sharedConfig.eurEscrowAccount = escrowEURCurrenyAccount.address;
+    sharedConfig.cnyEscrowAccount = escrowCNYCurrenyAccount.address;
 
     return [escrowUSDCurrenyAccount, escrowEURCurrenyAccount, escrowCNYCurrenyAccount]
 
