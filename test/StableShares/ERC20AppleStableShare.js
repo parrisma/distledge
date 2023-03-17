@@ -30,11 +30,11 @@ describe("ERC20AppleStableShare", function () {
         });
         it("Should have the token name as AppleStableShare", async function () {
             const { appleSS } = await loadFixture(deployERC20AppleStableShare);
-            expect(await appleSS.token_name()).to.equal("AppleStableShare");
+            expect(await appleSS.name()).to.equal("AppleStableShare");
         });
         it("Should have the token symbol as AppleSS", async function () {
             const { appleSS } = await loadFixture(deployERC20AppleStableShare);
-            expect(await appleSS.token_symbol()).to.equal("AppleSS");
+            expect(await appleSS.symbol()).to.equal("AppleSS");
         });
         it("Should have zero total at inception", async function () {
             const { appleSS } = await loadFixture(deployERC20AppleStableShare);
