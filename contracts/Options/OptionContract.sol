@@ -8,7 +8,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-import "../stable-coins/ERC20StableCoin.sol";
+import "../StableCoins/ERC20StableCoin.sol";
 
 /**
  ** @author Mark Parris

@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./OptionContract.sol";
 import "../DataFeeder/ReferenceLevel.sol";
-import "../stable-coins/ERC20StableCoin.sol";
+import "../StableCoins/ERC20StableCoin.sol";
 
 /**
  ** @author Mark Parris
