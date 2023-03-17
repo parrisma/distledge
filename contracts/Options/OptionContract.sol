@@ -132,25 +132,6 @@ abstract contract OptionContract is Ownable, Pausable {
     }
 
     /**
-     ** @notice Accept the terms by paying the premium
-     ** @return true when done.
-     */
-    function adjustMargin() public virtual onlySeller whenLive returns (bool) {
-        require(
-            _premiumToken.allowance(_buyer, address(this)) >= _premium,
-            "OptionContract: Buyer must pre-authorise transfer of premium"
-        );
-
-        _premiumToken.transferFrom(_buyer, address(this), _premium);
-
-        _alive = true;
-
-        emit DealStruck(_buyer, _seller, _uniqueId);
-
-        return (true);
-    }
-
-    /**
      ** @notice Settle the given amount
      ** @return true when done.
      */
