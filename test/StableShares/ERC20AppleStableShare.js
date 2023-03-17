@@ -20,9 +20,9 @@ describe("ERC20AppleStableShare", function () {
     }
 
     describe("Initialization phase of Stable shares", function () {
-        it("Should have zero in the unit per token", async function () {
+        it("Should have 100 in the unit per token", async function () {
             const { appleSS } = await loadFixture(deployERC20AppleStableShare);
-            expect(await appleSS.unitsPerToken()).to.equal(0);
+            expect(await appleSS.unitsPerToken()).to.equal(100);
         });
     });
 
