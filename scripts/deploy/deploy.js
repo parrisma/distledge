@@ -15,12 +15,22 @@ const { deployAndLinkEscrowAccounts } = require("./deployEscrow.js");
 const { deployEquityPrices } = require("./deployEquityPrices.js");
 const { deployFXRates } = require("./deployFXRates.js");
 const { mintAndAllocate } = require("./mintAndAllocate.js");
+const { namedAccounts } = require("./accounts.js");
+const { sharedConfig, cleanUpSharedConfig, writeSharedConfig } = require("./sharedConfig.js");
+
 
 async function main() {
+
+  console.log(`\n========================================\n`);
+  console.log(` D E P L O Y  T E S T  C O N T R A C T S`);
+  console.log(`\n========================================\n`);
+
+  cleanUpSharedConfig();
+
   /**
    * Get and allocate account roles on the network
    */
-  [escrow_manager, stable_coin_issuer, data_vendor, option_seller, option_buyer] = await hre.ethers.getSigners();
+  [escrow_manager, stable_coin_issuer, data_vendor, option_seller, option_buyer] = await namedAccounts();
 
   console.log(`\nAccount Addresses`);
   console.log(`Escrow Manager     : [${escrow_manager.address}]`);
@@ -32,22 +42,22 @@ async function main() {
   /**
   ** Deploy the three stable coin currencies.
   */
-  const [usdStableCoin, eurStableCoin, cnyStableCoin] = await deployStableCoins(hre, stable_coin_issuer);
+  const [usdStableCoin, eurStableCoin, cnyStableCoin] = await deployStableCoins(sharedConfig, hre, stable_coin_issuer);
 
   /**
   ** Deploy the three Escrow accounts and take ownership of the three stable coins.
   */
-  const [usdEscrowAccount, eurEscrowAccount, cnyEscrowAccount] = await deployAndLinkEscrowAccounts(hre, escrow_manager, usdStableCoin, eurStableCoin, cnyStableCoin);
+  const [usdEscrowAccount, eurEscrowAccount, cnyEscrowAccount] = await deployAndLinkEscrowAccounts(sharedConfig, hre, escrow_manager, usdStableCoin, eurStableCoin, cnyStableCoin);
 
   /**
   ** Deploy & initialize the equity prices
   */
-  const [teslaEquityPriceContract] = await deployEquityPrices(hre, data_vendor, data_vendor); // data_vendor is owner and source
+  const [teslaEquityPriceContract] = await deployEquityPrices(sharedConfig, hre, data_vendor, data_vendor); // data_vendor is owner and source
 
   /**
   ** Deploy & initialize the FX Rates
   */
-  const [UsdEurFXRateContract, UsdCnyFXRateContract] = await deployFXRates(hre, data_vendor, data_vendor); // data_vendor is owner and source
+  const [UsdEurFXRateContract, UsdCnyFXRateContract] = await deployFXRates(sharedConfig, hre, data_vendor, data_vendor); // data_vendor is owner and source
 
   /**
   ** Initial coin minting and allocation to trading accounts.
@@ -63,6 +73,10 @@ async function main() {
     erc20EURStableCoin,
     erc20CNYStableCoin);
 
+  /**
+   * Save the shared config for other test services to read.
+   */
+  writeSharedConfig();
 }
 
 // We recommend this pattern to be able to use async/await everywhere
