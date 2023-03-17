@@ -15,8 +15,8 @@ const { deployAndLinkEscrowAccounts } = require("./deployEscrow.js");
 const { deployEquityPrices } = require("./deployEquityPrices.js");
 const { deployFXRates } = require("./deployFXRates.js");
 const { mintAndAllocate } = require("./mintAndAllocate.js");
-const { namedAccounts } = require("./accounts.js");
-const { sharedConfig, cleanUpSharedConfig, writeSharedConfig } = require("./sharedConfig.js");
+const { namedAccounts } = require("../lib/accounts.js");
+const { sharedConfig, cleanUpSharedConfig, writeSharedConfig } = require("../lib/sharedConfig.js");
 
 
 async function main() {

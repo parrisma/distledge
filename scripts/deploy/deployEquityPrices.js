@@ -1,4 +1,4 @@
-const { signedValue } = require("./signedValue.js");
+const { signedValue } = require("../lib/signedValue.js");
 const { equityPriceDecimals,
     teslaPriceFeb2023,
     teslaTicker,

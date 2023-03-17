@@ -1,4 +1,4 @@
-const { signedValue } = require("./signedValue.js");
+const { signedValue } = require("../lib/signedValue.js");
 const { fxRateDecimals,
     USD_to_EUR,
     USD_to_CNY,
@@ -70,8 +70,8 @@ async function deployFXRates(sharedConfig, hre, price_issuer, secure_source) {
  * @returns The FX rate contracts loaded from the shared config details.
  */
 async function loadFXRatesFromAddresses(sharedConfig) {
-    const UsdEurFXRateContract = await hre.ethers.getContractAt("EquityPrice", sharedConfig.UsdEurFXRateContract);
-    const UsdCnyFXRateContract = await hre.ethers.getContractAt("EquityPrice", sharedConfig.UsdCnyFXRateContract);
+    const UsdEurFXRateContract = await hre.ethers.getContractAt("FXPrice", sharedConfig.UsdEurFXRateContract);
+    const UsdCnyFXRateContract = await hre.ethers.getContractAt("FXPrice", sharedConfig.UsdCnyFXRateContract);
     return [UsdEurFXRateContract, UsdCnyFXRateContract]
 }
 
