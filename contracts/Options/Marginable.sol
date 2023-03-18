@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import "../stable-coins/ERC20StableCoin.sol";
+import "../StableCoins/ERC20StableCoin.sol";
 import "../DataFeeder/ReferenceLevel.sol";
 
 abstract contract Marginable {
