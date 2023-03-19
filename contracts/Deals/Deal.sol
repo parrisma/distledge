@@ -5,12 +5,15 @@ pragma solidity ^0.8.17;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-/*
- ** All Deals must implment this abstract interface so they can be managed by the Exchange contract
+/**
+ ** @notice An interface definition for deals where there is an exchange of value based on
+ ** @notice ERC20 tokens.
+ **
+ ** @dev All Deals must implment this abstract interface so they can be managed by the Exchange contract
  */
 abstract contract Deal is Ownable {
     /**
-     ** @notice Execute the deal (one shot)
+     ** @notice Execute the deal (one shot) 
      */
     function execute() public virtual returns (bool);
 

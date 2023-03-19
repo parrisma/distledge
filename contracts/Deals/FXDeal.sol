@@ -8,15 +8,7 @@ import "../StableCoins/ERC20StableCoin.sol";
 import "./Deal.sol";
 
 /**
- ** @author Mark Parris
  ** @title A Token FX deal (token swap) quanity of sellToken swapped for quantity * rate of buyToken
- ** @param _seller - address of seller who will get quantity * rate of buyToken
- ** @param _buyer - address of buyer who will get quantoty of sellToken
- ** @param _sellToken - the token being sold
- ** @param _buyToken - the token being bought at given rate
- ** @param _quantity - the quantity of the deal
- ** @param _rate - the rate of the FX as a % where 100% = 100% and 55% = 55 etc.
- ** @param _timeToLive - the time at which deal expires and cannot be executed
  */
 contract FXDeal is Ownable, Deal {
     address private _seller;
@@ -27,6 +19,18 @@ contract FXDeal is Ownable, Deal {
     uint256 private _rate;
     uint256 private _timeToLive;
 
+    /**
+     ** @notice Construct an FXDeal contract
+     **
+     ** @notice all contracts have a default time to live of 2 mins.
+     **
+     ** @param _seller - address of seller who will get quantity * rate of buyToken
+     ** @param _buyer - address of buyer who will get quantoty of sellToken
+     ** @param _sellToken - the token being sold
+     ** @param _buyToken - the token being bought at given rate
+     ** @param _quantity - the quantity of the deal
+     ** @param _rate - the rate of the FX as a % where 100% = 100% and 55% = 55 etc.
+     */
     constructor(
         address seller_,
         address buyer_,
@@ -50,9 +54,9 @@ contract FXDeal is Ownable, Deal {
     }
 
     /**
-     ** @notice If buyer and seller have approved allowance to the deal, execute the token swap at given quantity and rate. This is one shot, so if successful execute cannot be called more than once.
+     ** @notice If buyer and seller have approved allowance to the deal, execute the token swap at given quantity and rate. 
+     ** @notice This is one shot, so if successful execute cannot be called more than once.
      ** @return true if deal done.
-     ** ToDo: extend so the deal has a 'time to live' limit, such that deal is only valid for a specified time.
      */
     function execute() public override onlyOwner returns (bool) {
         require(timeToLive() > 0, "FXDeal: Deal has expired");

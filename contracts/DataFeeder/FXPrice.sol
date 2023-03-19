@@ -10,7 +10,7 @@ import "./ReferenceLevel.sol";
  */
 contract FXPrice is RefernceLevel {
     /**
-     ** @notice Construct an EquityPrice contract
+     ** @notice Construct an FX Rate contract
      **
      ** @param ticker_ The price ticker by which the FX rate price is known
      ** @param description_ A human readble (short) description of the FX rate price e.g. 'USD to CNY Spot rate'
