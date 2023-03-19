@@ -20,6 +20,14 @@ abstract contract RefernceLevel is Ownable, SecureLevel {
     uint256 internal _decimals;
     string internal _ticker;
 
+    /**
+     ** @notice Construct an EquityPrice contract
+     **
+     ** @param ticker_ The price ticker by which the reference level is known
+     ** @param description_ A human readble (short) description of the reference level
+     ** @param priceFeedAddress_ The wallet / Account address that will be required to make the secure / signed reference level updates
+     ** @param decimals_ The number of decimal that the reference level is quoted to.
+     */
     constructor(
         string memory ticker_,
         string memory description_,
