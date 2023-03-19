@@ -21,7 +21,7 @@ abstract contract ERC20StableShare is Ownable, ERC20Pausable {
         string memory isinCode_,
         string memory token_symbol_,
         string memory token_name_
-    ) ERC20(_token_name, _token_symbol) Ownable() Pausable() {
+    ) ERC20(token_name_, token_symbol_) Ownable() Pausable() {
         _decimals = decimals_;
         _isinCode = isinCode_;
         _token_symbol = token_symbol_;
