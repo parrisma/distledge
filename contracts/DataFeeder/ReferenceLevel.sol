@@ -9,8 +9,12 @@ import "../SecureLevel/SecureLevel.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
- ** @author Mark Parris
  ** @title Implements protocol for off chain reference levels
+ **
+ ** @notice Implements SecureLevel which means that all updates must come from a signed source
+ ** @notice where the signed source is set by the creator of the contract.
+ **
+ ** @dev This is an abstract class that is intended for use creating specalised off-chain value sources.
  */
 abstract contract RefernceLevel is Ownable, SecureLevel {
     uint256 internal _decimals;
