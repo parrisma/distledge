@@ -2,4 +2,4 @@
 
 ## Running the test UI
 
-[Test UI](./start-ui)
+Read here for how to start and use the [test UI](./start-ui)

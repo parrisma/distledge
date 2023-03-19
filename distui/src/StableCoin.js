@@ -13,7 +13,7 @@ class StableCoin extends Component {
         this.supply = "pending";
     }
 
-    setDetail(symbol, description, supply){
+    setDetail(symbol, description, supply) {
         this.symbol = symbol;
         this.description = description;
         this.supply = supply;
