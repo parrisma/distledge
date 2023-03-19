@@ -1,5 +1,5 @@
 # How To
 
-## Link to MetaMask
+## Running the test UI
 
-![Under Construction](../resources/under-construction.jpg)
+[Test UI](./start-ui)

@@ -1,4 +1,4 @@
-node_modules
+**/node_modules
 .env
 coverage
 coverage.json
@@ -8,9 +8,7 @@ bin
 yarn.lock
 
 # Hardhat files
-cache
-artifacts
+**/cache
+**/artifacts
 
 deployments
-
-**/distui

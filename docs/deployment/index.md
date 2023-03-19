@@ -15,6 +15,7 @@ In one window
 ```text
 npx hardhat node
 ```
+
 This will start the network named ```hardhat``` as defined in ```hardhat.config.js```
 
 In another window, you can deploy contracts to that running now network. **However** to connect to this network you need to use ```--network localhost``` to connect to the running instance. Or the name of the host and port where the stand alone network was started.
