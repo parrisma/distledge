@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  ** @notice An interface definition for deals where there is an exchange of value based on
  ** @notice ERC20 tokens.
  **
- ** @dev All Deals must implment this abstract interface so they can be managed by the Exchange contract
+ ** @dev All Deals must implment this interface so they can be managed by the Exchange contract
  */
 abstract contract Deal is Ownable {
     /**

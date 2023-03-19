@@ -10,36 +10,53 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+/**
+ ** @title Stable Coin Token interface.
+ */
 abstract contract ERC20StableCoin is Ownable, ERC20Pausable {
     uint8 private _decimals;
     string private _isoCcyCode;
 
-    constructor(uint8 decimals_, string memory isoCcyCode_)
-        Ownable()
-        Pausable()
-    {
+    /**
+     ** @param decimals_ The number of decimals the token is quoted to
+     ** @param isoCcyCode_ The ISO curreny code the token represents
+     */
+    constructor(
+        uint8 decimals_,
+        string memory isoCcyCode_
+    ) Ownable() Pausable() {
         _decimals = decimals_;
         _isoCcyCode = isoCcyCode_;
     }
 
-    // All minting is to the owner account, the minted funds are then transfered out
+    /**
+     ** @notice Mint the given number of tokens and assign to Token owner
+     ** @param The number of tokens to mint.
+     */
     function mint(uint256 amount) public onlyOwner whenNotPaused {
         super._mint(owner(), amount);
     }
 
-    // All burning is from the owner account, based on return (transfer in) of funds
+    /**
+     ** @notice Burn the given number of tokens
+     ** @param amount The number of tokens to burn (must be less than total supply)
+     */
     function burn(uint256 amount) public onlyOwner whenNotPaused {
         super._burn(owner(), amount);
     }
 
-    // Pause all change activity on the contract
+    /**
+     ** @notice Pause all change activity on the contract
+     */
     function pause() public onlyOwner {
         if (!paused()) {
             super._pause();
         }
     }
 
-    // Un pause all change activity on the contract
+    /**
+     ** @notice Un pause all change activity on the contract
+     */
     function uppause() public onlyOwner {
         if (paused()) {
             super._unpause();
@@ -47,27 +64,26 @@ abstract contract ERC20StableCoin is Ownable, ERC20Pausable {
     }
 
     /**
-     * Two decimal places as this is a current representation
+     ** @notice Get the number of decimals to which the token is quoted
+     ** @return decimals places to which token is quoted
      */
     function decimals() public view virtual override returns (uint8) {
         return _decimals;
     }
 
     /**
-     * The number of units per one of the Token
+     ** @notice The number of units for a single token
+     ** @return units per token
      */
     function unitsPerToken() public view virtual returns (uint256) {
-        return 10**decimals();
+        return 10 ** decimals();
     }
 
     /**
-     * The ISO Curreny Code that the stable coin is backed by
+     ** @notice Get the ISO ccy code of the token
+     ** @return ISOCode of teh token
      */
     function isoCcyCode() public view virtual returns (string memory) {
         return _isoCcyCode;
-    }
-
-    function ping() public view virtual returns (address) {
-        return msg.sender;
     }
 }

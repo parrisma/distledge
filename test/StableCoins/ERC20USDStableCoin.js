@@ -51,11 +51,6 @@ describe("ERC20USDStableCoin", function () {
             const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
             expect(await erc20USDStableCoin.isoCcyCode()).to.equal("USD");
         });
-
-        it("Should return message address when ping contract", async function () {
-            const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
-            expect(await erc20USDStableCoin.ping()).to.equal(owner.address);
-        });
     });
 
     describe("MintAndBurn", function () {
@@ -98,7 +93,7 @@ describe("ERC20USDStableCoin", function () {
             // after minting we have supply scaled by number of decimals
             expect(await erc20USDStableCoin.totalSupply()).to.equal(mintQty1);
             expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(mintQty1);
-            
+
             await erc20USDStableCoin.connect(owner).mint(mintQty2)
             // after minting we have supply scaled by number of decimals
             expect(await erc20USDStableCoin.totalSupply()).to.equal(mintQty3);
