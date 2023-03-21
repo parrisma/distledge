@@ -4,6 +4,9 @@ pragma solidity ^0.8.17;
 
 import "./ERC20StableCoin.sol";
 
+/**
+ ** @title Stable Coin Token for USD
+ */
 contract ERC20USDStableCoin is ERC20StableCoin {
     string private constant _token_symbol = "USDS";
     string private constant _token_name = "USDStableCoin";

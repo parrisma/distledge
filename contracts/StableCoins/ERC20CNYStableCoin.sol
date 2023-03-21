@@ -4,6 +4,9 @@ pragma solidity ^0.8.17;
 
 import "./ERC20StableCoin.sol";
 
+/**
+ ** @title Stable Coin Token for Chinese Yuan
+ */
 contract ERC20CNYStableCoin is ERC20StableCoin {
     string private constant _token_symbol = "CNYS";
     string private constant _token_name = "CNYStableCoin";
