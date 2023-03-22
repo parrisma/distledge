@@ -14,3 +14,6 @@ yarn.lock
 **/artifacts
 
 deployments
+
+## Contract constants used by UI
+**/frontend/constants/*.json

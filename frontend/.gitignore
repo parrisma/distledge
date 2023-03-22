@@ -30,3 +30,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# Contract addresses ets stored as JSON config
+**/constants/*.json

@@ -1,5 +1,12 @@
 # Start Test UI
 
+## Install Yarn
+
+```cd .\frontend```
+Install [Hardhat](https://www.npmjs.com/package/hardhat)
+Install [yarn](https://classic.yarnpkg.com/en/docs/install#windows-stable)
+```cd ..```
+
 ## Start the Hardhat node
 
 We first need to run up a stand alone Hardhat test network, as below. To do this we must start a new command console and change directory into the project root. 
@@ -46,7 +53,7 @@ The network name ```Hardhat```, is free text as a name for these settings, howev
 ![Metamask Network](../resources/meta-mask-add-hardhat.png)
 
 
-## Import the Test accounts from teh Hardhat Test network.
+## Import the Test accounts from the Hardhat Test network.
 
 You will need to import the test accounts from the hardhat test network started above. You will need the private keys of the accounts shown in the console when the network was started.
 
@@ -62,8 +69,31 @@ You will need to import the test accounts from the hardhat test network started 
 
 ![Metamask Network](../resources/metamask-account-import-3.png)
 
-## Start the UI
+## Export abi and contract address
 
-Still work in progress, but there is an example of loading an Equity price. 
+The UI needs to know about the contracts that have been deployed to the test network. SO teh command below make the deployment addresses and ```abi``` files available to the UI.
 
-```App.js``` uses ```ethers``` to find and load the deployed equityPrice contract and then dumps the getDetails() call into console.log(). To see this you will need to right click the window that pops up when you launch the react App, and then right click and ```inspect``` and find the Console tab.
+```bash
+yarn hardhat run ./scripts/exportToFrontEnd\updateFrontEnd.js --network localhost
+```
+
+## Install
+
+
+```bash
+cd ./frontend/
+yarn
+```
+
+## Run UI
+
+```bash
+yarn dev
+```
+
+## Using the Front-end
+
+1. In Chrome navigate to [http://localhost:3000/](http://localhost:3000/)
+2. right click ```inspect``` to open up the developer window so you can see the console output and other in browser debugging support while developing the UI
+3. Hit the connect wallet button and login to your Metamask or other wallet service
+4. You should see the Equity price update and you are off an running.
