@@ -6,11 +6,11 @@
  * by scripts\deploy\deploy.js
  */
 const hre = require("hardhat");
-const { namedAccounts } = require("../deploy/accounts.js");
+const { namedAccounts } = require("../lib/accounts.js");
 const { loadEquityPricesFromAddresses } = require("../deploy/deployEquityPrices.js");
 const { loadFXRatesFromAddresses } = require("../deploy/deployFXRates.js");
-const { loadSharedConfig, sharedConfig } = require("../deploy/sharedConfig.js");
-const { signedValue } = require("../deploy/signedValue.js");
+const { loadSharedConfig, sharedConfig } = require("../lib/sharedConfig.js");
+const { signedValue } = require("../lib/signedValue.js");
 const timeout = 1000;
 
 /**
