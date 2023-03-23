@@ -21,7 +21,7 @@ export default function Contract(props) {
     contractABI = equityPriceABI;
   }
   if (contractType === "fx") {
-    contractABI = equityPriceABI;
+    contractABI = FXPriceABI;
   }
 
   const dispatch = useNotification();
