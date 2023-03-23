@@ -45,7 +45,7 @@ class EquityPrice extends Component {
         (async () => {
             if (this.equityPrice != null) { // Can only get details if Equity Contract has been loaded.
                 const [_ticker, _description, _live, _value, _lastUpdate] = await this.equityPrice.getDetails();
-                this.setState({ symbol: String(_ticker), description: String(_description), value: String(Number(_value)) });
+                this.setState({ symbol: String(_ticker), description: String(_description), value: String(Number(_value)/100) }); //TODO div value by decimals.
             } else {
                 this.setState({ symbol: 'N/A', description: 'Equity Not Loaded', value: 'NA' });
             }
@@ -59,14 +59,14 @@ class EquityPrice extends Component {
                     <p>Equity Ticker : [{this.state.symbol}]</p>
                     <p>Equity Description : [{this.state.description}]</p>
                     <p>Equity Value : [{this.state.value}]</p>
-                    <button onClick={() => this.updateEquity()}>Update Equity Details</button>
+                    <button className="button" onClick={() => this.updateEquity()}>Update Equity Details</button>
                 </div>
             );
         } else {
             return (
                 <div>
                     <p>Click to Load Equity : [{this.addr}]</p>
-                    <button onClick={() => this.loadEquity()}>Load Equity Contract</button>
+                    <button className="button" onClick={() => this.loadEquity()}>Load Equity Contract</button>
                 </div>
             );
         }

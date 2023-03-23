@@ -1,0 +1,19 @@
+.div-table {
+    display: table;         
+    width: auto;         
+    border-spacing: 5px;
+  }
+  .div-table-row {
+    display: table-row;
+    width: auto;
+    clear: both;
+  }
+  .div-table-col-fix {
+    float: left; 
+    display: table-column;         
+    width: 100px;         
+  }
+  .div-table-col {
+    float: left; 
+    display: table-column;         
+  }
