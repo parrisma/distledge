@@ -2,9 +2,8 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "@/styles/Home.module.css";
 import Header from "../components/Header";
-import Price from "../components/Price";
+import EscrowManager from "../components/EscrowManager";
 import { addressConfig } from "../constants";
-import OutputWindow from "../components/OutputWindow";
 
 export default function Home() {
   return (
@@ -17,19 +16,9 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Header />
-        <Price contract={{
-          address: addressConfig["teslaEquityPriceContract"]
-            ? addressConfig["teslaEquityPriceContract"]
-            : null,
-          type: "equity"
-        }} />
-        <Price contract={{
-          address: addressConfig["UsdEurFXRateContract"]
-            ? addressConfig["UsdEurFXRateContract"]
-            : null,
-          type: "fx"
-        }} />
-        <OutputWindow outputContent="The console started..."/>
+        <EscrowManager contract={{address: addressConfig["usdEscrowAccount"]
+            ? addressConfig["usdEscrowAccount"]
+            : null}}/>
       </div>
     </>
   );
