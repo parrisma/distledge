@@ -3,10 +3,18 @@ import Image from "next/image";
 import styles from "@/styles/Home.module.css";
 import Header from "../components/Header";
 import Price from "../components/Price";
+import EscrowManager from "../components/EscrowManager";
 import { addressConfig } from "../constants";
 import OutputWindow from "../components/OutputWindow";
+import { useState } from "react";
 
 export default function Home() {
+  const [activeTab, SetActiveTab] = useState("Price");
+  const handleTabChange = (tab) => {
+    console.log(tab);
+    SetActiveTab(tab);
+  };
+
   return (
     <>
       <div className={styles.container}>
@@ -16,20 +24,39 @@ export default function Home() {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Header />
-        <Price contract={{
-          address: addressConfig["teslaEquityPriceContract"]
-            ? addressConfig["teslaEquityPriceContract"]
-            : null,
-          type: "equity"
-        }} />
-        <Price contract={{
-          address: addressConfig["UsdEurFXRateContract"]
-            ? addressConfig["UsdEurFXRateContract"]
-            : null,
-          type: "fx"
-        }} />
-        <OutputWindow outputContent="The console started..."/>
+        <Header onHeaderTabChange={handleTabChange} />
+        {activeTab === "Price" ? (
+          <div>
+            <Price
+              contract={{
+                address: addressConfig["teslaEquityPriceContract"]
+                  ? addressConfig["teslaEquityPriceContract"]
+                  : null,
+                type: "equity",
+              }}
+            />
+            <Price
+              contract={{
+                address: addressConfig["UsdEurFXRateContract"]
+                  ? addressConfig["UsdEurFXRateContract"]
+                  : null,
+                type: "fx",
+              }}
+            />
+          </div>
+        ) : null}
+        {activeTab === "Escrow" ? (
+          <div>
+            <EscrowManager
+              contract={{
+                address: addressConfig["usdEscrowAccount"]
+                  ? addressConfig["usdEscrowAccount"]
+                  : null,
+              }}
+            />
+          </div>
+        ) : null}
+        <OutputWindow outputContent="The console started..." />
       </div>
     </>
   );
