@@ -13,6 +13,11 @@
     display: table-column;         
     width: 100px;         
   }
+  .div-table-col-fix-wide{
+    float: left; 
+    display: table-column;         
+    width: 330px;         
+  }
   .div-table-col {
     float: left; 
     display: table-column;         
