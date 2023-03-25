@@ -14,6 +14,8 @@ abstract contract Marginable {
     ERC20StableCoin internal _contractToken;
     RefernceLevel internal _fxRate;
 
+    uint internal _decimal = 4; // Decimal places of the initial margin and maintenance margin. Default to 4.
+
     constructor(
         address broker,
         ERC20StableCoin marginToken,
@@ -41,13 +43,13 @@ abstract contract Marginable {
 
     event MarginAdjusted(uint256 amount, uint256 currentAmount);
 
-    function calInitialMargin(
+    function calculateInitialMargin(
         uint256 contractValue
     ) public virtual returns (uint256) {
         return margin(contractValue, _initialMargin);
     }
 
-    function calMaintenanceMargin(
+    function calculateMaintenanceMargin(
         uint256 contractValue
     ) public virtual returns (uint256) {
         return margin(contractValue, _maintenanceMargin);
@@ -65,6 +67,11 @@ abstract contract Marginable {
         return currentMargin;
     }
 
+    /**
+     * TODO Rename and refine the method.
+     * Should not be marked only broker, as
+     * Buyer and Seller may need to make margin payments depending on the contract value. If the contract goes against buyer they may need to place more margin - if it goes in their favour the broker may need to return some margin - otherwise buyer is over exposed to credit risk of seller
+     */
     function adjustMargin(
         address client,
         uint256 amount
