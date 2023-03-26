@@ -4,8 +4,10 @@
 
 ```text
 cd .\frontend
+```
 Install [Hardhat](https://www.npmjs.com/package/hardhat)
 Install [yarn](https://classic.yarnpkg.com/en/docs/install#windows-stable)
+```
 cd ..
 ```
 
