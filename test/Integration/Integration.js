@@ -142,18 +142,18 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             */
             const ERC20USDStableCoin = await ethers.getContractFactory("ERC20USDStableCoin");
             erc20USDStableCoin = await ERC20USDStableCoin.connect(stable_coin_issuer).deploy();
-            expect(await erc20USDStableCoin.isoCcyCode()).to.equal("USD");
-            console.log("\nStable coin token for ISO Ccy [" + await erc20USDStableCoin.isoCcyCode() + "] created");
+            expect(await erc20USDStableCoin.assetCode()).to.equal("USD");
+            console.log("\nStable coin token for ISO Ccy [" + await erc20USDStableCoin.assetCode() + "] created");
 
             const ERC20CNYStableCoin = await ethers.getContractFactory("ERC20CNYStableCoin");
             erc20CNYStableCoin = await ERC20CNYStableCoin.connect(stable_coin_issuer).deploy();
-            expect(await erc20CNYStableCoin.isoCcyCode()).to.equal("CNY");
-            console.log("Stable coin token for ISO Ccy [" + await erc20CNYStableCoin.isoCcyCode() + "] created");
+            expect(await erc20CNYStableCoin.assetCode()).to.equal("CNY");
+            console.log("Stable coin token for ISO Ccy [" + await erc20CNYStableCoin.assetCode() + "] created");
 
             const ERC20EURStableCoin = await ethers.getContractFactory("ERC20EURStableCoin");
             erc20EURStableCoin = await ERC20EURStableCoin.connect(stable_coin_issuer).deploy();
-            expect(await erc20EURStableCoin.isoCcyCode()).to.equal("EUR");
-            console.log("Stable coin token for ISO Ccy [" + await erc20EURStableCoin.isoCcyCode() + "] created");
+            expect(await erc20EURStableCoin.assetCode()).to.equal("EUR");
+            console.log("Stable coin token for ISO Ccy [" + await erc20EURStableCoin.assetCode() + "] created");
 
         });
 

@@ -5,7 +5,7 @@ pragma solidity ^0.8.17;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-import "../StableCoins/ERC20StableCoin.sol";
+import "../StableAsset/ERC20StableAsset.sol";
 
 /**
  ** @author Mark Parris
@@ -25,15 +25,15 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         uint256 _balance
     );
 
-    ERC20StableCoin private _erc20StableCoin;
+    ERC20StableAsset private _erc20StableCoin;
     uint256 _physicalBalance;
     uint256 _reserverPercent;
     uint256 _unitsPerToken;
 
-    constructor(address erc20StableCoinAddr_, uint8 reserverPercent_)
-        Ownable()
-        Pausable()
-    {
+    constructor(
+        address erc20StableCoinAddr_,
+        uint8 reserverPercent_
+    ) Ownable() Pausable() {
         super._pause(); // Started in Paused state to allow for full validation of Token ownership.
 
         require(
@@ -42,7 +42,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         );
         _reserverPercent = reserverPercent_;
 
-        _erc20StableCoin = ERC20StableCoin(erc20StableCoinAddr_);
+        _erc20StableCoin = ERC20StableAsset(erc20StableCoinAddr_);
         _unitsPerToken = _erc20StableCoin.unitsPerToken();
         _physicalBalance = 0;
 
@@ -85,7 +85,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
         return address(_erc20StableCoin);
     }
 
-     /**
+    /**
      ** @notice return the name of the token being managed
      ** @return the name of the managed token
      */
@@ -193,11 +193,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
      ** @notice Return the address of the contract instance.
      ** @return the contract instance address.
      */
-    function txfr(
-        address from,
-        address to,
-        uint256 qty
-    ) public returns (bool) {
+    function txfr(address from, address to, uint256 qty) public returns (bool) {
         _erc20StableCoin.transferFrom(from, to, qty);
         return true;
     }

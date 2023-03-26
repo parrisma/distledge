@@ -49,7 +49,7 @@ describe("ERC20USDStableCoin", function () {
 
         it("Should have iso code 'USD' for USD stable coin", async function () {
             const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
-            expect(await erc20USDStableCoin.isoCcyCode()).to.equal("USD");
+            expect(await erc20USDStableCoin.assetCode()).to.equal("USD");
         });
     });
 

@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "../StableCoins/ERC20StableCoin.sol";
+import "../StableAsset/ERC20StableAsset.sol";
 import "./Deal.sol";
 
 /**
@@ -13,8 +13,8 @@ import "./Deal.sol";
 contract FXDeal is Ownable, Deal {
     address private _seller;
     address private _buyer;
-    ERC20StableCoin private _sellToken;
-    ERC20StableCoin private _buyToken;
+    ERC20StableAsset private _sellToken;
+    ERC20StableAsset private _buyToken;
     uint256 private _quantity;
     uint256 private _rate;
     uint256 private _timeToLive;
@@ -34,8 +34,8 @@ contract FXDeal is Ownable, Deal {
     constructor(
         address seller_,
         address buyer_,
-        ERC20StableCoin sellToken_,
-        ERC20StableCoin buyToken_,
+        ERC20StableAsset sellToken_,
+        ERC20StableAsset buyToken_,
         uint256 quantity_,
         uint256 rate_
     ) Ownable() {
@@ -54,7 +54,7 @@ contract FXDeal is Ownable, Deal {
     }
 
     /**
-     ** @notice If buyer and seller have approved allowance to the deal, execute the token swap at given quantity and rate. 
+     ** @notice If buyer and seller have approved allowance to the deal, execute the token swap at given quantity and rate.
      ** @notice This is one shot, so if successful execute cannot be called more than once.
      ** @return true if deal done.
      */
@@ -86,8 +86,8 @@ contract FXDeal is Ownable, Deal {
         returns (
             address,
             address,
-            ERC20StableCoin,
-            ERC20StableCoin,
+            ERC20StableAsset,
+            ERC20StableAsset,
             uint256,
             uint256
         )
@@ -116,7 +116,7 @@ contract FXDeal is Ownable, Deal {
      ** @return The ticker symbolc as string.
      */
     function ticker() public view override returns (string memory) {
-        return (string.concat(_sellToken.isoCcyCode(), _buyToken.isoCcyCode()));
+        return (string.concat(_sellToken.assetCode(), _buyToken.assetCode()));
     }
 
     /**

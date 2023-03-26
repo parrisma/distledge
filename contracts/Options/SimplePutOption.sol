@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./SimpleOption.sol";
 import "../DataFeeder/ReferenceLevel.sol";
-import "../StableCoins/ERC20StableCoin.sol";
+import "../StableAsset/ERC20StableAsset.sol";
 
 contract SimplePutOption is SimpleOption {
     constructor(
