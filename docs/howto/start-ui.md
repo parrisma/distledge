@@ -2,10 +2,12 @@
 
 ## Install Yarn
 
-```cd .\frontend```
+```text
+cd .\frontend
 Install [Hardhat](https://www.npmjs.com/package/hardhat)
 Install [yarn](https://classic.yarnpkg.com/en/docs/install#windows-stable)
-```cd ..```
+cd ..
+```
 
 ## Start the Hardhat node
 

@@ -1,5 +1,5 @@
 import { useWeb3Contract } from "react-moralis";
-import { USDCoin, EURCoin, CNYCoin, addressConfig } from "../constants";
+import { StableCoinABI, addressConfig } from "../constants";
 import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
 import { useNotification } from "web3uikit";
@@ -17,13 +17,13 @@ export default function Contract(props) {
 
   var contractABI = null;
   if (contractType === "usdStableCoin") {
-    contractABI = USDCoin;
+    contractABI = StableCoinABI;
   }
   if (contractType === "eurStableCoin") {
-    contractABI = EURCoin;
+    contractABI = StableCoinABI;
   }
   if (contractType === "cnyStableCoin") {
-    contractABI = CNYCoin;
+    contractABI = StableCoinABI;
   }
 
   const dispatch = useNotification();

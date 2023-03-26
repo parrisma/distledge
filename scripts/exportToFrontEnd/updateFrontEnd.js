@@ -10,10 +10,10 @@ async function main() {
   var sharedConfig = loadSharedConfig();
   exportSharedConfigToFrontEnd(sharedConfig);
 
-  await updateAbi("ERC20USDStableCoin", sharedConfig.usdStableCoin);
-  await updateAbi("ERC20EURStableCoin", sharedConfig.eurStableCoin);
-  await updateAbi("ERC20CNYStableCoin", sharedConfig.cnyStableCoin);
+  // Only export one abi where the different contracts share the same interface
+  await updateAbi("ERC20StableCoin", sharedConfig.cnyStableCoin);
   await updateAbi("EquityPrice", sharedConfig.teslaEquityPriceContract);
+  await updateAbi("FXPrice", sharedConfig.UsdEurFXRateContract);
   await updateAbi("EscrowCurrenyAccount", sharedConfig.usdEscrowAccount);
 }
 
