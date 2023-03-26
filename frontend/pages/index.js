@@ -10,9 +10,18 @@ import { useState } from "react";
 
 export default function Home() {
   const [activeTab, SetActiveTab] = useState("Price");
+  const [log, SetLog] = useState("The console started...");
   const handleTabChange = (tab) => {
-    console.log(tab);
     SetActiveTab(tab);
+  };
+  const handleLogChange = (newlog) => {
+    const currentTime = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "numeric",
+      hour12: false,
+    });
+    SetLog(`${log}\n${currentTime}:${newlog}`);
   };
 
   return (
@@ -34,6 +43,7 @@ export default function Home() {
                   : null,
                 type: "equity",
               }}
+              onAddInfo={handleLogChange}
             />
             <Price
               contract={{
@@ -42,6 +52,7 @@ export default function Home() {
                   : null,
                 type: "fx",
               }}
+              onAddInfo={handleLogChange}
             />
           </div>
         ) : null}
@@ -56,7 +67,7 @@ export default function Home() {
             />
           </div>
         ) : null}
-        <OutputWindow outputContent="The console started..." />
+        <OutputWindow outputContent={log} />
       </div>
     </>
   );

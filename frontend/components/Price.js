@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useNotification } from "web3uikit";
 
-export default function Contract(props) {
+const Contract = (props) => {
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
   const chainId = parseInt(chainIdHex);
   let priceAddress = props.contract.address; // Price contract address passed as prop
@@ -59,8 +59,9 @@ export default function Contract(props) {
   });
 
   async function updateUI() {
-    const _decimals = Number((await getDecimals()));
-    const [_ticker, _description, _live, _value, _lastUpdate] = (await getDetails());
+    const _decimals = Number(await getDecimals());
+    const [_ticker, _description, _live, _value, _lastUpdate] =
+      await getDetails();
     setDescription(_description.toString());
     setTicker(_ticker.toString());
     setVerifiedValue(Number(_value) / _decimals);
@@ -74,6 +75,7 @@ export default function Contract(props) {
   }, [isWeb3Enabled]);
 
   const handleSuccess = async (tx) => {
+    handleButtonClick("button has been clicked.");
     handleNewNotification();
     updateUI();
   };
@@ -86,6 +88,10 @@ export default function Contract(props) {
       position: "topR",
       icon: "bell",
     });
+  };
+
+  const handleButtonClick = (info) => {
+    props.onAddInfo(info);
   };
 
   return (
@@ -135,4 +141,6 @@ export default function Contract(props) {
       )}
     </div>
   );
-}
+};
+
+export default Contract;

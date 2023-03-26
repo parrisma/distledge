@@ -8,12 +8,11 @@ import { useNotification } from "web3uikit";
 export default function EscrowManager(props) {
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
   const chainId = parseInt(chainIdHex);
-  let escrowManagerAddress = props.contract.address; 
+  let escrowManagerAddress = props.contract.address;
 
   const dispatch = useNotification();
 
-  async function updateUI() {
-  }
+  async function updateUI() {}
 
   useEffect(() => {
     if (isWeb3Enabled) {
@@ -37,6 +36,8 @@ export default function EscrowManager(props) {
   };
 
   return (
-    <div className="p-4 border-b-2 flex flex-row">You can replace whatever you want here in the Escrow component.</div>
+    <div className="p-4 border-b-2 flex flex-row">
+      You can replace whatever you want here in the Escrow component.
+    </div>
   );
 }

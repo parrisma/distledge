@@ -1,12 +1,20 @@
+import { useRef, useEffect } from "react";
 
 export default function OutputWindow(params) {
+  const outputRef = useRef(null);
+
+  useEffect(() => {
+    outputRef.current.scrollTop = outputRef.current.scrollHeight;
+  }, [params.outputContent]);
   return (
-    <nav className="p-5 border-b-2 flex flex-row justify-between items-center">
-      <div className="ml-auto py-2 px-4">
-      <div className="bg-lightblue p-10 rounded-5">
-          <p>{params.outputContent}</p>
-        </div>
+    <div className="ml-auto py-2 px-4">
+      <div
+        className="bg-black text-white p-10 rounded-5"
+        style={{ maxHeight: "200px", overflowY: "scroll" }}
+        ref={outputRef}
+      >
+        <pre>{params.outputContent}</pre>
       </div>
-    </nav>
+    </div>
   );
 }
