@@ -1,72 +1,77 @@
 import { useWeb3Contract } from "react-moralis";
-import { equityPriceABI, FXPriceABI, addressConfig } from "../constants";
+import { USDCoin, EURCoin, CNYCoin, addressConfig } from "../constants";
 import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
 import { useNotification } from "web3uikit";
 
-const Contract = (props) => {
+export default function Contract(props) {
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
   const chainId = parseInt(chainIdHex);
   let priceAddress = props.contract.address; // Price contract address passed as prop
   let contractType = props.contract.type;
 
-  const [ticker, setTicker] = useState("?");
-  const [verifiedValue, setVerifiedValue] = useState("0");
+  const [symbol, setTicker] = useState("?");
   const [decimals, setDecimals] = useState("0");
-  const [description, setDescription] = useState("?");
+  const [token_name, setTokenName] = useState("?");
+  const [token_supply, setTokenSupply] = useState("?");
 
   var contractABI = null;
-  if (contractType === "equity") {
-    contractABI = equityPriceABI;
+  if (contractType === "usdStableCoin") {
+    contractABI = USDCoin;
   }
-  if (contractType === "fx") {
-    contractABI = equityPriceABI;
+  if (contractType === "eurStableCoin") {
+    contractABI = EURCoin;
+  }
+  if (contractType === "cnyStableCoin") {
+    contractABI = CNYCoin;
   }
 
   const dispatch = useNotification();
 
   const {
-    runContractFunction: getTicker,
+    runContractFunction: getSymbol,
     isLoading,
     isFetching,
   } = useWeb3Contract({
     abi: contractABI,
     contractAddress: priceAddress,
-    functionName: "getTicker",
+    functionName: "symbol",
     params: {},
   });
 
-  const { runContractFunction: getVerifiedValue } = useWeb3Contract({
+  const {
+    runContractFunction: getTokenName,
+  } = useWeb3Contract({
     abi: contractABI,
     contractAddress: priceAddress,
-    functionName: "getVerifiedValue",
-    params: {},
-  });
-
-  const { runContractFunction: getDetails } = useWeb3Contract({
-    abi: contractABI,
-    contractAddress: priceAddress,
-    functionName: "getDetails",
+    functionName: "name",
     params: {},
   });
 
   const { runContractFunction: getDecimals } = useWeb3Contract({
     abi: contractABI,
     contractAddress: priceAddress,
-    functionName: "getDecimals",
+    functionName: "decimals",
+    params: {},
+  });
+
+
+  const { runContractFunction: getTokenSupply } = useWeb3Contract({
+    abi: contractABI,
+    contractAddress: priceAddress,
+    functionName: "totalSupply",
     params: {},
   });
 
   async function updateUI() {
-    const _decimals = Number(await getDecimals());
-    console.log({ _decimals });
-    const [_ticker, _description, _live, _value, _lastUpdate] =
-      await getDetails();
-    setDescription(_description.toString());
-    setTicker(_ticker.toString());
-    setVerifiedValue(Number(_value) / 10 ** _decimals);
+    const _decimals = Number((await getDecimals()));
+    const _symbol = (await getSymbol());
+    const _token_name = (await getTokenName());
+    const _token_supply = Number(await getTokenSupply());
+    setTicker(_symbol.toString());
     setDecimals(_decimals);
+    setTokenName(_token_name);
+    setTokenSupply(_token_supply / (10 **decimals));
   }
 
   useEffect(() => {
@@ -76,7 +81,6 @@ const Contract = (props) => {
   }, [isWeb3Enabled]);
 
   const handleSuccess = async (tx) => {
-    handleButtonClick("button has been clicked.");
     handleNewNotification();
     updateUI();
   };
@@ -84,15 +88,11 @@ const Contract = (props) => {
   const handleNewNotification = () => {
     dispatch({
       type: "info",
-      message: "Ticker Received!",
-      title: "Ticker Notification",
+      message: "Stable Token Received!",
+      title: "Token Notification",
       position: "topR",
       icon: "bell",
     });
-  };
-
-  const handleButtonClick = (info) => {
-    props.onAddInfo(info);
   };
 
   return (
@@ -101,20 +101,20 @@ const Contract = (props) => {
         <div>
           <div className="div-table">
             <div className="div-table-row">
-              <div className="div-table-col-fix">Description</div>
-              <div className="div-table-col">{description}</div>
+              <div className="div-table-col-fix">Name</div>
+              <div className="div-table-col">{token_name}</div>
             </div>
             <div className="div-table-row">
-              <div className="div-table-col-fix">Ticker</div>
-              <div className="div-table-col">{ticker}</div>
-            </div>
-            <div className="div-table-row">
-              <div className="div-table-col-fix">Price</div>
-              <div className="div-table-col">{verifiedValue}</div>
+              <div className="div-table-col-fix">Symbol</div>
+              <div className="div-table-col">{symbol}</div>
             </div>
             <div className="div-table-row">
               <div className="div-table-col-fix">Decimals</div>
               <div className="div-table-col">{decimals}</div>
+            </div>
+            <div className="div-table-row">
+              <div className="div-table-col-fix">Supply</div>
+              <div className="div-table-col">{token_supply}</div>
             </div>
             <div className="div-table-row">
               <div className="div-table-col-fix">Type</div>
@@ -125,7 +125,7 @@ const Contract = (props) => {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
             disabled={isLoading || isFetching}
             onClick={() => {
-              getTicker({
+              getSymbol({
                 onSuccess: handleSuccess,
               });
             }}
@@ -133,15 +133,13 @@ const Contract = (props) => {
             {isLoading || isFetching ? (
               <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
             ) : (
-              <div>Update price</div>
+              <div>Update Supply</div>
             )}
           </button>
         </div>
       ) : (
-        <div>Missing Price Contract Address</div>
+        <div>Missing Token Contract Address</div>
       )}
     </div>
   );
-};
-
-export default Contract;
+}

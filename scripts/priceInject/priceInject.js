@@ -90,6 +90,7 @@ async function main() {
     console.log("\nLoading instances of already deployed price and FX contracts\n");
     var teslaEquityPriceContract;
     var sharedConfig = loadSharedConfig();
+    console.log(sharedConfig);
     try {
         [teslaEquityPriceContract] = await loadEquityPricesFromAddresses(sharedConfig);
         console.log("Price contract loaded with ticker: " + await teslaEquityPriceContract.getTicker() + " and price [" + await teslaEquityPriceContract.getVerifiedValue() + "]");
