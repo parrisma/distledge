@@ -15,6 +15,8 @@ async function main() {
   await updateAbi("EquityPrice", sharedConfig.teslaEquityPriceContract);
   await updateAbi("FXPrice", sharedConfig.UsdEurFXRateContract);
   await updateAbi("EscrowCurrenyAccount", sharedConfig.usdEscrowAccount);
+  await updateAbi("FXPrice", sharedConfig.UsdEurFXRateContract)
+  // await updateAbi("FXPrice", sharedConfig.UsdCnyFXRateContract)
 }
 
 async function updateAbi(contractName, contractAddress) {
