@@ -8,6 +8,7 @@ const Header = (props) => {
   const handleButtonClick = (tabName) => {
     const newTab = tabName;
     setTab(newTab);
+    console.log(document.getElementsByTagName(tabName));
     props.onHeaderTabChange(newTab);
   };
 
@@ -20,13 +21,15 @@ const Header = (props) => {
         <div className="flex flex-row items-center">
           <button
             onClick={() => handleButtonClick("Price")}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-l"
+            className="button-tab"
+            name="Price"
           >
             Prices
           </button>
           <button
             onClick={() => handleButtonClick("Escrow")}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r"
+            className="button-tab"
+            name="Escrow"
           >
             Escrow
           </button>

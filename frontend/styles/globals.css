@@ -4,4 +4,10 @@
 
 @import "tailwindcss/utilities";
 
+@import "./app.css";
+
+@import "./buttons.css";
+
+@import "./tab.css";
+
 @import "./layout-row-col.css";

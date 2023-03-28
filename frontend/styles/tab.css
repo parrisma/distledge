@@ -1,0 +1,17 @@
+.button-tab {
+    background-color: #459444;
+    border-radius: 8px;
+    border: 1px solid white;
+    color: white;
+    padding: 10px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    transition-duration: 0.4s;
+}
+
+.button-tab:hover {
+    background-color: white;
+    color: black;
+}

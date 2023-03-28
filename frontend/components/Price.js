@@ -21,7 +21,7 @@ const Contract = (props) => {
     contractABI = equityPriceABI;
   }
   if (contractType === "fx") {
-    contractABI = equityPriceABI;
+    contractABI = FXPriceABI;
   }
 
   const dispatch = useNotification();
@@ -60,7 +60,6 @@ const Contract = (props) => {
 
   async function updateUI() {
     const _decimals = Number(await getDecimals());
-    console.log({ _decimals });
     const [_ticker, _description, _live, _value, _lastUpdate] =
       await getDetails();
     setDescription(_description.toString());
@@ -122,7 +121,7 @@ const Contract = (props) => {
             </div>
           </div>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
+            className="button"
             disabled={isLoading || isFetching}
             onClick={() => {
               getTicker({

@@ -1,11 +1,8 @@
 import Head from "next/head";
-import Image from "next/image";
 import styles from "@/styles/Home.module.css";
 import Header from "../components/Header";
-import Price from "../components/Price";
-import EscrowManager from "../components/EscrowManager";
-import StableToken from "../components/StableToken";
-import { addressConfig } from "../constants";
+import PriceTab from "../components/PricesTab";
+import EscrowTab from "../components/EscrowTab";
 import OutputWindow from "../components/OutputWindow";
 import { useState } from "react";
 
@@ -15,6 +12,7 @@ export default function Home() {
   const handleTabChange = (tab) => {
     SetActiveTab(tab);
   };
+
   const handleLogChange = (newlog) => {
     const currentTime = new Date().toLocaleTimeString([], {
       hour: "2-digit",
@@ -36,64 +34,11 @@ export default function Home() {
         </Head>
         <Header onHeaderTabChange={handleTabChange} />
         {activeTab === "Price" ? (
-          <div className="div-table">
-            <div className="div-table-row">
-              <div className="div-table-col-fix-wide">
-                <Price
-                  contract={{
-                    address: addressConfig["teslaEquityPriceContract"]
-                      ? addressConfig["teslaEquityPriceContract"]
-                      : null,
-                    type: "equity",
-                  }}
-                  onAddInfo={handleLogChange}
-                />
-              </div>
-              <div className="div-table-col-fix-wide">
-                <StableToken
-                  contract={{
-                    address: addressConfig["usdStableCoin"]
-                      ? addressConfig["usdStableCoin"]
-                      : null,
-                    type: "usdStableCoin",
-                  }}
-                />
-              </div>
-            </div>
-            <div className="div-table-row">
-              <div className="div-table-col-fix-wide">
-                <Price
-                  contract={{
-                    address: addressConfig["UsdEurFXRateContract"]
-                      ? addressConfig["UsdEurFXRateContract"]
-                      : null,
-                    type: "fx",
-                  }}
-                  onAddInfo={handleLogChange}
-                />
-              </div>
-              <div className="div-table-col-fix-wide">
-                <StableToken
-                  contract={{
-                    address: addressConfig["eurStableCoin"]
-                      ? addressConfig["eurStableCoin"]
-                      : null,
-                    type: "eurStableCoin",
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+          <PriceTab handleLogChange={handleLogChange} />
         ) : null}
         {activeTab === "Escrow" ? (
           <div>
-            <EscrowManager
-              contract={{
-                address: addressConfig["usdEscrowAccount"]
-                  ? addressConfig["usdEscrowAccount"]
-                  : null,
-              }}
-            />
+            <EscrowTab handleLogChange={handleLogChange} />
           </div>
         ) : null}
         <OutputWindow outputContent={log} />
