@@ -1,28 +1,20 @@
 import styles from "@/styles/Home.module.css";
 import Header from "../components/Header";
-import OutputWindow from "../components/OutputWindow";
+import Console from "../components/Console";
 import MainTabs from "../components/MainTabs";
+import { handleLogChange } from "@/lib/ConsoleUtil";
 import { useState } from "react";
 
 export default function Home() {
-  const [log, SetLog] = useState("The console started...");
 
-  const handleLogChange = (newlog) => {
-    const currentTime = new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "numeric",
-      hour12: false,
-    });
-    SetLog(`${log}\n${currentTime}:${newlog}`);
-  };
+  const [log, SetLog] = useState(`The console started...`);
 
   return (
     <>
       <div className={styles.container}>
-        <Header/>
-        <MainTabs handleLogChange={handleLogChange}/>
-        <OutputWindow outputContent={log} />
+        <Header />
+        <MainTabs handleLogChange={(newLogMessage) => { handleLogChange(SetLog, log, newLogMessage) }} />
+        <Console outputContent={log} />
       </div>
     </>
   );

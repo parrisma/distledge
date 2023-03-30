@@ -1,8 +1,7 @@
-import { useWeb3Contract } from "react-moralis";
-import { EscrowStableCoinABI, addressConfig } from "../constants";
 import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
 import { useNotification } from "web3uikit";
+import { getEscrowContractABI, getManagedTokenNameC, getBalanceOnHandC, getIsBalancedC } from "@/lib/EscrowWrapper";
 
 export default function Contract(props) {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
@@ -13,45 +12,12 @@ export default function Contract(props) {
     const [managed_token_name, setManagedTokenName] = useState("?");
     const [balance_on_hand, setBalanceOnHand] = useState("0");
     const [isBalanced, setIsBalanced] = useState("?");
-
-    var contractABI = null;
-    if (contractType === "EscrowAccount") {
-        contractABI = EscrowStableCoinABI;
-    } else {
-        console.log(`Unknown contract Type ${contractType}`);
-    }
-
     const dispatch = useNotification();
 
-    const {
-        runContractFunction: getManagedTokenName,
-        isLoading,
-        isFetching,
-        error
-    } = useWeb3Contract({
-        abi: contractABI,
-        contractAddress: escrowAddress,
-        functionName: "managedTokenName",
-        params: {},
-    });
-
-    const {
-        runContractFunction: getBalanceOnHand,
-    } = useWeb3Contract({
-        abi: contractABI,
-        contractAddress: escrowAddress,
-        functionName: "balanceOnHand",
-        params: {},
-    });
-
-    const {
-        runContractFunction: getIsBalanced,
-    } = useWeb3Contract({
-        abi: contractABI,
-        contractAddress: escrowAddress,
-        functionName: "isBalanced",
-        params: {},
-    });
+    const contractABI = getEscrowContractABI(contractType);
+    const [getManagedTokenName, isFetching, isLoading] = getManagedTokenNameC(escrowAddress, contractABI, true);
+    const getBalanceOnHand = getBalanceOnHandC(escrowAddress, contractABI);
+    const getIsBalanced = getIsBalancedC(escrowAddress, contractABI);
 
     async function updateUI() {
         const _managed_token_name = (await getManagedTokenName());
@@ -75,7 +41,7 @@ export default function Contract(props) {
     };
 
     const handleError = async (err) => {
-        console.log(error);
+        console.log(err);
     };
 
     const handleNewNotification = () => {

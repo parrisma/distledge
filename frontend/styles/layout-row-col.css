@@ -26,7 +26,16 @@
 .div-table-col-fix-address {
   float: left;
   display: table-column;
-  width: 400px;
+  width: 430px;
+  padding-right: 3px;
+  padding-left: 3px;
+}
+
+.div-table-col-fix-address-data {
+  font-family: "Courier New";
+  float: left;
+  display: table-column;
+  width: 430px;
   padding-right: 3px;
   padding-left: 3px;
 }

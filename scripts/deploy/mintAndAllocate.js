@@ -36,11 +36,11 @@ async function mintAndAllocate(hre,
 
     transId = crypto.randomUUID();
     await escrowEURCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyEUR, transId);
-    console.log("Option seller has " + await erc20EURStableCoin.balanceOf(option_seller.address) + " USD Token");
+    console.log("Option seller has " + await erc20EURStableCoin.balanceOf(option_seller.address) + " EUR Token");
 
     transId = crypto.randomUUID();
     await escrowCNYCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyCNY, transId);
-    console.log("Option seller has " + await erc20CNYStableCoin.balanceOf(option_seller.address) + " USD Token");
+    console.log("Option seller has " + await erc20CNYStableCoin.balanceOf(option_seller.address) + " CNY Token");
 
     console.log("\nOption buyer pays physical cash (USD,CNY,EUR) to Escrow account which mints stable coin tokens and transfers them");
     transId = crypto.randomUUID();
@@ -49,11 +49,11 @@ async function mintAndAllocate(hre,
 
     transId = crypto.randomUUID();
     await escrowEURCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_buyer.address, depositQtyEUR, transId);
-    console.log("Option buyer has " + await erc20EURStableCoin.balanceOf(option_buyer.address) + " USD Token");
+    console.log("Option buyer has " + await erc20EURStableCoin.balanceOf(option_buyer.address) + " EUR Token");
 
     transId = crypto.randomUUID();
     await escrowCNYCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_buyer.address, depositQtyCNY, transId);
-    console.log("Option buyer has " + await erc20CNYStableCoin.balanceOf(option_buyer.address) + " USD Token");
+    console.log("Option buyer has " + await erc20CNYStableCoin.balanceOf(option_buyer.address) + " CNY Token");
 }
 
 module.exports = {

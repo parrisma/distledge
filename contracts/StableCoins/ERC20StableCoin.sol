@@ -81,7 +81,7 @@ abstract contract ERC20StableCoin is Ownable, ERC20Pausable {
 
     /**
      ** @notice Get the ISO ccy code of the token
-     ** @return ISOCode of teh token
+     ** @return ISOCode of the token
      */
     function isoCcyCode() public view virtual returns (string memory) {
         return _isoCcyCode;
