@@ -8,6 +8,11 @@ var fs = require('fs');
   */
 
 var sharedConfig = {
+    escrowAccount: { accountName: `Escrow`, accountAddress: ``, usd: 0, eur: 0, cny: 0 },
+    tokenAccount: { accountName: 'Token', accountAddress: ``, usd: 0, eur: 0, cny: 0 },
+    dataAccount: { accountName: 'Data', accountAddress: ``, usd: 0, eur: 0, cny: 0 },
+    sellerAccount: { accountName: `Seller`, accountAddress: ``, usd: 1000, eur: 900, cny: 7000 },
+    buyerAccount: { accountName: `Buyer`, accountAddress: ``, usd: 1000, eur: 900, cny: 7000 },
     usdStableCoin: "",
     eurStableCoin: "",
     cnyStableCoin: "",

@@ -81,6 +81,7 @@ export default function Contract(props) {
   }, [isWeb3Enabled]);
 
   const handleSuccess = async (tx) => {
+    handleButtonClick(`Request Token update ${tx}`);
     handleNewNotification();
     updateUI();
   };
@@ -93,6 +94,10 @@ export default function Contract(props) {
       position: "topR",
       icon: "bell",
     });
+  };
+
+  const handleButtonClick = (info) => {
+    props.onAddInfo(info);
   };
 
   return (

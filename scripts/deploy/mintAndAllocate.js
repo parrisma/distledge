@@ -40,7 +40,7 @@ async function mintAndAllocate(hre,
 
     transId = crypto.randomUUID();
     await escrowCNYCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyCNY, transId);
-    console.log("Option seller has " + await erc20CNYStableCoin.balanceOf(option_buyer.address) + " USD Token");
+    console.log("Option seller has " + await erc20CNYStableCoin.balanceOf(option_seller.address) + " USD Token");
 
     console.log("\nOption buyer pays physical cash (USD,CNY,EUR) to Escrow account which mints stable coin tokens and transfers them");
     transId = crypto.randomUUID();

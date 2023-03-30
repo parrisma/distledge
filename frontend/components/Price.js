@@ -75,7 +75,7 @@ const Contract = (props) => {
   }, [isWeb3Enabled]);
 
   const handleSuccess = async (tx) => {
-    handleButtonClick("button has been clicked.");
+    handleButtonClick(`Request price update ${tx}.`);
     handleNewNotification();
     updateUI();
   };

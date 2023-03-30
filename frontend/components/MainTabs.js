@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import TabButton from "../components/TabButton";
 import PriceTab from "../components/PricesTab";
 import EscrowTab from "../components/EscrowTab";
+import SellerTab from "../components/SellerTab";
+import BuyerTab from "../components/BuyerTab";
+import AccountsTab from "../components/AccountsTab";
 
 const Contract = (props) => {
-    const tabs = ["Price", "Escrow"];
+    const tabs = ["Accounts", "Price", "Escrow", "Seller", "Buyer"];
     const defaultTabId = 0;
     const [tab, setTab] = useState(tabs[defaultTabId]);
     const [activeTab, SetActiveTab] = useState(tabs[defaultTabId]);
@@ -24,13 +27,25 @@ const Contract = (props) => {
             <div className="tab-row">
                 <TabButton tabName={tabs[0]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
                 <TabButton tabName={tabs[1]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
+                <TabButton tabName={tabs[2]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
+                <TabButton tabName={tabs[3]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
+                <TabButton tabName={tabs[4]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
             </div>
             <div>
                 {activeTab === tabs[0] ? (
-                    <PriceTab handleLogChange={props.handleLogChange} />
+                    <AccountsTab handleLogChange={props.handleLogChange} />
                 ) : null}
                 {activeTab === tabs[1] ? (
+                    <PriceTab handleLogChange={props.handleLogChange} />
+                ) : null}
+                {activeTab === tabs[2] ? (
                     <EscrowTab handleLogChange={props.handleLogChange} />
+                ) : null}
+                {activeTab === tabs[3] ? (
+                    <SellerTab handleLogChange={props.handleLogChange} />
+                ) : null}
+                {activeTab === tabs[4] ? (
+                    <BuyerTab handleLogChange={props.handleLogChange} />
                 ) : null}
             </div>
         </div>

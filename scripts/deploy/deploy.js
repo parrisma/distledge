@@ -30,14 +30,14 @@ async function main() {
   /**
    * Get and allocate account roles on the network
    */
-  [escrow_manager, stable_coin_issuer, data_vendor, option_seller, option_buyer] = await namedAccounts();
+  [escrow_manager, stable_coin_issuer, data_vendor, option_seller, option_buyer] = await namedAccounts(sharedConfig);
 
   console.log(`\nAccount Addresses`);
-  console.log(`Escrow Manager     : [${escrow_manager.address}]`);
-  console.log(`Stable Coin Issuer : [${stable_coin_issuer.address}]`);
-  console.log(`Data Vendor        : [${data_vendor.address}]`);
-  console.log(`Option Seller      : [${option_seller.address}]`);
-  console.log(`Option Buyer       : [${option_buyer.address}]`);
+  console.log(`Escrow Manager     : [${sharedConfig.escrowAccount.accountAddress}]`);
+  console.log(`Stable Coin Issuer : [${sharedConfig.tokenAccount.accountAddress}]`);
+  console.log(`Data Vendor        : [${sharedConfig.dataAccount.accountAddress}]`);
+  console.log(`Option Seller      : [${sharedConfig.sellerAccount.accountAddress}]`);
+  console.log(`Option Buyer       : [${sharedConfig.buyerAccount.accountAddress}]`);
 
   /**
   ** Deploy the three stable coin currencies.
