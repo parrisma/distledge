@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useMoralis } from "react-moralis";
+import { useState, useEffect } from "react";
 import { addressConfig } from "../constants";
 import { getTokenContractABI, getBalanceOfC } from "../lib/StableTokenWrapper";
 
 const Contract = (props) => {
+
+    const { isWeb3Enabled } = useMoralis();
 
     const [usdTokenBalence, setUsdTokenBalance] = useState("0");
     const [eurTokenBalence, setEurTokenBalance] = useState("0");
@@ -13,14 +16,25 @@ const Contract = (props) => {
     const getUSDTokenBalanceOfAccount = getBalanceOfC(addressConfig.usdStableCoin, coinTokenABI, props.accountDetail.accountAddress);
     const getCNYTokenBalanceOfAccount = getBalanceOfC(addressConfig.cnyStableCoin, coinTokenABI, props.accountDetail.accountAddress);
 
-    async function updateAllTokenBalences() {
-        const _usdTokenBalence = Number(await getUSDTokenBalanceOfAccount());
-        const _eurTokenBalence = Number(await getEURTokenBalanceOfAccount());
-        const _cnyTokenBalence = Number(await getCNYTokenBalanceOfAccount());
-        setUsdTokenBalance(_usdTokenBalence);
-        setEurTokenBalance(_eurTokenBalence);
-        setCnyTokenBalance(_cnyTokenBalence);
+    async function updateAllTokenBalances() {
+        if (isWeb3Enabled) {
+            const _usdTokenBalence = Number(await getUSDTokenBalanceOfAccount());
+            const _eurTokenBalence = Number(await getEURTokenBalanceOfAccount());
+            const _cnyTokenBalence = Number(await getCNYTokenBalanceOfAccount());
+            setUsdTokenBalance(_usdTokenBalence);
+            setEurTokenBalance(_eurTokenBalence);
+            setCnyTokenBalance(_cnyTokenBalence);
+        }
     }
+
+    // Update every 2.5 seconds.
+    useEffect(() => {
+        updateAllTokenBalances(); // update immediatly after render
+        const interval = setInterval(() => { updateAllTokenBalances(); }, 2500);
+        return () => {
+            clearInterval(interval); // Stop update after unmounted
+        };
+    }, [isWeb3Enabled]);
 
     return (
         <div>
@@ -61,7 +75,7 @@ const Contract = (props) => {
                         <button
                             className="button"
                             onClick={() => {
-                                updateAllTokenBalences();
+                                updateAllTokenBalances();
                             }}
                         >
                             Go

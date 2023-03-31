@@ -22,18 +22,22 @@ const Contract = (props) => {
   const getDecimals = getDecimalsC(levelAddress, contractABI);
 
   async function updateUI() {
-    const _decimals = Number(await getDecimals());
-    const [_ticker, _description, _live, _value, _lastUpdate] = await getLevelDetails();
-    setDescription(_description.toString());
-    setTicker(_ticker.toString());
-    setVerifiedValue(Number(_value) / 10 ** _decimals);
-    setDecimals(_decimals);
+    if (isWeb3Enabled) {
+      const _decimals = Number(await getDecimals());
+      const [_ticker, _description, _live, _value, _lastUpdate] = await getLevelDetails();
+      setDescription(_description.toString());
+      setTicker(_ticker.toString());
+      setVerifiedValue(Number(_value) / 10 ** _decimals);
+      setDecimals(_decimals);
+    }
   }
 
   useEffect(() => {
-    if (isWeb3Enabled) {
-      updateUI();
-    }
+    updateUI(); // update immediatly after render
+    const interval = setInterval(() => { updateUI(); }, 2000);
+    return () => {
+      clearInterval(interval); // Stop update after unmounted
+    };
   }, [isWeb3Enabled]);
 
   const handleSuccess = async (tx) => {

@@ -24,20 +24,24 @@ export default function Contract(props) {
   const getTokenSupply = getTokenSupplyC(addressOfDeployedToken, contractABI)
 
   async function updateUI() {
-    const _decimals = Number((await getDecimals()));
-    const _symbol = (await getSymbol());
-    const _token_name = (await getTokenName());
-    const _token_supply = Number(await getTokenSupply());
-    setTicker(_symbol.toString());
-    setDecimals(_decimals);
-    setTokenName(_token_name);
-    setTokenSupply(_token_supply / (10 ** decimals));
+    if (isWeb3Enabled) {
+      const _decimals = Number((await getDecimals()));
+      const _symbol = (await getSymbol());
+      const _token_name = (await getTokenName());
+      const _token_supply = Number(await getTokenSupply());
+      setTicker(_symbol.toString());
+      setDecimals(_decimals);
+      setTokenName(_token_name);
+      setTokenSupply(_token_supply / (10 ** decimals));
+    }
   }
 
   useEffect(() => {
-    if (isWeb3Enabled) {
-      updateUI();
-    }
+    updateUI(); // update immediatly after render
+    const interval = setInterval(() => { updateUI(); }, 2500);
+    return () => {
+      clearInterval(interval); // Stop update after unmounted
+    };
   }, [isWeb3Enabled]);
 
   const handleSuccess = async (tx) => {

@@ -1,3 +1,4 @@
+import React, { Component } from "react";
 import { addressConfig } from "../constants";
 import Account from "../components/Account";
 

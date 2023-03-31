@@ -20,18 +20,22 @@ export default function Contract(props) {
     const getIsBalanced = getIsBalancedC(escrowAddress, contractABI);
 
     async function updateUI() {
-        const _managed_token_name = (await getManagedTokenName());
-        const _balance_on_hand = Number(await getBalanceOnHand());
-        const _isBalanced = Boolean(await getIsBalanced());
-        setManagedTokenName(_managed_token_name);
-        setBalanceOnHand(_balance_on_hand);
-        setIsBalanced(_isBalanced.toString());
+        if (isWeb3Enabled) {
+            const _managed_token_name = (await getManagedTokenName());
+            const _balance_on_hand = Number(await getBalanceOnHand());
+            const _isBalanced = Boolean(await getIsBalanced());
+            setManagedTokenName(_managed_token_name);
+            setBalanceOnHand(_balance_on_hand);
+            setIsBalanced(_isBalanced.toString());
+        }
     }
 
     useEffect(() => {
-        if (isWeb3Enabled) {
-            updateUI();
-        }
+        updateUI(); // update immediatly after render
+        const interval = setInterval(() => { if (isWeb3Enabled) { updateUI(); } }, 2500);
+        return () => {
+            clearInterval(interval); // Stop update after unmounted
+        };
     }, [isWeb3Enabled]);
 
     const handleSuccess = async (tx) => {

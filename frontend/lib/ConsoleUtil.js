@@ -1,3 +1,5 @@
+/* Get a current timestamp for logging messages to console.
+*/
 export function consoleTimeStamp() {
     return new Date().toLocaleTimeString([], {
         hour: "2-digit",
@@ -7,6 +9,10 @@ export function consoleTimeStamp() {
     });
 }
 
-export function handleLogChange(logSetter, currentLogMessages, newLogMessage) {
+/* Write a message via the given setter.
+*/
+export function handleLogChange(logSetter,
+    currentLogMessages,
+    newLogMessage) {
     logSetter(`${currentLogMessages}\n${consoleTimeStamp()}:${newLogMessage}`);
 };
