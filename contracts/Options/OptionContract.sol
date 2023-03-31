@@ -8,7 +8,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-import "../StableCoins/ERC20StableCoin.sol";
+import "../StableAsset/ERC20StableAsset.sol";
 
 /**
  ** @author Mark Parris
@@ -24,8 +24,10 @@ abstract contract OptionContract is Ownable, Pausable {
     string internal _name;
     string internal _description;
     uint256 internal _premium;
-    ERC20StableCoin internal _premiumToken;
+
+    ERC20StableAsset internal _premiumToken;
     ERC20Pausable internal _settlementToken;
+
     bool internal _alive;
 
     constructor(
@@ -45,7 +47,7 @@ abstract contract OptionContract is Ownable, Pausable {
         _buyer = buyer_;
         _uniqueId = uniqueId_;
         _premium = premium_;
-        _premiumToken = ERC20StableCoin(premiumcToken_);
+        _premiumToken = ERC20StableAsset(premiumcToken_);
         _settlementToken = ERC20Pausable(settlementToken_);
     }
 

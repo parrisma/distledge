@@ -26,7 +26,7 @@ describe("ERC20AppleStableShare", function () {
         });
         it("Should have the isincode as US0378331005", async function () {
             const { appleSS } = await loadFixture(deployERC20AppleStableShare);
-            expect(await appleSS.isinCode()).to.equal("US0378331005");
+            expect(await appleSS.assetCode()).to.equal("US0378331005");
         });
         it("Should have the token name as AppleStableShare", async function () {
             const { appleSS } = await loadFixture(deployERC20AppleStableShare);

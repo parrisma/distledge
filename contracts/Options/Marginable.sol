@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import "../StableCoins/ERC20StableCoin.sol";
+import "../StableAsset/ERC20StableAsset.sol";
 import "../DataFeeder/ReferenceLevel.sol";
 
 abstract contract Marginable {
@@ -10,16 +10,16 @@ abstract contract Marginable {
     uint256 internal _marginAmount;
     uint16 internal _initialMargin; // Initial margin in percentage
     uint16 internal _maintenanceMargin; // Maintenance margin in percentage
-    ERC20StableCoin internal _marginToken;
-    ERC20StableCoin internal _contractToken;
+    ERC20StableAsset internal _marginToken;
+    ERC20StableAsset internal _contractToken;
     RefernceLevel internal _fxRate;
 
     uint internal _decimal = 4; // Decimal places of the initial margin and maintenance margin. Default to 4.
 
     constructor(
         address broker,
-        ERC20StableCoin marginToken,
-        ERC20StableCoin contractToken,
+        ERC20StableAsset marginToken,
+        ERC20StableAsset contractToken,
         RefernceLevel fxRate,
         uint16 initialMargin,
         uint16 maintenanceMargin

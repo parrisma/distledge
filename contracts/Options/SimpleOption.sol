@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./OptionContract.sol";
 import "../DataFeeder/ReferenceLevel.sol";
-import "../StableCoins/ERC20StableCoin.sol";
+import "../StableAsset/ERC20StableAsset.sol";
 
 /**
  ** @author Mark Parris
@@ -22,7 +22,7 @@ contract SimpleOption is OptionContract {
     uint256 _updatetime;
     RefernceLevel _referenceLevel;
     RefernceLevel _fxReferenceLevel;
-    ERC20StableCoin internal _settlementStableCoin;
+    ERC20StableAsset internal _settlementStableCoin;
 
     constructor(
         string memory uniqueId_,
@@ -51,7 +51,7 @@ contract SimpleOption is OptionContract {
         _strike = strike_;
         _referenceLevel = RefernceLevel(referenceLevel_);
         _fxReferenceLevel = RefernceLevel(fxReferenceLevel_);
-        _settlementStableCoin = ERC20StableCoin(settlementToken_);
+        _settlementStableCoin = ERC20StableAsset(settlementToken_);
     }
 
     /**

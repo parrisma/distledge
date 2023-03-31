@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-// Base contract for ERC20 Based Stable Share
+// Base contract for ERC20 Based Stable Asset
 
 pragma solidity ^0.8.17;
 
@@ -10,32 +10,32 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-abstract contract ERC20StableShare is Ownable, ERC20Pausable {
+abstract contract ERC20StableAsset is Ownable, ERC20Pausable {
     uint8 private _decimals;
-    string private _isinCode;
+    string private _asset_code;
     string private _token_symbol;
     string private _token_name;
 
     constructor(
         uint8 decimals_,
-        string memory isinCode_,
+        string memory asset_code_,
         string memory token_symbol_,
         string memory token_name_
     ) ERC20(token_name_, token_symbol_) Ownable() Pausable() {
         _decimals = decimals_;
-        _isinCode = isinCode_;
+        _asset_code = asset_code_;
         _token_symbol = token_symbol_;
         _token_name = token_name_;
     }
 
     // All minting is to the owner account, the minted funds are then transfered out
-    function mint(uint256 amount) public onlyOwner whenNotPaused {
-        super._mint(this.owner(), amount * unitsPerToken());
+    function mint(uint256 amount) public virtual onlyOwner whenNotPaused {
+        super._mint(this.owner(), amount);
     }
 
     // All burning is from the owner account, based on return (transfer in) of funds
-    function burn(uint256 amount) public onlyOwner whenNotPaused {
-        super._burn(this.owner(), amount * unitsPerToken());
+    function burn(uint256 amount) public virtual onlyOwner whenNotPaused {
+        super._burn(this.owner(), amount);
     }
 
     // Pause all change activity on the contract
@@ -60,20 +60,17 @@ abstract contract ERC20StableShare is Ownable, ERC20Pausable {
     }
 
     /**
-     * The number of shares per Token
+     * The Asset Code that identity the stable asset
      */
-    function unitsPerToken() public view virtual returns (uint256) {
-        return 10 ** _decimals;
+
+    function assetCode() public view virtual returns (string memory) {
+        return _asset_code;
     }
 
     /**
-     * The ISO Curreny Code that the stable coin is backed by
+     * The units per Token
      */
-    function isinCode() public view virtual returns (string memory) {
-        return _isinCode;
-    }
-
-    function share_symbol() public view returns (string memory) {
-        return string(abi.encodePacked(_token_symbol, "-", _isinCode));
+    function unitsPerToken() public view virtual returns (uint256) {
+        return 10 ** decimals();
     }
 }

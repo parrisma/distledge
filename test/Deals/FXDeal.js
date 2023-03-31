@@ -93,7 +93,7 @@ describe("FXDeal Test Suite", function () {
             const quantity = 456; // Valid Quantity
             const deal = await Deal.deploy(seller.address, buyer.address, token1.address, token2.address, quantity, rate);
             const [buyer_, seller_, token1_, token2_, rate_, quantity_] = await deal.info();
-            expect(await deal.ticker()).to.equal(await token1.isoCcyCode() + await token2.isoCcyCode());
+            expect(await deal.ticker()).to.equal(await token1.assetCode() + await token2.assetCode());
         });
 
         it("Should return correct time to live", async function () {
