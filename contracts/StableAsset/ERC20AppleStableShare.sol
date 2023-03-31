@@ -22,6 +22,16 @@ contract ERC20AppleStableShare is ERC20StableAsset {
         )
     {}
 
+    // All minting is to the owner account, the minted funds are then transfered out
+    function mint(uint256 amount) public override onlyOwner whenNotPaused {
+        super._mint(this.owner(), amount * unitsPerToken());
+    }
+
+    // All burning is from the owner account, based on return (transfer in) of funds
+    function burn(uint256 amount) public override onlyOwner whenNotPaused {
+        super._burn(this.owner(), amount * unitsPerToken());
+    }
+
     /**
      * Combine symbol and ISIN code of stable share
      */
