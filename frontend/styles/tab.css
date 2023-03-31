@@ -1,0 +1,41 @@
+.tab-row {
+    display: flex;
+    vertical-align: top;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.button-tab-off {
+    background-color: #459444;
+    border-radius: 8px;
+    border: 1px solid white;
+    color: white;
+    padding: 10px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    flex-flow: column;
+    font-size: 14px;
+    transition-duration: 0.4s;
+    width: 150px;
+}
+
+.button-tab-on {
+    background-color: #6adf68;
+    border-radius: 8px;
+    border: 1px solid white;
+    color: white;
+    padding: 10px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    flex-flow: column;
+    font-size: 14px;
+    transition-duration: 0.4s;
+    width: 150px;
+}
+
+.button-tab:hover {
+    background-color: white;
+    color: black;
+}

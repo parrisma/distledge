@@ -4,8 +4,10 @@
 
 ```text
 cd .\frontend
+```
 Install [Hardhat](https://www.npmjs.com/package/hardhat)
 Install [yarn](https://classic.yarnpkg.com/en/docs/install#windows-stable)
+```
 cd ..
 ```
 
@@ -76,7 +78,7 @@ You will need to import the test accounts from the hardhat test network started 
 The UI needs to know about the contracts that have been deployed to the test network. SO teh command below make the deployment addresses and ```abi``` files available to the UI.
 
 ```bash
-yarn hardhat run ./scripts/exportToFrontEnd\updateFrontEnd.js --network localhost
+yarn hardhat run ./scripts/exportToFrontEnd/updateFrontEnd.js --network localhost
 ```
 
 ## Install
@@ -99,3 +101,11 @@ yarn dev
 2. right click ```inspect``` to open up the developer window so you can see the console output and other in browser debugging support while developing the UI
 3. Hit the connect wallet button and login to your Metamask or other wallet service
 4. You should see the Equity price update and you are off an running.
+
+## Debugging the Front-end
+1. Run UI by following instructions above.
+2. Open VSCode with ./frontend/ as root directory.
+3. Choose debug configuration "attach debugger in front end" and Press F5
+4. Set your breakpoint in the frontend component.
+5. Access weg page http://localhost:3000 in chrome
+6. Your breakpoints are hit and execution is paused.

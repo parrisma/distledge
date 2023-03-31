@@ -62,6 +62,7 @@ abstract contract ERC20StableAsset is Ownable, ERC20Pausable {
     /**
      * The Asset Code that identity the stable asset
      */
+
     function assetCode() public view virtual returns (string memory) {
         return _asset_code;
     }

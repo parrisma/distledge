@@ -1,80 +1,47 @@
-import { useWeb3Contract } from "react-moralis";
-import { equityPriceABI, FXPriceABI, addressConfig } from "../constants";
 import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
 import { useNotification } from "web3uikit";
+import { getLevelContractABI, getTickerC, getLevelDetailsC, getVerifiedValueC, getDecimalsC } from "../lib/LevelWrapper";
 
-export default function Contract(props) {
+const Contract = (props) => {
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
   const chainId = parseInt(chainIdHex);
-  let priceAddress = props.contract.address; // Price contract address passed as prop
+  let levelAddress = props.contract.address; // Price contract address passed as prop
   let contractType = props.contract.type;
 
   const [ticker, setTicker] = useState("?");
   const [verifiedValue, setVerifiedValue] = useState("0");
   const [decimals, setDecimals] = useState("0");
   const [description, setDescription] = useState("?");
-
-  var contractABI = null;
-  if (contractType === "equity") {
-    contractABI = equityPriceABI;
-  }
-  if (contractType === "fx") {
-    contractABI = equityPriceABI;
-  }
-
   const dispatch = useNotification();
 
-  const {
-    runContractFunction: getTicker,
-    isLoading,
-    isFetching,
-  } = useWeb3Contract({
-    abi: contractABI,
-    contractAddress: priceAddress,
-    functionName: "getTicker",
-    params: {},
-  });
-
-  const { runContractFunction: getVerifiedValue } = useWeb3Contract({
-    abi: contractABI,
-    contractAddress: priceAddress,
-    functionName: "getVerifiedValue",
-    params: {},
-  });
-
-  const { runContractFunction: getDetails } = useWeb3Contract({
-    abi: contractABI,
-    contractAddress: priceAddress,
-    functionName: "getDetails",
-    params: {},
-  });
-
-  const { runContractFunction: getDecimals } = useWeb3Contract({
-    abi: contractABI,
-    contractAddress: priceAddress,
-    functionName: "getDecimals",
-    params: {},
-  });
+  const contractABI = getLevelContractABI(contractType);
+  const [getTicker, isFetching, isLoading] = getTickerC(levelAddress, contractABI, true);
+  const getLevelDetails = getLevelDetailsC(levelAddress, contractABI);
+  const getVerifiedValue = getVerifiedValueC(levelAddress, contractABI);
+  const getDecimals = getDecimalsC(levelAddress, contractABI);
 
   async function updateUI() {
-    const _decimals = Number((await getDecimals()));
-    console.log({_decimals});
-    const [_ticker, _description, _live, _value, _lastUpdate] = (await getDetails());
-    setDescription(_description.toString());
-    setTicker(_ticker.toString());
-    setVerifiedValue(Number(_value) / (10 **_decimals));
-    setDecimals(_decimals);
+    if (isWeb3Enabled) {
+      const _decimals = Number(await getDecimals());
+      const [_ticker, _description, _live, _value, _lastUpdate] = await getLevelDetails();
+      setDescription(_description.toString());
+      setTicker(_ticker.toString());
+      setVerifiedValue(Number(_value) / 10 ** _decimals);
+      setDecimals(_decimals);
+    }
   }
 
   useEffect(() => {
-    if (isWeb3Enabled) {
-      updateUI();
-    }
+    updateUI(); // update immediatly after render
+    const interval = setInterval(() => { updateUI(); }, 2000);
+    return () => {
+      clearInterval(interval); // Stop update after unmounted
+    };
   }, [isWeb3Enabled]);
 
   const handleSuccess = async (tx) => {
+    handleButtonClick(`Request price update ${tx}.`);
     handleNewNotification();
     updateUI();
   };
@@ -89,9 +56,13 @@ export default function Contract(props) {
     });
   };
 
+  const handleButtonClick = (info) => {
+    props.onAddInfo(info);
+  };
+
   return (
     <div className="p-5">
-      {priceAddress ? (
+      {levelAddress ? (
         <div>
           <div className="div-table">
             <div className="div-table-row">
@@ -116,7 +87,7 @@ export default function Contract(props) {
             </div>
           </div>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
+            className="button"
             disabled={isLoading || isFetching}
             onClick={() => {
               getTicker({
@@ -132,8 +103,10 @@ export default function Contract(props) {
           </button>
         </div>
       ) : (
-        <div>Missing Price Contract Address</div>
+        <div>Missing Level Contract Address</div>
       )}
     </div>
   );
-}
+};
+
+export default Contract;

@@ -1,24 +1,60 @@
 .div-table {
-    display: table;         
-    width: auto;         
-    border-spacing: 5px;
-  }
-  .div-table-row {
-    display: table-row;
-    width: auto;
-    clear: both;
-  }
-  .div-table-col-fix {
-    float: left; 
-    display: table-column;         
-    width: 100px;         
-  }
-  .div-table-col-fix-wide{
-    float: left; 
-    display: table-column;         
-    width: 330px;         
-  }
-  .div-table-col {
-    float: left; 
-    display: table-column;         
-  }
+  display: table;
+  width: auto;
+  border-spacing: 5px;
+}
+
+.div-table-row {
+  display: table-row;
+  width: auto;
+  clear: both;
+}
+
+.div-table-col-fix {
+  float: left;
+  display: table-column;
+  width: 100px;
+}
+
+.div-table-col-fix-lab {
+  float: left;
+  display: table-column;
+  width: 100px;
+  padding-right: 5px;
+}
+
+.div-table-col-fix-address {
+  float: left;
+  display: table-column;
+  width: 430px;
+  padding-right: 3px;
+  padding-left: 3px;
+}
+
+.div-table-col-fix-address-data {
+  font-family: "Courier New";
+  float: left;
+  display: table-column;
+  width: 430px;
+  padding-right: 3px;
+  padding-left: 3px;
+}
+
+.div-table-col-fix-number {
+  float: left;
+  display: table-column;
+  width: 100px;
+  padding-right: 3px;
+  padding-left: 3px;
+}
+
+.div-table-col-fix-wide {
+  float: left;
+  display: table-column;
+  width: 330px;
+}
+
+.div-table-col {
+  float: left;
+  display: table-column;
+}

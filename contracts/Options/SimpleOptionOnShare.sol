@@ -16,13 +16,13 @@ import "../StableAsset/ERC20StableAsset.sol";
  ** @author Mark Parris
  ** @title Trival option that pays max(0, notional * (reference - strike))
  */
-contract SimpleOption is OptionContract {
+contract SimpleOptionOnShare is OptionContract {
     uint256 _notional;
     uint256 _strike;
     uint256 _updatetime;
     RefernceLevel _referenceLevel;
     RefernceLevel _fxReferenceLevel;
-    ERC20StableAsset internal _settlementStableCoin;
+    ERC20StableAsset internal _settlementStableShare;
 
     constructor(
         string memory uniqueId_,
@@ -51,7 +51,7 @@ contract SimpleOption is OptionContract {
         _strike = strike_;
         _referenceLevel = RefernceLevel(referenceLevel_);
         _fxReferenceLevel = RefernceLevel(fxReferenceLevel_);
-        _settlementStableCoin = ERC20StableAsset(settlementToken_);
+        _settlementStableShare = ERC20StableAsset(settlementToken_);
     }
 
     /**
@@ -68,7 +68,7 @@ contract SimpleOption is OptionContract {
     {
         return
             string.concat(
-                "Simple Option on [",
+                "Simple Option On Share on [",
                 _referenceLevel.getTicker(),
                 "] with a strike of [",
                 Strings.toString(_strike),
@@ -77,7 +77,7 @@ contract SimpleOption is OptionContract {
                 "] paid in [",
                 _premiumToken.symbol(),
                 "] settled in [",
-                _settlementStableCoin.symbol(),
+                _settlementStableShare.symbol(),
                 "] unique reference of [",
                 _uniqueId,
                 "]"
@@ -121,7 +121,7 @@ contract SimpleOption is OptionContract {
         return
             (valuation() *
                 uint256(fxRate) *
-                _settlementStableCoin.unitsPerToken()) /
+                _settlementStableShare.unitsPerToken()) /
             (10 **
                 (_fxReferenceLevel.getDecimals() +
                     _referenceLevel.getDecimals()));

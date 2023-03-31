@@ -24,8 +24,10 @@ abstract contract OptionContract is Ownable, Pausable {
     string internal _name;
     string internal _description;
     uint256 internal _premium;
+
     ERC20StableAsset internal _premiumToken;
-    ERC20StableAsset internal _settlementToken;
+    ERC20Pausable internal _settlementToken;
+
     bool internal _alive;
 
     constructor(
@@ -46,7 +48,7 @@ abstract contract OptionContract is Ownable, Pausable {
         _uniqueId = uniqueId_;
         _premium = premium_;
         _premiumToken = ERC20StableAsset(premiumcToken_);
-        _settlementToken = ERC20StableAsset(settlementToken_);
+        _settlementToken = ERC20Pausable(settlementToken_);
     }
 
     /**

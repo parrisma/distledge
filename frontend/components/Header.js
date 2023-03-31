@@ -1,12 +1,25 @@
 import { ConnectButton } from "web3uikit";
+import Head from "next/head";
 
-export default function Header(params) {
+const Header = (props) => {
   return (
-    <div className="p5 border-b-2 flex flex-row">
-      <h1 className="py-4 px-4 font-blog text-3xl">Distributed Ledger</h1>
-      <div className="ml-auto py-2 px-4">
-        <ConnectButton moralisAuth={false} />
+    <nav>
+      <Head>
+        <title>Dist Ledger</title>
+        <meta name="description" content="Our Option Smart Contract" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="header-row">
+        <div className="header-decription">
+          <h1 className="header">Distributed Ledger</h1>
+        </div>
+        <div className="header-connect">
+          <ConnectButton className="item-right" moralisAuth={false} />
+        </div>
       </div>
-    </div>
+    </nav>
   );
-}
+};
+
+export default Header;

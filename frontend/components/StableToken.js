@@ -1,86 +1,51 @@
-import { useWeb3Contract } from "react-moralis";
-import { StableCoinABI, addressConfig } from "../constants";
 import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
 import { useNotification } from "web3uikit";
+import { getTokenContractABI, getSymbolC, getTokenNameC, getDecimalsC, getTokenSupplyC } from "../lib/StableTokenWrapper";
 
 export default function Contract(props) {
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
   const chainId = parseInt(chainIdHex);
-  let priceAddress = props.contract.address; // Price contract address passed as prop
-  let contractType = props.contract.type;
+  const addressOfDeployedToken = props.contract.address; // Price contract address passed as prop
+  const contractType = props.contract.type;
 
   const [symbol, setTicker] = useState("?");
   const [decimals, setDecimals] = useState("0");
   const [token_name, setTokenName] = useState("?");
   const [token_supply, setTokenSupply] = useState("?");
 
-  var contractABI = null;
-  if (contractType === "usdStableCoin") {
-    contractABI = StableCoinABI;
-  }
-  if (contractType === "eurStableCoin") {
-    contractABI = StableCoinABI;
-  }
-  if (contractType === "cnyStableCoin") {
-    contractABI = StableCoinABI;
-  }
-
   const dispatch = useNotification();
 
-  const {
-    runContractFunction: getSymbol,
-    isLoading,
-    isFetching,
-  } = useWeb3Contract({
-    abi: contractABI,
-    contractAddress: priceAddress,
-    functionName: "symbol",
-    params: {},
-  });
-
-  const {
-    runContractFunction: getTokenName,
-  } = useWeb3Contract({
-    abi: contractABI,
-    contractAddress: priceAddress,
-    functionName: "name",
-    params: {},
-  });
-
-  const { runContractFunction: getDecimals } = useWeb3Contract({
-    abi: contractABI,
-    contractAddress: priceAddress,
-    functionName: "decimals",
-    params: {},
-  });
-
-
-  const { runContractFunction: getTokenSupply } = useWeb3Contract({
-    abi: contractABI,
-    contractAddress: priceAddress,
-    functionName: "totalSupply",
-    params: {},
-  });
+  // Get ABI & Token Methods
+  const contractABI = getTokenContractABI(contractType);
+  const [getSymbol, isFetching, isLoading] = getSymbolC(addressOfDeployedToken, contractABI, true);
+  const getTokenName = getTokenNameC(addressOfDeployedToken, contractABI);
+  const getDecimals = getDecimalsC(addressOfDeployedToken, contractABI);
+  const getTokenSupply = getTokenSupplyC(addressOfDeployedToken, contractABI)
 
   async function updateUI() {
-    const _decimals = Number((await getDecimals()));
-    const _symbol = (await getSymbol());
-    const _token_name = (await getTokenName());
-    const _token_supply = Number(await getTokenSupply());
-    setTicker(_symbol.toString());
-    setDecimals(_decimals);
-    setTokenName(_token_name);
-    setTokenSupply(_token_supply / (10 **decimals));
+    if (isWeb3Enabled) {
+      const _decimals = Number((await getDecimals()));
+      const _symbol = (await getSymbol());
+      const _token_name = (await getTokenName());
+      const _token_supply = Number(await getTokenSupply());
+      setTicker(_symbol.toString());
+      setDecimals(_decimals);
+      setTokenName(_token_name);
+      setTokenSupply(_token_supply / (10 ** decimals));
+    }
   }
 
   useEffect(() => {
-    if (isWeb3Enabled) {
-      updateUI();
-    }
+    updateUI(); // update immediatly after render
+    const interval = setInterval(() => { updateUI(); }, 2500);
+    return () => {
+      clearInterval(interval); // Stop update after unmounted
+    };
   }, [isWeb3Enabled]);
 
   const handleSuccess = async (tx) => {
+    handleButtonClick(`Request Token update ${tx}`);
     handleNewNotification();
     updateUI();
   };
@@ -95,9 +60,13 @@ export default function Contract(props) {
     });
   };
 
+  const handleButtonClick = (info) => {
+    props.onAddInfo(info);
+  };
+
   return (
     <div className="p-5">
-      {priceAddress ? (
+      {addressOfDeployedToken ? (
         <div>
           <div className="div-table">
             <div className="div-table-row">
@@ -122,7 +91,7 @@ export default function Contract(props) {
             </div>
           </div>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
+            className="button"
             disabled={isLoading || isFetching}
             onClick={() => {
               getSymbol({
