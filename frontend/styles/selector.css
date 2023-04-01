@@ -1,0 +1,16 @@
+.selector {
+    background-color: #3315dd;
+    border-radius: 8px;
+    border: 1px solid black;
+    color: black;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    transition-duration: 0.4s;
+}
+
+.selector:hover {
+    background-color: white;
+    color: black;
+}
