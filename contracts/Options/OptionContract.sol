@@ -26,7 +26,7 @@ abstract contract OptionContract is Ownable, Pausable {
     uint256 internal _premium;
 
     ERC20StableAsset internal _premiumToken;
-    ERC20Pausable internal _settlementToken;
+    ERC20StableAsset internal _settlementToken;
 
     bool internal _alive;
 
@@ -48,7 +48,7 @@ abstract contract OptionContract is Ownable, Pausable {
         _uniqueId = uniqueId_;
         _premium = premium_;
         _premiumToken = ERC20StableAsset(premiumcToken_);
-        _settlementToken = ERC20Pausable(settlementToken_);
+        _settlementToken = ERC20StableAsset(settlementToken_);
     }
 
     /**

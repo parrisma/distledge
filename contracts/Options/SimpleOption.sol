@@ -22,7 +22,6 @@ contract SimpleOption is OptionContract {
     uint256 _updatetime;
     RefernceLevel _referenceLevel;
     RefernceLevel _fxReferenceLevel;
-    ERC20StableAsset internal _settlementStableCoin;
 
     constructor(
         string memory uniqueId_,
@@ -51,7 +50,6 @@ contract SimpleOption is OptionContract {
         _strike = strike_;
         _referenceLevel = RefernceLevel(referenceLevel_);
         _fxReferenceLevel = RefernceLevel(fxReferenceLevel_);
-        _settlementStableCoin = ERC20StableAsset(settlementToken_);
     }
 
     /**
@@ -77,7 +75,7 @@ contract SimpleOption is OptionContract {
                 "] paid in [",
                 _premiumToken.symbol(),
                 "] settled in [",
-                _settlementStableCoin.symbol(),
+                _settlementToken.symbol(),
                 "] unique reference of [",
                 _uniqueId,
                 "]"
@@ -119,9 +117,7 @@ contract SimpleOption is OptionContract {
     {
         int256 fxRate = _fxReferenceLevel.getVerifiedValue();
         return
-            (valuation() *
-                uint256(fxRate) *
-                _settlementStableCoin.unitsPerToken()) /
+            (valuation() * uint256(fxRate) * _settlementToken.unitsPerToken()) /
             (10 **
                 (_fxReferenceLevel.getDecimals() +
                     _referenceLevel.getDecimals()));
