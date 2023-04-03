@@ -1,16 +1,16 @@
 import { useWeb3Contract } from "react-moralis";
-import { StableCoinABI } from "../constants";
+import { StableCoinABI as ERC20AppleStableShare, ERC20CNYStableCoin, ERC20EURStableCoin, ERC20USDStableCoin } from "../constants";
 
 export function getTokenContractABI(contractType) {
     var contractABI = null;
     if (contractType === "usdStableCoin") {
-        contractABI = StableCoinABI;
+        contractABI = ERC20USDStableCoin;
     }
     else if (contractType === "eurStableCoin") {
-        contractABI = StableCoinABI;
+        contractABI = ERC20EURStableCoin;
     }
     else if (contractType === "cnyStableCoin") {
-        contractABI = StableCoinABI;
+        contractABI = ERC20CNYStableCoin;
     }
     return contractABI;
 }

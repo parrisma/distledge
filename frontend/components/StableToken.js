@@ -29,7 +29,7 @@ export default function Contract(props) {
       const _symbol = (await getSymbol());
       const _token_name = (await getTokenName());
       const _token_supply = Number(await getTokenSupply());
-      setTicker(_symbol.toString());
+      setTicker(_symbol);
       setDecimals(_decimals);
       setTokenName(_token_name);
       setTokenSupply(_token_supply / (10 ** decimals));

@@ -12,7 +12,6 @@ export function getDisplayName(nameToMapToDisplayName) {
         }
     });
     return displayName;
-
 }
 
 
