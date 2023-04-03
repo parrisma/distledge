@@ -4,6 +4,6 @@
 ** See: https://stackoverflow.com/questions/105034/how-do-i-create-a-guid-uuid
 */
 export function GloballyUniqueId() {
-    return Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15);
+    return (Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15)).toUpperCase();
 }

@@ -3,29 +3,28 @@ import SettlementTokenDropDown from "../components/dropdown/SettlementTokenDropD
 import StableCoinDropDown from "../components/dropdown/StableCoinDropDown";
 import FXRateDropDown from "../components/dropdown/FXRateDropDown";
 import ReferenceLevelDropDown from "../components/dropdown/ReferenceLevelDropDown";
+import InputField from "../components/InputField";
+import { GloballyUniqueId } from "../lib/GloballyUniqueId";
 
 const Contract = (props) => {
 
-    var SettlementToken = null;
-    var PremiumCoin = null;
-    var SettlementFXRate = null;
-    var ReferenceLevel = null;
-
-    const handleSettlementTokenSelection = event => {
-        SettlementToken = event.value;
+    var contractDetails = {
+        "uniqueId": `${GloballyUniqueId()}`,
+        "name": "?",
+        "description": "?",
+        "buyerAddress": "",
+        "premium": "0",
+        "premiumTokenAddress": "",
+        "settlementTokenAddress": "",
+        "notional": "0",
+        "strike": "0",
+        "referenceLevelAddress": "",
+        "fxReferenceLevelAddress": ""
     };
 
-    const handlePremiumCoinSelection = event => {
-        PremiumCoin = event.value;
-    };
-
-    const handleSettlementFXSelection = event => {
-        SettlementFXRate = event.value;
-    };
-
-    const handleReferenceLevelSelection = event => {
-        ReferenceLevel = event.value;
-    };
+    function printContract() {
+        console.log(contractDetails);
+    }
 
     return (
         <div>
@@ -37,30 +36,63 @@ const Contract = (props) => {
                 </div>
                 <div className="div-table-row">
                     <div className="div-table-col-fix-wide">
+                        <p>Unique Id</p>
+                    </div>
+                    <div className="div-table-col-fix-wide">
+                        <InputField
+                            value={contractDetails.uniqueId || GloballyUniqueId()}
+                            handleValueChange={(value) => { contractDetails.GloballyUniqueId = value }}
+                            width={"300px"} />
+                    </div>
+                </div>
+                <div className="div-table-row">
+                    <div className="div-table-col-fix-wide">
+                        <p>Settlement Token</p>
+                    </div>
+                    <div className="div-table-col-fix-wide">
                         <SettlementTokenDropDown
-                            handleChange={handleSettlementTokenSelection}
+                            handleChange={(value) => { contractDetails.settlementTokenAddress = value }}
                             placeholder={`Settlement Token`} />
                     </div>
                 </div>
                 <div className="div-table-row">
                     <div className="div-table-col-fix-wide">
+                        <p>Premium Token</p>
+                    </div>
+                    <div className="div-table-col-fix-wide">
                         <StableCoinDropDown
-                            handleChange={handlePremiumCoinSelection}
+                            handleChange={(value) => { contractDetails.premiumTokenAddress = value }}
                             placeholder={`Premium Coin`} />
                     </div>
                 </div>
                 <div className="div-table-row">
                     <div className="div-table-col-fix-wide">
+                        <p>Settlement FX Rate</p>
+                    </div>
+                    <div className="div-table-col-fix-wide">
                         <FXRateDropDown
-                            handleChange={handlePremiumCoinSelection}
+                            handleChange={(value) => { contractDetails.fxReferenceLevelAddress = value }}
                             placeholder={`Settlement Rate`} />
                     </div>
                 </div>
                 <div className="div-table-row">
                     <div className="div-table-col-fix-wide">
+                        <p>Reference Level</p>
+                    </div>
+                    <div className="div-table-col-fix-wide">
                         <ReferenceLevelDropDown
-                            handleChange={handleReferenceLevelSelection}
+                            handleChange={(value) => { contractDetails.referenceLevelAddress = value }}
                             placeholder={`Reference Level`} />
+                    </div>
+                </div>
+                <div className="div-table-row">
+                    <div className="div-table-col-fix-wide">
+                        <button
+                            className="button"
+                            onClick={printContract}
+                        >
+                            <div>Print Contract</div>
+                        </button>
                     </div>
                 </div>
             </div>

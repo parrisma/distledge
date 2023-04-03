@@ -18,13 +18,17 @@ const Contract = (props) => {
         }
     };
 
+    function handleChange(e) {
+        props.handleChange(e.value);
+    }
+
     return (
         <Select
             className='selector'
             options={optionsList}
             placeholder={`${props.placeholder}`}
             clearable={false}
-            onChange={props.handleChange}
+            onChange={handleChange}
         />
     );
 };
