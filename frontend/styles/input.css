@@ -14,3 +14,7 @@
 .input:hover {
     background-color: white;
 }
+
+.input::-webkit-input-placeholder {
+    color: rgb(229, 229, 229)
+}

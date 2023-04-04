@@ -2,19 +2,21 @@ import { addressConfig } from "@/constants";
 import { getDisplayName } from "@/lib/DisplayName";
 import Select from 'react-select'
 
-/* A list of all option types that can be printed
+/* A list of all Accounts
 */
 const Contract = (props) => {
 
-    /* List all of the Option Types that can be printed.
-    ** The option is the display name of the OPtion
-    ** The value is the contract ABI of the Option
+    /* Extract all Accounts from address config by matching names.
+    ** The option is the display name of the Token
+    ** The value is the contract address of the Token
     */
     var optionsList = [];
     for (const key in addressConfig) {
-        if (key.match(/.*FXRate.*/)) {
-            const optionName = getDisplayName(key);
-            optionsList.push({ label: `${optionName}`, value: `${addressConfig[key]}` });
+        if (key.match(/.*Account.*/)) {
+            if (addressConfig[key].accountName) {
+                const optionName = getDisplayName(addressConfig[key].accountName);
+                optionsList.push({ label: `${optionName}`, value: `${addressConfig[key].accountAddress}` });
+            }
         }
     };
 

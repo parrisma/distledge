@@ -19,7 +19,8 @@ const Contract = (props) => {
                 className='input'
                 type={props.type || "text"}
                 onChange={handleChange}
-                value={inputValue || "?"}
+                value={inputValue || ""}
+                placeholder={props.placeholder || ""}
             />
         </div>
     );
