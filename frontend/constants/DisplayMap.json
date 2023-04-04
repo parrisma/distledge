@@ -1,0 +1,60 @@
+{
+    "map": [
+        {
+            "rawName": "escrowAccount",
+            "displayName": "Escrow Manager"
+        },
+        {
+            "rawName": "tokenAccount",
+            "displayName": "Token Issuer"
+        },
+        {
+            "rawName": "Data",
+            "displayName": "Data Provider"
+        },
+        {
+            "rawName": "Seller",
+            "displayName": "Option Seller"
+        },
+        {
+            "rawName": "Buyer",
+            "displayName": "Option Buyer"
+        },
+        {
+            "rawName": "usdStableCoin",
+            "displayName": "USD Stable Coin"
+        },
+        {
+            "rawName": "eurStableCoin",
+            "displayName": "EUR Stable Coin"
+        },
+        {
+            "rawName": "cnyStableCoin",
+            "displayName": "CNY Stable Coin"
+        },
+        {
+            "rawName": "usdEscrowAccount",
+            "displayName": "USD Escrow Service"
+        },
+        {
+            "rawName": "eurEscrowAccount",
+            "displayName": "EUR Escrow Service"
+        },
+        {
+            "rawName": "cnyEscrowAccount",
+            "displayName": "CNY Escrow Service"
+        },
+        {
+            "rawName": "teslaEquityPriceContract",
+            "displayName": "Tesla Price Feed"
+        },
+        {
+            "rawName": "UsdEurFXRateContract",
+            "displayName": "USD-EUR Rate Feed"
+        },
+        {
+            "rawName": "UsdCnyFXRateContract",
+            "displayName": "USD-CNY Rate Feed"
+        }
+    ]
+}
