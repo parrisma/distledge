@@ -1,0 +1,15 @@
+.warning-container {
+    padding: 10px 10px;
+}
+
+.warning {
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid white;
+    color: rgb(21, 31, 215);
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}

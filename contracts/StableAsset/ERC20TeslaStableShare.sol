@@ -5,14 +5,12 @@ pragma solidity ^0.8.17;
 import "./ERC20StableAsset.sol";
 
 /**
- ** @title Stable Share for Apple
- **
- ** TODO: Also, we can move share_symbol() into base class and rename it token_symbol.
+ ** @title Stable Share for AppTeslale
  */
-contract ERC20AppleStableShare is ERC20StableAsset {
-    string private constant _token_symbol = "AppleSS";
-    string private constant _token_name = "AppleStableShare";
-    string private constant _asset_code = "US0378331005"; // isin code
+contract ERC20TeslaShare is ERC20StableAsset {
+    string private constant _token_symbol = "TeslaSS";
+    string private constant _token_name = "TeslaStableShare";
+    string private constant _asset_code = "US88160R1014"; // isin code
     uint8 private constant _2decimal_places = 2;
 
     constructor()
@@ -27,7 +25,6 @@ contract ERC20AppleStableShare is ERC20StableAsset {
     /**
      * @notice Combine symbol and ISIN code of stable share
      */
-
     function share_symbol() public pure returns (string memory) {
         return string(abi.encodePacked(_token_symbol, "-", _asset_code));
     }

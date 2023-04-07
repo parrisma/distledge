@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 
 /**
  ** @notice Library to generate globally unique id's similar to GUIDs
+ ** @dev COntract address etc is unique, but this is a functional id for contracts equiv to say ISIN
  */
 library UniqueId {
     /**

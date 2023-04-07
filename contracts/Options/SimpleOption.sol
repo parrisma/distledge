@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-// Abstract Base contract for Options
+// A contract that models an option with a simple pay off.
 
 pragma solidity ^0.8.17;
 

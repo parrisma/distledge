@@ -10,13 +10,10 @@ const Contract = (props) => {
     ** The option is the display name of the OPtion
     ** The value is the contract ABI of the Option
     */
-    var optionsList = [];
-    for (const key in addressConfig) {
-        if (key.match(/.*FXRate.*/)) {
-            const optionName = getDisplayName(key);
-            optionsList.push({ label: `${optionName}`, value: `${addressConfig[key]}` });
-        }
-    };
+    var optionsList = [
+        { label: "Simple Option", value: "1" },
+        { label: "Simple Put Option", value: "2" }
+    ];
 
     function handleChange(e) {
         props.handleChange(e.value);

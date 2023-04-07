@@ -28,24 +28,34 @@ abstract contract ERC20StableAsset is Ownable, ERC20Pausable {
         _token_name = token_name_;
     }
 
-    // All minting is to the owner account, the minted funds are then transfered out
+    /**
+     * @notice All minting is to the owner account, the minted funds are then transfered out
+     * @param amount the number of tokens to mint
+     */
     function mint(uint256 amount) public virtual onlyOwner whenNotPaused {
         super._mint(this.owner(), amount);
     }
 
-    // All burning is from the owner account, based on return (transfer in) of funds
+    /**
+     * @notice All burning is from the owner account, based on return (transfer in) of funds
+     * @param amount the number of token to burn (msu be less then or equal to current supply)
+     */
     function burn(uint256 amount) public virtual onlyOwner whenNotPaused {
         super._burn(this.owner(), amount);
     }
 
-    // Pause all change activity on the contract
+    /**
+     * @notice Pause all change activity on the contract
+     */
     function pause() public onlyOwner {
         if (!paused()) {
             super._pause();
         }
     }
 
-    // Un pause all change activity on the contract
+    /**
+     * @notice Un pause all change activity on the contract
+     */
     function uppause() public onlyOwner {
         if (paused()) {
             super._unpause();
@@ -53,22 +63,21 @@ abstract contract ERC20StableAsset is Ownable, ERC20Pausable {
     }
 
     /**
-     * Two decimal places as this is a current representation
+     * @notice return the number of decimal places token uses.
      */
     function decimals() public view virtual override returns (uint8) {
         return _decimals;
     }
 
     /**
-     * The Asset Code that identity the stable asset
+     * @notice The Asset Code that identity the stable asset
      */
-
     function assetCode() public view virtual returns (string memory) {
         return _asset_code;
     }
 
     /**
-     * The units per Token
+     * @notice the number of units per token = 10^decimals.
      */
     function unitsPerToken() public view virtual returns (uint256) {
         return 10 ** decimals();

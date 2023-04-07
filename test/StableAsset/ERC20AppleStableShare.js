@@ -131,7 +131,7 @@ describe("ERC20AppleStableShare", function () {
             const { appleSS, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20AppleStableShare);
 
             const qty = 1;
-            await appleSS.connect(owner).mint(qty);
+            await appleSS.connect(owner).mint(qty * unitsPerToken);
             expect(await appleSS.balanceOf(owner.address)).to.equal(1 * unitsPerToken);
             await appleSS.connect(owner).transfer(otherAccount.address, 0.25 * unitsPerToken);
             expect(await appleSS.balanceOf(owner.address)).to.equal(0.75 * unitsPerToken);
@@ -145,7 +145,7 @@ describe("ERC20AppleStableShare", function () {
             const { appleSS, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20AppleStableShare);
 
             const qty = 1;
-            await appleSS.connect(owner).mint(qty)
+            await appleSS.connect(owner).mint(qty * unitsPerToken)
             expect(await appleSS.balanceOf(owner.address)).to.equal(qty * unitsPerToken);
             await expect(appleSS.connect(owner).transferFrom(owner.address, otherAccount.address, 0.25 * unitsPerToken)).to.be.revertedWith(
                 "ERC20: insufficient allowance"
@@ -159,7 +159,7 @@ describe("ERC20AppleStableShare", function () {
             const { appleSS, owner, otherAccount, unitsPerToken } = await loadFixture(deployERC20AppleStableShare);
 
             const qty = 1;
-            await appleSS.connect(owner).mint(qty);
+            await appleSS.connect(owner).mint(qty * unitsPerToken);
             await appleSS.connect(owner).approve(owner.address, 0.25 * unitsPerToken)
             await appleSS.connect(owner).transfer(otherAccount.address, 0.25 * unitsPerToken)
             expect(await appleSS.balanceOf(owner.address)).to.equal(0.75 * unitsPerToken);

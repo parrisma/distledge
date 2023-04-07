@@ -18,16 +18,17 @@ async function main() {
 
   // ABI for contracts that have not been deployed.
   console.log("Exporting Contract ABI")
-  await updateAbiFromBuildArtifacts("Options", "SimpleOption");
-  await updateAbiFromBuildArtifacts("Options", "SimplePutOption");
-  await updateAbiFromBuildArtifacts("Deals", "FXDeal");
-  await updateAbiFromBuildArtifacts("DataFeeder", "EquityPrice");
-  await updateAbiFromBuildArtifacts("DataFeeder", "FXPrice");
-  await updateAbiFromBuildArtifacts("Mint", "EscrowCurrenyAccount");
-  await updateAbiFromBuildArtifacts("StableAsset", "ERC20CNYStableCoin");
-  await updateAbiFromBuildArtifacts("StableAsset", "ERC20EURStableCoin");
-  await updateAbiFromBuildArtifacts("StableAsset", "ERC20USDStableCoin");
-  await updateAbiFromBuildArtifacts("StableAsset", "ERC20AppleStableShare");
+  await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimpleOption");
+  await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimplePutOption");
+  await exportAbiAndBytecodeFromBuildArtifacts("Deals", "FXDeal");
+  await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "EquityPrice");
+  await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "FXPrice");
+  await exportAbiAndBytecodeFromBuildArtifacts("Mint", "EscrowCurrenyAccount");
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20CNYStableCoin");
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20EURStableCoin");
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20USDStableCoin");
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20AppleStableShare");
+  await exportAbiAndBytecodeFromBuildArtifacts("HelloWorld", "HelloWorld");
   console.log("Update ./frontend/constants/index.js if you have added new contracts");
 }
 
@@ -49,9 +50,9 @@ async function updateAbiFromDeployedContractAddress(contractName, contractAddres
   }
 }
 
-/* Export ABI file to front end, where ABI is given in JSON format
+/* Export ABI & Bytecode file to front end, by taking latest builds from project artifacts
 */
-async function updateAbiFromBuildArtifacts(contractGroup, contractName) {
+async function exportAbiAndBytecodeFromBuildArtifacts(contractGroup, contractName) {
   try {
     const contractFile = `./artifacts/contracts/${contractGroup}/${contractName}.sol/${contractName}.json`;
     let jsonData = JSON.parse(fs.readFileSync(contractFile, 'utf-8'));
@@ -60,8 +61,12 @@ async function updateAbiFromBuildArtifacts(contractGroup, contractName) {
       `${frontEndAbiLocation}${contractName}.json`,
       iface.format(ethers.utils.FormatTypes.json));
     console.log(`Exported ABI for [${contractFile}]`);
+    fs.writeFileSync(
+      `${frontEndAbiLocation}${contractName}-bytecode.json`,
+      `{"bytecode":"${jsonData.bytecode}"}`);
+    console.log(`Exported Bytecode for [${contractFile}]`);
   } catch (err) {
-    console.log(`Failed to export ABI for ${contractName} with error [${err}]`);
+    console.log(`Failed to export for ${contractName} with error [${err}]`);
   }
 }
 

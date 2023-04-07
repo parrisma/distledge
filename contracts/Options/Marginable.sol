@@ -5,6 +5,18 @@ pragma solidity ^0.8.17;
 import "../StableAsset/ERC20StableAsset.sol";
 import "../DataFeeder/ReferenceLevel.sol";
 
+/**
+ ** A contract that requires a margin against loss to be maintained.
+ **
+ ** TODO : I think this should work more like escrow, where the margin is held by an independent party
+ **      : and paid out to the losing party in the case of default.
+ **      : This could be done as part of this contract with a method only callable by the independent
+ **      : margin holder party. This method would do a token transfer to the party who suffered the loss
+ **      : or would be returned to the margin depositor on exercise if no default.
+ **      : We also need methods to allow only broker and only buyer to transfer in margin.
+ **
+ **      : All in all nice idea and great start, just needs a bit of a re-think.
+ */
 abstract contract Marginable {
     address internal _broker;
     uint256 internal _marginAmount;
@@ -43,18 +55,37 @@ abstract contract Marginable {
 
     event MarginAdjusted(uint256 amount, uint256 currentAmount);
 
+    /**
+     ** @notice Calculate te initial mergin to be deposited.
+     */
     function calculateInitialMargin(
         uint256 contractValue
     ) public virtual returns (uint256) {
         return margin(contractValue, _initialMargin);
     }
 
+    /**
+     ** @notice calculate the margin adjustment.
+     **
+     ** TODO : this could be combined with calculateInitialMargin() and just have a single method
+     **      : that returned the current margin at the time of call. This is more how such contracts
+     **      : work where margin is calculated peridoically (e.g. daily) or as a result of a given
+     **      : % market move.
+     */
     function calculateMaintenanceMargin(
         uint256 contractValue
     ) public virtual returns (uint256) {
         return margin(contractValue, _maintenanceMargin);
     }
 
+    /**
+     ** @dev Calculate the current margin.
+     **
+     ** TODO: Would ideally declare explicity as private to underpin that this is a utility method.
+     **     : could make this a single current margin function. Instead of initial margin you could
+     **     : just have minium-margin and margin . This woule give same effect and remove two methods
+     **     : from the contract.
+     */
     function margin(
         uint256 contractValue,
         uint marginRate

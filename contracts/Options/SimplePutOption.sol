@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-// Abstract Base contract for Options
+// A contract that models a simple put style option.
 
 pragma solidity ^0.8.17;
 

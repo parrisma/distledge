@@ -30,6 +30,11 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
     uint256 _reserverPercent;
     uint256 _unitsPerToken;
 
+    /**
+     ** Construct an stable asset escrow account.
+     ** @param erc20StableCoinAddr_ the address of the already deployed token that the Escrow account will take ownership of.
+     ** @param reservePercent_ the minimum balance on hand that cannot be burned when tokens are sold back to their master asset
+     */
     constructor(
         address erc20StableCoinAddr_,
         uint8 reserverPercent_
