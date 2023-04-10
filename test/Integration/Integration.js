@@ -162,23 +162,23 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             /**
             ** Create the Ccy specific escrow accounts & take ownership of relevant stable coin.
             */
-            const EscrowCurrenyAccount = await ethers.getContractFactory("EscrowCurrenyAccount");
+            const EscrowAccount = await ethers.getContractFactory("EscrowAccount");
 
-            escrowUSDCurrenyAccount = await EscrowCurrenyAccount.connect(escrow_manager).deploy(erc20USDStableCoin.address, onePercentReserve);
+            escrowUSDCurrenyAccount = await EscrowAccount.connect(escrow_manager).deploy(erc20USDStableCoin.address, onePercentReserve);
             await erc20USDStableCoin.transferOwnership(await escrowUSDCurrenyAccount.connect(escrow_manager).contractAddress());
             expect(await escrowUSDCurrenyAccount.managedTokenAddress()).to.equal(erc20USDStableCoin.address);
             expect(await escrowUSDCurrenyAccount.isBalanced()).to.equal(true);
             await escrowUSDCurrenyAccount.connect(escrow_manager).unPause();
             console.log("\nEscrow Account created and managing token [" + await escrowUSDCurrenyAccount.managedTokenAddress() + "] for [" + await escrowUSDCurrenyAccount.managedTokenName() + "]");
 
-            escrowEURCurrenyAccount = await EscrowCurrenyAccount.connect(escrow_manager).deploy(erc20EURStableCoin.address, onePercentReserve);
+            escrowEURCurrenyAccount = await EscrowAccount.connect(escrow_manager).deploy(erc20EURStableCoin.address, onePercentReserve);
             await erc20EURStableCoin.transferOwnership(await escrowEURCurrenyAccount.connect(escrow_manager).contractAddress());
             expect(await escrowEURCurrenyAccount.managedTokenAddress()).to.equal(erc20EURStableCoin.address);
             expect(await escrowEURCurrenyAccount.isBalanced()).to.equal(true);
             await escrowEURCurrenyAccount.connect(escrow_manager).unPause();
             console.log("Escrow Account created and managing token [" + await escrowEURCurrenyAccount.managedTokenAddress() + "] for [" + await escrowEURCurrenyAccount.managedTokenName() + "]");
 
-            escrowCNYCurrenyAccount = await EscrowCurrenyAccount.connect(escrow_manager).deploy(erc20CNYStableCoin.address, onePercentReserve);
+            escrowCNYCurrenyAccount = await EscrowAccount.connect(escrow_manager).deploy(erc20CNYStableCoin.address, onePercentReserve);
             await erc20CNYStableCoin.transferOwnership(await escrowCNYCurrenyAccount.connect(escrow_manager).contractAddress());
             expect(await escrowCNYCurrenyAccount.managedTokenAddress()).to.equal(erc20CNYStableCoin.address);
             expect(await escrowCNYCurrenyAccount.isBalanced()).to.equal(true);
