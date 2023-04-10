@@ -10,15 +10,15 @@ async function deployStableCoins(sharedConfig, hre, stable_coin_issuer) {
     console.log("\nIssue Stable Coins");
     const ERC20USDStableCoin = await hre.ethers.getContractFactory("ERC20USDStableCoin");
     erc20USDStableCoin = await ERC20USDStableCoin.connect(stable_coin_issuer).deploy();
-    console.log(`Stable coin token for ISO Ccy [${await erc20USDStableCoin.isoCcyCode()}] created at address [${erc20USDStableCoin.address}]`);
+    console.log(`Stable coin token for ISO Ccy [${await erc20USDStableCoin.assetCode()}] created at address [${erc20USDStableCoin.address}]`);
 
     const ERC20EURStableCoin = await hre.ethers.getContractFactory("ERC20EURStableCoin");
     erc20EURStableCoin = await ERC20EURStableCoin.connect(stable_coin_issuer).deploy();
-    console.log(`Stable coin token for ISO Ccy [${await erc20EURStableCoin.isoCcyCode()}] created at address [${erc20EURStableCoin.address}]`);
+    console.log(`Stable coin token for ISO Ccy [${await erc20EURStableCoin.assetCode()}] created at address [${erc20EURStableCoin.address}]`);
 
     const ERC20CNYStableCoin = await hre.ethers.getContractFactory("ERC20CNYStableCoin");
     erc20CNYStableCoin = await ERC20CNYStableCoin.connect(stable_coin_issuer).deploy();
-    console.log(`Stable coin token for ISO Ccy [${await erc20CNYStableCoin.isoCcyCode()}] created at address [${erc20CNYStableCoin.address}]\n`);
+    console.log(`Stable coin token for ISO Ccy [${await erc20CNYStableCoin.assetCode()}] created at address [${erc20CNYStableCoin.address}]\n`);
 
     sharedConfig.usdStableCoin = erc20USDStableCoin.address;
     sharedConfig.eurStableCoin = erc20EURStableCoin.address;
