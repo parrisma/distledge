@@ -19,12 +19,30 @@ function getAbiAndBytecodeFromBuildArtifacts(contractGroup, contractName) {
     }
 }
 
+function loadAndCallContract(contractInstance,
+    abi) {
+    console.log('Contract deployed Ok to address: [${contractInstance.options.address}]');
+
+    /* Now, we we load the contract from it's address & call a method on it.
+    */
+    const helloWorldContract = new web3.eth.Contract(abi, contractInstance.options.address);
+    helloWorldContract.methods
+        .message()
+        .call((err, res) => {
+            if (err) {
+                console.log(`Failed to call contract method :[${err}]`);
+                return;
+            }
+            console.log(`Contract returned : [${res}]`);
+        })
+}
+
 /*
 ** Main Script Starts Here
 */
 
 const getFromArtifacts = true;
-const test_account_address = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'; // this address needs to be an account created on the test net.
+const testAccountAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'; // this address needs to be an account created on the test net.
 
 /* Create Web 3 Provider so we have connection to local test network.
 */
@@ -64,7 +82,7 @@ var helloWorldTransaction = helloWorldContract.deploy({ data: bytecode, argument
 ** created by the test-network.
 */
 try {
-    helloWorldTransaction.send({ from: test_account_address, gas: 999999 }).then((contractInstance) => { console.log('Contract deployed Ok to address [${contractInstance.options.address}]') });
+    helloWorldTransaction.send({ from: testAccountAddress, gas: 999999 }).then((instance) => { loadAndCallContract(instance, abi, testAccountAddress) });
 } catch (err) {
     console.log(`Failed deploy contract with error [${err}]`);
 }
