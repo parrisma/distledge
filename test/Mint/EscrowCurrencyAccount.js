@@ -126,7 +126,7 @@ describe("Escrow Currency Account", function () {
 
             await expect(escrowCurrenyAccount.connect(escrow).processDepositTransaction(player1.address, depositQty, transId1))
                 .to.emit(escrowCurrenyAccount, 'Deposit')
-                .withArgs(player1.address, depositQty, transId1, depositQty);
+                .withArgs("USD", player1.address, depositQty, transId1, depositQty);
 
             expect(await erc20USDStableCoin.totalSupply()).to.equal(depositQty); // Total supply should be equal to amount of deposit (minted)
             expect(await await escrowCurrenyAccount.connect(escrow).balanceOnHand()).to.equal(depositQty); // physical balance shld be eql to deposit
@@ -153,7 +153,7 @@ describe("Escrow Currency Account", function () {
             //await escrowCurrenyAccount.txfr(player1.address, escrow.address, withdrawQty);
             await expect(escrowCurrenyAccount.connect(escrow).processWithdrawalTransaction(player1.address, withdrawQty, transId1))
                 .to.emit(escrowCurrenyAccount, 'Withdrawal')
-                .withArgs(player1.address, withdrawQty, transId1, 0);
+                .withArgs("USD", player1.address, withdrawQty, transId1, 0);
 
             expect(await erc20USDStableCoin.totalSupply()).to.equal(0); // Total supply should be equal to zero as now burned
             expect(await await escrowCurrenyAccount.connect(escrow).balanceOnHand()).to.equal(0); // physical balance shld be eql to zero

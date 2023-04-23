@@ -2,6 +2,7 @@ import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
 import { useNotification } from "web3uikit";
 import { getEscrowContractABI, getManagedTokenNameC, getBalanceOnHandC, getIsBalancedC } from "@/lib/EscrowWrapper";
+import { ethers } from "ethers";
 
 export default function Contract(props) {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
@@ -61,6 +62,69 @@ export default function Contract(props) {
     const handleButtonClick = (info) => {
         props.onAddInfo(info);
     };
+
+    const { Moralis, web3 } = useMoralis();
+
+  useEffect(() => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(escrowAddress, contractABI, provider);
+    const handleDeposit = async (
+      assetCode,
+      from,
+      quantity,
+      transactionId,
+      balance,
+      event
+    ) => {
+      let info =
+        quantity +
+        " " +
+        assetCode +
+        " deposited from " +
+        from +
+        ", balance " +
+        balance;
+      props.onAddInfo(info);
+    };
+    const handleWithdrawal = async (
+      assetCode,
+      to,
+      quantity,
+      transactionId,
+      balance,
+      event
+    ) => {
+      let info =
+        quantity +
+        " " +
+        assetCode +
+        " withdrawn to " +
+        to +
+        ", balance " +
+        balance;
+      props.onAddInfo(info);
+    };
+    const setEscrowEvents = async () => {
+      // Subscribe to the "Deposit" event
+      contract.on("Deposit", handleDeposit, {
+        fromBlock: 0,
+        toBlock: "latest",
+      });
+
+      // Subscribe to the "Withdrawal" event
+      contract.on("Withdrawal", handleWithdrawal, {
+        fromBlock: 0,
+        toBlock: "latest",
+      });
+    };
+
+    setEscrowEvents();
+
+    return () => {
+      contract.off("Deposit", handleDeposit);
+      contract.off("Withdrawal", handleWithdrawal);
+    };
+  }, [Moralis, web3, escrowAddress, contractABI]);
 
     return (
         <div className="p-5">
