@@ -1,6 +1,8 @@
 /*
-** To run me type 'node web3-deploy.js' in a command window on a machine where a test network has been launched locally on default port 8545
-** and where that test network as test accounts created. 
+** To run this test script, change directory to <root>/scripts/test and then 
+** type 'node web3-deploy.js' in a command window on a machine where a test network has been launched locally on default port 8545
+** and where that test network has test accounts created. If need be update testAccountAddress in the code to be the valid public address
+** of one of those test accounts.
 */
 var fs = require('fs');
 var Web3 = require('web3');
