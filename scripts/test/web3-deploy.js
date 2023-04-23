@@ -21,13 +21,23 @@ function getAbiAndBytecodeFromBuildArtifacts(contractGroup, contractName) {
 
 function loadAndCallContract(contractInstance,
     abi) {
-    console.log('Contract deployed Ok to address: [${contractInstance.options.address}]');
+    console.log(`Contract deployed Ok to address: [${contractInstance.options.address}]`);
 
     /* Now, we we load the contract from it's address & call a method on it.
     */
     const helloWorldContract = new web3.eth.Contract(abi, contractInstance.options.address);
     helloWorldContract.methods
-        .message()
+        .message("Mark", contractInstance.options.address, 3142)
+        .call((err, res) => {
+            if (err) {
+                console.log(`Failed to call contract method :[${err}]`);
+                return;
+            }
+            console.log(`Contract returned : [${res}]`);
+        })
+
+    helloWorldContract.methods
+        .ctor_params()
         .call((err, res) => {
             if (err) {
                 console.log(`Failed to call contract method :[${err}]`);
@@ -74,7 +84,7 @@ var helloWorldContract = new web3.eth.Contract(abi);
 /* Create a transaction to request the contract be deployed which requires the bytecode that implements
 ** the interface
 */
-var helloWorldTransaction = helloWorldContract.deploy({ data: bytecode, arguments: [] });
+var helloWorldTransaction = helloWorldContract.deploy({ data: bytecode, arguments: ["CtorStr", testAccountAddress, 6284] });
 
 /* Send the transaction to the test network to deploy an instance of the contract
 **
