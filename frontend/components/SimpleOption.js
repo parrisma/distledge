@@ -23,23 +23,6 @@ const Contract = (props) => {
         "fxReferenceLevelAddress": ""
     };
 
-    function printContract() {
-        deployOptionContract(
-            contractDetails.buyerAddress,
-            contractDetails.uniqueId,
-            contractDetails.name,
-            contractDetails.description,
-            contractDetails.buyerAddress,
-            contractDetails.premium,
-            contractDetails.premiumTokenAddress,
-            contractDetails.settlementTokenAddress,
-            contractDetails.notional,
-            contractDetails.strike,
-            contractDetails.referenceLevelAddress,
-            contractDetails.fxReferenceLevelAddress
-        );
-    }
-
     return (
         <div>
             <div className="div-table">
