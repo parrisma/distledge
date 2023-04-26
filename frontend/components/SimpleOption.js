@@ -4,7 +4,6 @@ import FXRateDropDown from "../components/dropdown/FXRateDropDown";
 import ReferenceLevelDropDown from "../components/dropdown/ReferenceLevelDropDown";
 import AccountDropDown from "../components/dropdown/AccountsDropDown";
 import InputField from "../components/InputField";
-import HelloWorld from "../components/SimpleOption";
 import { deployOptionContract } from "../lib/SimpleOptionWrapper";
 import { GloballyUniqueId } from "../lib/GloballyUniqueId";
 
@@ -25,8 +24,20 @@ const Contract = (props) => {
     };
 
     function printContract() {
-        console.log("Print");
-        deployOptionContract(); // Hard Coded Test function for now, need to be passed Option params.
+        deployOptionContract(
+            contractDetails.buyerAddress,
+            contractDetails.uniqueId,
+            contractDetails.name,
+            contractDetails.description,
+            contractDetails.buyerAddress,
+            contractDetails.premium,
+            contractDetails.premiumTokenAddress,
+            contractDetails.settlementTokenAddress,
+            contractDetails.notional,
+            contractDetails.strike,
+            contractDetails.referenceLevelAddress,
+            contractDetails.fxReferenceLevelAddress
+        );
     }
 
     return (
@@ -157,7 +168,22 @@ const Contract = (props) => {
                     <div className="div-table-col-fix-wide">
                         <button
                             className="button"
-                            onClick={printContract}
+                            onClick={() => {
+                                deployOptionContract(
+                                    contractDetails.buyerAddress,
+                                    contractDetails.uniqueId,
+                                    contractDetails.name,
+                                    contractDetails.description,
+                                    contractDetails.buyerAddress,
+                                    contractDetails.premium,
+                                    contractDetails.premiumTokenAddress,
+                                    contractDetails.settlementTokenAddress,
+                                    contractDetails.notional,
+                                    contractDetails.strike,
+                                    contractDetails.referenceLevelAddress,
+                                    contractDetails.fxReferenceLevelAddress
+                                );
+                            }}
                         >
                             <div>Print Contract</div>
                         </button>
