@@ -5,7 +5,7 @@ import ReferenceLevelDropDown from "../components/dropdown/ReferenceLevelDropDow
 import AccountDropDown from "../components/dropdown/AccountsDropDown";
 import InputField from "../components/InputField";
 import HelloWorld from "../components/SimpleOption";
-import { deployAndRunHelloWorld } from "../lib/SimpleOptionWrapper";
+import { deployOptionContract } from "../lib/SimpleOptionWrapper";
 import { GloballyUniqueId } from "../lib/GloballyUniqueId";
 
 const Contract = (props) => {
@@ -26,7 +26,7 @@ const Contract = (props) => {
 
     function printContract() {
         console.log("Print");
-        deployAndRunHelloWorld(); // Not yet working - need to finalise Moralis vs Alchemey
+        deployOptionContract(); // Hard Coded Test function for now, need to be passed Option params.
     }
 
     return (

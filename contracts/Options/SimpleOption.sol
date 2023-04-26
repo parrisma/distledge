@@ -15,6 +15,7 @@ import "../StableAsset/ERC20StableAsset.sol";
 /**
  ** @author Mark Parris
  ** @title Trival option that pays max(0, notional * (reference - strike))
+ ** 
  */
 contract SimpleOption is OptionContract {
     uint256 _notional;

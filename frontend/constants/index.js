@@ -8,13 +8,16 @@ const addressConfig = require("./contractAddressesConfig.json");
 // These are exported here by <proj root>./scripts/updateFrontEnd.js
 const equityPriceABI = require("./EquityPrice.json");
 const FXPriceABI = require("./FXPrice.json");
+const FXPriceByteCode = require("./FXPrice-bytecode.json");
 const ERC20AppleStableShare = require("./ERC20AppleStableShare.json");
 const ERC20CNYStableCoin = require("./ERC20CNYStableCoin");
 const ERC20EURStableCoin = require("./ERC20EURStableCoin");
 const ERC20USDStableCoin = require("./ERC20USDStableCoin");
+const ERC20USDStableByteCode = require("./ERC20USDStableCoin-bytecode.json");
 const EscrowStableCoinABI = require("./EscrowCurrenyAccount.json");
 const FXDeal = require("./FXDeal.json");
-const SimpleOption = require("./SimpleOption.json");
+const SimpleOptionABI = require("./SimpleOption.json");
+const SimpleOptionByteCode = require("./SimpleOption-bytecode.json");
 const SimplePutOption = require("./SimplePutOption.json");
 const HelloWorldABI = require("./HelloWorld.json");
 const HelloWorldByteCode = require("./HelloWorld-bytecode.json");
@@ -24,13 +27,16 @@ module.exports = {
   DisplayMap,
   equityPriceABI,
   FXPriceABI,
+  FXPriceByteCode,
   ERC20AppleStableShare,
   ERC20CNYStableCoin,
   ERC20EURStableCoin,
   ERC20USDStableCoin,
+  ERC20USDStableByteCode,
   EscrowStableCoinABI,
   FXDeal,
-  SimpleOption,
+  SimpleOptionABI,
+  SimpleOptionByteCode,
   SimplePutOption,
   HelloWorldABI,
   HelloWorldByteCode
