@@ -2,7 +2,9 @@
     "solidity.defaultCompiler": "localNodeModule",
     "cSpell.words": [
         "arrayify",
+        "CNYCNY",
         "Curreny",
+        "EUREUR",
         "keccak",
         "Mata",
         "nomicfoundation",
@@ -13,6 +15,7 @@
         "TSLA",
         "USDCNY",
         "USDEUR",
-        "USDEURFX"
+        "USDEURFX",
+        "USDUSD"
     ]
 }

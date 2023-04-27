@@ -57,7 +57,12 @@ async function main() {
   /**
   ** Deploy & initialize the FX Rates
   */
-  const [UsdEurFXRateContract, UsdCnyFXRateContract] = await deployFXRates(sharedConfig, hre, data_vendor, data_vendor); // data_vendor is owner and source
+  const [
+    UsdEurFXRateContract,
+    UsdCnyFXRateContract,
+    UsdUsdFXRateContract,
+    EurEurFXRateContract,
+    CnyCnyFXRateContract] = await deployFXRates(sharedConfig, hre, data_vendor, data_vendor); // data_vendor is owner and source
 
   /**
   ** Initial coin minting and allocation to trading accounts.
