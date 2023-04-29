@@ -8,6 +8,7 @@ bin
 yarn.lock
 .vs
 .prettierignore
+.vscode-server
 
 # Hardhat files
 **/cache
