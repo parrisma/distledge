@@ -55,6 +55,18 @@
         {
             "rawName": "UsdCnyFXRateContract",
             "displayName": "USD-CNY Rate Feed"
+        },
+        {
+            "rawName": "UsdUsdFXRateContract",
+            "displayName": "USD-USD Rate Feed"
+        },
+        {
+            "rawName": "EurEurFXRateContract",
+            "displayName": "EUR-EUR Rate Feed"
+        },
+        {
+            "rawName": "CnyCnyFXRateContract",
+            "displayName": "CNY-CNY Rate Feed"
         }
     ]
 }

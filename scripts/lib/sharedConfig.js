@@ -21,7 +21,10 @@ var sharedConfig = {
     cnyEscrowAccount: "",
     teslaEquityPriceContract: "",
     UsdEurFXRateContract: "",
-    UsdCnyFXRateContract: ""
+    UsdCnyFXRateContract: "",
+    UsdUsdFXRateContract: "",
+    EurEurFXRateContract: "",
+    CnyCnyFXRateContract: ""
 };
 
 const sharedConfigFileName = "./scripts/tmp/sharedConfig.json";

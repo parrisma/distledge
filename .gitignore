@@ -6,6 +6,7 @@ typechain
 typechain-types
 bin
 yarn.lock
+yarn-error.log
 .vs
 .prettierignore
 .vscode-server

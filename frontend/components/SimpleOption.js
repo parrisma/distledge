@@ -4,8 +4,7 @@ import FXRateDropDown from "../components/dropdown/FXRateDropDown";
 import ReferenceLevelDropDown from "../components/dropdown/ReferenceLevelDropDown";
 import AccountDropDown from "../components/dropdown/AccountsDropDown";
 import InputField from "../components/InputField";
-import HelloWorld from "../components/SimpleOption";
-import { deployAndRunHelloWorld } from "../lib/SimpleOptionWrapper";
+import { deployOptionContract } from "../lib/SimpleOptionWrapper";
 import { GloballyUniqueId } from "../lib/GloballyUniqueId";
 
 const Contract = (props) => {
@@ -23,11 +22,6 @@ const Contract = (props) => {
         "referenceLevelAddress": "",
         "fxReferenceLevelAddress": ""
     };
-
-    function printContract() {
-        console.log("Print");
-        deployAndRunHelloWorld(); // Not yet working - need to finalise Moralis vs Alchemey
-    }
 
     return (
         <div>
@@ -157,7 +151,22 @@ const Contract = (props) => {
                     <div className="div-table-col-fix-wide">
                         <button
                             className="button"
-                            onClick={printContract}
+                            onClick={() => {
+                                deployOptionContract(
+                                    contractDetails.buyerAddress,
+                                    contractDetails.uniqueId,
+                                    contractDetails.name,
+                                    contractDetails.description,
+                                    contractDetails.buyerAddress,
+                                    contractDetails.premium,
+                                    contractDetails.premiumTokenAddress,
+                                    contractDetails.settlementTokenAddress,
+                                    contractDetails.notional,
+                                    contractDetails.strike,
+                                    contractDetails.referenceLevelAddress,
+                                    contractDetails.fxReferenceLevelAddress
+                                );
+                            }}
                         >
                             <div>Print Contract</div>
                         </button>
