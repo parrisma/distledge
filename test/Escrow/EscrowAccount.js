@@ -124,9 +124,9 @@ describe("Escrow Account", function () {
 
             expect(await erc20USDStableCoin.balanceOf(player1.address)).to.equal(0); // player 1 should be zero before deposit
 
-            await expect(escrowAccount.connect(escrow).processDepositTransaction(player1.address, depositQty, transId1))
-                .to.emit(escrowAccount, 'Deposit')
-                .withArgs(player1.address, depositQty, transId1, depositQty);
+            await expect(escrowCurrenyAccount.connect(escrow).processDepositTransaction(player1.address, depositQty, transId1))
+                .to.emit(escrowCurrenyAccount, 'Deposit')
+                .withArgs("USD", player1.address, depositQty, transId1, depositQty);
 
             expect(await erc20USDStableCoin.totalSupply()).to.equal(depositQty); // Total supply should be equal to amount of deposit (minted)
             expect(await await escrowAccount.connect(escrow).balanceOnHand()).to.equal(depositQty); // physical balance shld be eql to deposit
@@ -150,10 +150,10 @@ describe("Escrow Account", function () {
             await erc20USDStableCoin.connect(player1).approve(escrowContractAddr, withdrawQty); // Permission transfer between player and escrow
             expect(await erc20USDStableCoin.allowance(player1.address, escrowContractAddr)).to.equal(withdrawQty); // escrow contract should have allowance to txfr
 
-            //await escrowAccount.txfr(player1.address, escrow.address, withdrawQty);
-            await expect(escrowAccount.connect(escrow).processWithdrawalTransaction(player1.address, withdrawQty, transId1))
-                .to.emit(escrowAccount, 'Withdrawal')
-                .withArgs(player1.address, withdrawQty, transId1, 0);
+            //await escrowCurrenyAccount.txfr(player1.address, escrow.address, withdrawQty);
+            await expect(escrowCurrenyAccount.connect(escrow).processWithdrawalTransaction(player1.address, withdrawQty, transId1))
+                .to.emit(escrowCurrenyAccount, 'Withdrawal')
+                .withArgs("USD", player1.address, withdrawQty, transId1, 0);
 
             expect(await erc20USDStableCoin.totalSupply()).to.equal(0); // Total supply should be equal to zero as now burned
             expect(await await escrowAccount.connect(escrow).balanceOnHand()).to.equal(0); // physical balance shld be eql to zero
