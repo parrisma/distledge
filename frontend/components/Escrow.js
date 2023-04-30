@@ -63,8 +63,6 @@ export default function Contract(props) {
         props.onAddInfo(info);
     };
 
-    const { Moralis, web3 } = useMoralis();
-
   useEffect(() => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const contract = new ethers.Contract(escrowAddress, contractABI, provider);
@@ -124,7 +122,7 @@ export default function Contract(props) {
       contract.off("Deposit", handleDeposit);
       contract.off("Withdrawal", handleWithdrawal);
     };
-  }, [Moralis, web3, escrowAddress, contractABI]);
+  }, [escrowAddress, contractABI]);
 
     return (
         <div className="p-5">

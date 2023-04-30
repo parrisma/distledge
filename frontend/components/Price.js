@@ -61,8 +61,6 @@ const Contract = (props) => {
     props.onAddInfo(info);
   };
 
-  const { Moralis, web3 } = useMoralis();
-
   useEffect(() => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const contract = new ethers.Contract(levelAddress, contractABI, provider);
@@ -105,7 +103,7 @@ const Contract = (props) => {
       contract.off("ChangeOfSource", handleChangeOfSource);
       contract.off("LevelUpdated", handleSecureLevelUpdate);
     };
-  }, [Moralis, web3, levelAddress, contractABI]);
+  }, [levelAddress, contractABI]);
 
   return (
     <div className="p-5">
