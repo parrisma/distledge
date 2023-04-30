@@ -1,8 +1,8 @@
-# Deploying from Interface and Bytecode.
+# Deploying from Interface and Bytecode
 
 ## Overview
 
-There are time when we need to deploy contracts from the interface (abi) and  bytecode. In our example here when we create new option contracts we need to create new instances of the relevant contract.
+There are time when we need to deploy contracts from the interface (abi) and bytecode. In our project, when we create new option contracts we need to create new instances of the relevant contract.
 
 We would also like to do this from the interface. So to do this we need to have access to the latest version of the interface (abi) and the bytecode. These are produced when the contract is compiled.
 
@@ -20,9 +20,9 @@ The demo code below, shows the following flow
 4. Load the ```HelloWorld.json``` and extract the ```.abi``` and ```.byecode```
 5. Create a contract interface with ```var helloWorldContract = new web3.eth.Contract(abi)```
 6. Deploy an instance of the contract, with this command that associates the interface with the bytecode ```var helloWorldTransaction = helloWorldContract.deploy({ data: bytecode, arguments: ["CtorStr", testAccountAddress, 6284] });```
-7. Create a link to the deployed contract with ``` const helloWorldContract = new web3.eth.Contract(abi, contractInstance.options.address);```
-8. Call a method on the deployed contract with ```helloWorldContract.methods.message("Mark", contractInstance.options.address, 3142).call((err, res) => {})```
+7. Create a link to the deployed contract with ```const helloWorldContract = new web3.eth.Contract(abi, contractInstance.options.address);```
+8. Call a method on the deployed contract with ```helloWorldContract.methods.message("Mark", contractInstance.options.address, 3142).call((err, res) => {});```
 
 ## Demo Code
 
-There is a demo script you can run with by changing directory to ```[project root]\scripts\test``` and running ```node web3-deploy.js```. You need to make sure the test network is running with ```npx hardhat node```
+There is a demo script you can run, changing directory to ```[project root]\scripts\test``` and runn ```node web3-deploy.js```. You need to make sure the test network is running with ```npx hardhat node```

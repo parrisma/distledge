@@ -6,6 +6,7 @@ require("hardhat-deploy");
 require("@nomiclabs/hardhat-etherscan");
 require("solidity-coverage");
 require("hardhat-gas-reporter");
+require('hardhat-contract-sizer');
 
 //Assign environment variables for local use.
 const GOERLI_RPC_URL =
@@ -24,6 +25,16 @@ module.exports = {
     compilers: [
       {
         version: "0.8.17",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+            details:
+            {
+              yul: false
+            },
+          },
+        }
       }
     ],
   },
@@ -32,6 +43,7 @@ module.exports = {
     hardhat: {
       chianId: 31337,
       blockGasLimit: 60000000, // Network block gasLimit
+      allowUnlimitedContractSize: true,
     },
     goerli: {
       url: GOERLI_RPC_URL, //test network RPC URL is defined in .env file.
