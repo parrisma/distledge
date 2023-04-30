@@ -13,28 +13,28 @@ async function deployAndLinkEscrowAccounts(sharedConfig, hre, escrow_manager, us
     const onePercentReserve = 1;
 
     console.log("\nCreate Escrow Accounts and Link to Stable Coins");
-    const EscrowCurrenyAccount = await hre.ethers.getContractFactory("EscrowCurrenyAccount");
+    const EscrowAccount = await hre.ethers.getContractFactory("EscrowAccount");
 
-    escrowUSDCurrenyAccount = await EscrowCurrenyAccount.connect(escrow_manager).deploy(usdStableCoin.address, onePercentReserve);
-    await usdStableCoin.transferOwnership(await escrowUSDCurrenyAccount.connect(escrow_manager).contractAddress());
-    await escrowUSDCurrenyAccount.connect(escrow_manager).unPause();
-    console.log("Escrow Account created and managing token [" + await escrowUSDCurrenyAccount.managedTokenAddress() + "] for [" + await escrowUSDCurrenyAccount.managedTokenName() + "]");
+    escrowUSDAccount = await EscrowAccount.connect(escrow_manager).deploy(usdStableCoin.address, onePercentReserve);
+    await usdStableCoin.transferOwnership(await escrowUSDAccount.connect(escrow_manager).contractAddress());
+    await escrowUSDAccount.connect(escrow_manager).unPause();
+    console.log("Escrow Account created and managing token [" + await escrowUSDAccount.managedTokenAddress() + "] for [" + await escrowUSDAccount.managedTokenName() + "]");
 
-    escrowEURCurrenyAccount = await EscrowCurrenyAccount.connect(escrow_manager).deploy(eurStableCoin.address, onePercentReserve);
-    await eurStableCoin.transferOwnership(await escrowEURCurrenyAccount.connect(escrow_manager).contractAddress());
-    await escrowEURCurrenyAccount.connect(escrow_manager).unPause();
-    console.log("Escrow Account created and managing token [" + await escrowEURCurrenyAccount.managedTokenAddress() + "] for [" + await escrowEURCurrenyAccount.managedTokenName() + "]");
+    escrowEURAccount = await EscrowAccount.connect(escrow_manager).deploy(eurStableCoin.address, onePercentReserve);
+    await eurStableCoin.transferOwnership(await escrowEURAccount.connect(escrow_manager).contractAddress());
+    await escrowEURAccount.connect(escrow_manager).unPause();
+    console.log("Escrow Account created and managing token [" + await escrowEURAccount.managedTokenAddress() + "] for [" + await escrowEURAccount.managedTokenName() + "]");
 
-    escrowCNYCurrenyAccount = await EscrowCurrenyAccount.connect(escrow_manager).deploy(cnyStableCoin.address, onePercentReserve);
-    await cnyStableCoin.transferOwnership(await escrowCNYCurrenyAccount.connect(escrow_manager).contractAddress());
-    await escrowCNYCurrenyAccount.connect(escrow_manager).unPause();
-    console.log("Escrow Account created and managing token [" + await escrowCNYCurrenyAccount.managedTokenAddress() + "] for [" + await escrowCNYCurrenyAccount.managedTokenName() + "]");
+    escrowCNYAccount = await EscrowAccount.connect(escrow_manager).deploy(cnyStableCoin.address, onePercentReserve);
+    await cnyStableCoin.transferOwnership(await escrowCNYAccount.connect(escrow_manager).contractAddress());
+    await escrowCNYAccount.connect(escrow_manager).unPause();
+    console.log("Escrow Account created and managing token [" + await escrowCNYAccount.managedTokenAddress() + "] for [" + await escrowCNYAccount.managedTokenName() + "]");
 
-    sharedConfig.usdEscrowAccount = escrowUSDCurrenyAccount.address;
-    sharedConfig.eurEscrowAccount = escrowEURCurrenyAccount.address;
-    sharedConfig.cnyEscrowAccount = escrowCNYCurrenyAccount.address;
+    sharedConfig.usdEscrowAccount = escrowUSDAccount.address;
+    sharedConfig.eurEscrowAccount = escrowEURAccount.address;
+    sharedConfig.cnyEscrowAccount = escrowCNYAccount.address;
 
-    return [escrowUSDCurrenyAccount, escrowEURCurrenyAccount, escrowCNYCurrenyAccount]
+    return [escrowUSDAccount, escrowEURAccount, escrowCNYAccount]
 
 }
 

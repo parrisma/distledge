@@ -186,10 +186,10 @@ describe("Simple Option Test Suite", function () {
     ).deploy();
 
     // Setup deposite of seller & buyer accounts
-    const EscrowCurrenyAccount = await ethers.getContractFactory(
-      "EscrowCurrenyAccount"
+    const EscrowAccount = await ethers.getContractFactory(
+      "EscrowAccount"
     );
-    const escrowPremiumTokenAccount = await EscrowCurrenyAccount.connect(
+    const escrowPremiumTokenAccount = await EscrowAccount.connect(
       escrow_manager
     ).deploy(premiumToken.address, 1);
     await premiumToken.transferOwnership(
@@ -212,7 +212,7 @@ describe("Simple Option Test Suite", function () {
         defaultTokenBalance,
         transId2
       );
-    const escrowSettlementTokenAccount = await EscrowCurrenyAccount.connect(
+    const escrowSettlementTokenAccount = await EscrowAccount.connect(
       escrow_manager
     ).deploy(settlementToken.address, 1);
     await settlementToken.transferOwnership(

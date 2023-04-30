@@ -11,8 +11,7 @@ export function consoleTimeStamp() {
 
 /* Write a message via the given setter.
 */
-export function handleLogChange(logSetter,
-    currentLogMessages,
-    newLogMessage) {
-    logSetter(`${currentLogMessages}\n${consoleTimeStamp()}:${newLogMessage}`);
+
+export function handleLogChange(logSetter, newLogMessage) {
+    logSetter(prevLog => `${prevLog}\n${consoleTimeStamp()} - ${newLogMessage}`);
 };

@@ -2,6 +2,7 @@ import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
 import { useNotification } from "web3uikit";
 import { getLevelContractABI, getTickerC, getLevelDetailsC, getVerifiedValueC, getDecimalsC } from "../lib/LevelWrapper";
+import { ethers } from "ethers";
 
 const Contract = (props) => {
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
@@ -59,6 +60,50 @@ const Contract = (props) => {
   const handleButtonClick = (info) => {
     props.onAddInfo(info);
   };
+
+  useEffect(() => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(levelAddress, contractABI, provider);
+    const handleChangeOfSource = async (
+      currentSigner,
+      newSigner,
+      event
+    ) => {
+      let info =
+        "Signer changed  from " +
+        currentSigner +
+        " to " +
+        newSigner;
+      props.onAddInfo(info);
+    };
+    const handleSecureLevelUpdate = async (
+      value,
+      event
+    ) => {
+      let info = "Secure level updated to " + value;
+      props.onAddInfo(info);
+    };
+    const setSecureLevelEvents = async () => {
+      // Subscribe to the "Deposit" event
+      contract.on("ChangeOfSource", handleChangeOfSource, {
+        fromBlock: 0,
+        toBlock: "latest",
+      });
+
+      // Subscribe to the "Withdrawal" event
+      contract.on("LevelUpdated", handleSecureLevelUpdate, {
+        fromBlock: 0,
+        toBlock: "latest",
+      });
+    };
+
+    setSecureLevelEvents();
+
+    return () => {
+      contract.off("ChangeOfSource", handleChangeOfSource);
+      contract.off("LevelUpdated", handleSecureLevelUpdate);
+    };
+  }, [levelAddress, contractABI]);
 
   return (
     <div className="p-5">

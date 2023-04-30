@@ -9,16 +9,18 @@ import "../StableAsset/ERC20StableAsset.sol";
 
 /**
  ** @author Mark Parris
- ** @title Simulate an Escrow Curreny Account that can verify deposits and withdrawals that back a stable coin token
+ ** @title Simulate an Escrow Account that can verify deposits and withdrawals that back a stable coin token
  */
-contract EscrowCurrenyAccount is Ownable, Pausable {
+contract EscrowAccount is Ownable, Pausable {
     event Deposit(
+        string _assetCode,
         address _from,
         uint256 _quantity,
         string transactionId,
         uint256 _balance
     );
     event Withdrawal(
+        string _assetCode,
         address _to,
         uint256 _quantity,
         string transactionId,
@@ -64,7 +66,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
     function unPause() public onlyOwner whenPaused returns (bool) {
         require(
             _erc20StableCoin.owner() == address(this),
-            "EscrowCurrenyAccount not owner of managed token"
+            "EscrowAccount not owner of managed token"
         );
         require(
             isBalanced() == true,
@@ -167,6 +169,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
             _erc20StableCoin.transfer(transactingAddress_, quantity_);
             _physicalBalance = _physicalBalance + quantity_;
             emit Deposit(
+                _erc20StableCoin.assetCode(),
                 transactingAddress_,
                 quantity_,
                 uniqueTransactionId_,
@@ -185,6 +188,7 @@ contract EscrowCurrenyAccount is Ownable, Pausable {
             _physicalBalance = _physicalBalance - quantity_;
             _erc20StableCoin.burn(quantity_);
             emit Withdrawal(
+                _erc20StableCoin.assetCode(),
                 transactingAddress_,
                 quantity_,
                 uniqueTransactionId_,

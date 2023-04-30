@@ -162,23 +162,23 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             /**
             ** Create the Ccy specific escrow accounts & take ownership of relevant stable coin.
             */
-            const EscrowCurrenyAccount = await ethers.getContractFactory("EscrowCurrenyAccount");
+            const EscrowAccount = await ethers.getContractFactory("EscrowAccount");
 
-            escrowUSDCurrenyAccount = await EscrowCurrenyAccount.connect(escrow_manager).deploy(erc20USDStableCoin.address, onePercentReserve);
+            escrowUSDCurrenyAccount = await EscrowAccount.connect(escrow_manager).deploy(erc20USDStableCoin.address, onePercentReserve);
             await erc20USDStableCoin.transferOwnership(await escrowUSDCurrenyAccount.connect(escrow_manager).contractAddress());
             expect(await escrowUSDCurrenyAccount.managedTokenAddress()).to.equal(erc20USDStableCoin.address);
             expect(await escrowUSDCurrenyAccount.isBalanced()).to.equal(true);
             await escrowUSDCurrenyAccount.connect(escrow_manager).unPause();
             console.log("\nEscrow Account created and managing token [" + await escrowUSDCurrenyAccount.managedTokenAddress() + "] for [" + await escrowUSDCurrenyAccount.managedTokenName() + "]");
 
-            escrowEURCurrenyAccount = await EscrowCurrenyAccount.connect(escrow_manager).deploy(erc20EURStableCoin.address, onePercentReserve);
+            escrowEURCurrenyAccount = await EscrowAccount.connect(escrow_manager).deploy(erc20EURStableCoin.address, onePercentReserve);
             await erc20EURStableCoin.transferOwnership(await escrowEURCurrenyAccount.connect(escrow_manager).contractAddress());
             expect(await escrowEURCurrenyAccount.managedTokenAddress()).to.equal(erc20EURStableCoin.address);
             expect(await escrowEURCurrenyAccount.isBalanced()).to.equal(true);
             await escrowEURCurrenyAccount.connect(escrow_manager).unPause();
             console.log("Escrow Account created and managing token [" + await escrowEURCurrenyAccount.managedTokenAddress() + "] for [" + await escrowEURCurrenyAccount.managedTokenName() + "]");
 
-            escrowCNYCurrenyAccount = await EscrowCurrenyAccount.connect(escrow_manager).deploy(erc20CNYStableCoin.address, onePercentReserve);
+            escrowCNYCurrenyAccount = await EscrowAccount.connect(escrow_manager).deploy(erc20CNYStableCoin.address, onePercentReserve);
             await erc20CNYStableCoin.transferOwnership(await escrowCNYCurrenyAccount.connect(escrow_manager).contractAddress());
             expect(await escrowCNYCurrenyAccount.managedTokenAddress()).to.equal(erc20CNYStableCoin.address);
             expect(await escrowCNYCurrenyAccount.isBalanced()).to.equal(true);
@@ -201,19 +201,19 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             const transId1 = crypto.randomUUID();
             await expect(escrowUSDCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyUSD, transId1))
                 .to.emit(escrowUSDCurrenyAccount, 'Deposit')
-                .withArgs(option_seller.address, depositQtyUSD, transId1, depositQtyUSD);
+                .withArgs("USD", option_seller.address, depositQtyUSD, transId1, depositQtyUSD);
             console.log("Option seller has " + await erc20USDStableCoin.balanceOf(option_seller.address) + " USD Token");
 
             const transId2 = crypto.randomUUID();
             await expect(escrowEURCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyEUR, transId2))
                 .to.emit(escrowEURCurrenyAccount, 'Deposit')
-                .withArgs(option_seller.address, depositQtyEUR, transId2, depositQtyEUR);
+                .withArgs("EUR", option_seller.address, depositQtyEUR, transId2, depositQtyEUR);
             console.log("Option seller has " + await erc20EURStableCoin.balanceOf(option_seller.address) + " EUR Token");
 
             const transId3 = crypto.randomUUID();
             await expect(escrowCNYCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyCNY, transId3))
                 .to.emit(escrowCNYCurrenyAccount, 'Deposit')
-                .withArgs(option_seller.address, depositQtyCNY, transId3, depositQtyCNY);
+                .withArgs("CNY", option_seller.address, depositQtyCNY, transId3, depositQtyCNY);
             console.log("Option seller has " + await erc20CNYStableCoin.balanceOf(option_seller.address) + " CNY Token");
 
             // Buyer
@@ -221,19 +221,19 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             const transId4 = crypto.randomUUID();
             await expect(escrowUSDCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_buyer.address, depositQtyUSD, transId4))
                 .to.emit(escrowUSDCurrenyAccount, 'Deposit')
-                .withArgs(option_buyer.address, depositQtyUSD, transId4, depositQtyUSD * 2.0);
+                .withArgs("USD", option_buyer.address, depositQtyUSD, transId4, depositQtyUSD * 2.0);
             console.log("Option buyer has " + await erc20USDStableCoin.balanceOf(option_buyer.address) + " USD Token");
 
             const transId5 = crypto.randomUUID();
             await expect(escrowEURCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_buyer.address, depositQtyEUR, transId5))
                 .to.emit(escrowEURCurrenyAccount, 'Deposit')
-                .withArgs(option_buyer.address, depositQtyEUR, transId5, depositQtyEUR * 2.0);
+                .withArgs("EUR", option_buyer.address, depositQtyEUR, transId5, depositQtyEUR * 2.0);
             console.log("Option buyer has " + await erc20EURStableCoin.balanceOf(option_buyer.address) + " EUR Token");
 
             const transId6 = crypto.randomUUID();
             await expect(escrowCNYCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_buyer.address, depositQtyCNY, transId6))
                 .to.emit(escrowCNYCurrenyAccount, 'Deposit')
-                .withArgs(option_buyer.address, depositQtyCNY, transId6, depositQtyCNY * 2.0);
+                .withArgs("CNY", option_buyer.address, depositQtyCNY, transId6, depositQtyCNY * 2.0);
             console.log("Option buyer has " + await erc20CNYStableCoin.balanceOf(option_buyer.address) + " CNY Token");
 
         });

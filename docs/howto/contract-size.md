@@ -6,6 +6,10 @@ Contracts are limited in size by [EIP-170](https://soliditydeveloper.com/max-con
 
 The ```hardhat-contract-sizer``` has been added to this project, and this can report on the KB size of all our contracts.
 
+## To install
+
+yarn add hardhat-contract-sizer
+
 ## To Run
 
 Type ```>yarn hardhat size-contracts```
