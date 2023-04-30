@@ -9,7 +9,7 @@ const hre = require("hardhat");
 const { namedAccounts } = require("../lib/accounts.js");
 const { loadEquityPricesFromAddresses } = require("../deploy/deployEquityPrices.js");
 const { loadFXRatesFromAddresses } = require("../deploy/deployFXRates.js");
-const { loadSharedConfig, sharedConfig } = require("../lib/sharedConfig.js");
+const { loadSharedConfig } = require("../lib/sharedConfig.js");
 const { signedValue } = require("../lib/signedValue.js");
 const timeout = 1000;
 
@@ -73,7 +73,8 @@ async function main() {
     /**
      * Get and allocate account roles on the network
      */
-    [escrow_manager, stable_coin_issuer, data_vendor, option_seller, option_buyer] = await namedAccounts();
+    var sharedConfig = loadSharedConfig();
+    [escrow_manager, stable_coin_issuer, data_vendor, option_seller, option_buyer] = await namedAccounts(sharedConfig);
 
     console.log(`\nAccount Addresses`);
     console.log(`Escrow Manager     : [${escrow_manager.address}]`);
@@ -89,8 +90,6 @@ async function main() {
      */
     console.log("\nLoading instances of already deployed price and FX contracts\n");
     var teslaEquityPriceContract;
-    var sharedConfig = loadSharedConfig();
-    console.log(sharedConfig);
     try {
         [teslaEquityPriceContract] = await loadEquityPricesFromAddresses(sharedConfig);
         console.log("Price contract loaded with ticker: " + await teslaEquityPriceContract.getTicker() + " and price [" + await teslaEquityPriceContract.getVerifiedValue() + "]");
