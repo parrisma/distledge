@@ -6,7 +6,7 @@ const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
 const crypto = require('crypto');
 
-describe("Escrow Currency Account", function () {
+describe("Escrow Account", function () {
     /* We define a fixture to reuse the same setup in every test.
     ** We use loadFixture to run this setup once, snapshot that state,
     ** and reset Hardhat Network to that snapshot in every test.
@@ -26,13 +26,13 @@ describe("Escrow Currency Account", function () {
         ** Create escrow account that will manage the token.
         */
         const onePercentReserve = 1;
-        const EscrowCurrenyAccount = await ethers.getContractFactory("EscrowCurrenyAccount");
-        const escrowCurrenyAccount = await EscrowCurrenyAccount.connect(escrow).deploy(erc20USDStableCoin.address, onePercentReserve);
+        const EscrowAccount = await ethers.getContractFactory("EscrowAccount");
+        const escrowAccount = await EscrowAccount.connect(escrow).deploy(erc20USDStableCoin.address, onePercentReserve);
 
-        const escrowContractAddress = await escrowCurrenyAccount.connect(escrow).contractAddress();
+        const escrowContractAddress = await escrowAccount.connect(escrow).contractAddress();
         await erc20USDStableCoin.transferOwnership(escrowContractAddress); // make escrow owner of token
-        await escrowCurrenyAccount.connect(escrow).unPause(); // un pause the escrow contract.
-        return { escrowCurrenyAccount };
+        await escrowAccount.connect(escrow).unPause(); // un pause the escrow contract.
+        return { escrowAccount };
     }
 
     describe("Testing Escrow Process", async function () {
@@ -43,27 +43,27 @@ describe("Escrow Currency Account", function () {
             var { erc20USDStableCoin, owner, escrow, player1 } = await loadFixture(deployAccountAndToken);
 
             /*
-            ** Create the escrow current account to test
+            ** Create the escrow account to test
             */
             const onePercentReserve = 1;
-            const EscrowCurrenyAccount = await ethers.getContractFactory("EscrowCurrenyAccount");
-            const escrowCurrenyAccount = await EscrowCurrenyAccount.connect(escrow).deploy(erc20USDStableCoin.address, onePercentReserve);
+            const EscrowAccount = await ethers.getContractFactory("EscrowAccount");
+            const escrowAccount = await EscrowAccount.connect(escrow).deploy(erc20USDStableCoin.address, onePercentReserve);
 
             // Test paused at time of construction
-            expect(await escrowCurrenyAccount.connect(escrow).paused()).to.equal(true);
-            expect(await escrowCurrenyAccount.connect(escrow).isBalanced()).to.equal(true);
-            expect(await escrowCurrenyAccount.connect(escrow).managedTokenAddress()).to.equal(erc20USDStableCoin.address);
+            expect(await escrowAccount.connect(escrow).paused()).to.equal(true);
+            expect(await escrowAccount.connect(escrow).isBalanced()).to.equal(true);
+            expect(await escrowAccount.connect(escrow).managedTokenAddress()).to.equal(erc20USDStableCoin.address);
 
             // Test paused enforcement
-            await expect(escrowCurrenyAccount.connect(escrow).balanceOnHand()).to.be.revertedWith(
+            await expect(escrowAccount.connect(escrow).balanceOnHand()).to.be.revertedWith(
                 "Pausable: paused"
             );
 
             /*
             ** Cannot un-pause if escrow not owner of the token
             */
-            await expect(escrowCurrenyAccount.connect(escrow).unPause()).to.be.revertedWith(
-                "EscrowCurrenyAccount not owner of managed token"
+            await expect(escrowAccount.connect(escrow).unPause()).to.be.revertedWith(
+                "EscrowAccount not owner of managed token"
             );
 
             /* 
@@ -72,25 +72,25 @@ describe("Escrow Currency Account", function () {
             ** this means tokens are only minted/burnt in line with the supervisory controls imposed by the
             ** escrow process.
             */
-            const escrowContractAddress = await escrowCurrenyAccount.connect(escrow).contractAddress();
+            const escrowContractAddress = await escrowAccount.connect(escrow).contractAddress();
             await erc20USDStableCoin.transferOwnership(escrowContractAddress);
             expect(await erc20USDStableCoin.owner()).to.equal(escrowContractAddress);
 
             // Un pause for owner tests
-            await escrowCurrenyAccount.connect(escrow).unPause();
-            expect(await escrowCurrenyAccount.connect(escrow).paused()).to.equal(false);
+            await escrowAccount.connect(escrow).unPause();
+            expect(await escrowAccount.connect(escrow).paused()).to.equal(false);
 
             // Test onlyOwner enforcement
-            await expect(escrowCurrenyAccount.connect(player1).contractAddress()).to.be.revertedWith(
+            await expect(escrowAccount.connect(player1).contractAddress()).to.be.revertedWith(
                 "Ownable: caller is not the owner"
             );
-            await expect(escrowCurrenyAccount.connect(player1).processDepositTransaction(ethers.constants.AddressZero, 0, "")).to.be.revertedWith(
+            await expect(escrowAccount.connect(player1).processDepositTransaction(ethers.constants.AddressZero, 0, "")).to.be.revertedWith(
                 "Ownable: caller is not the owner"
             );
-            await expect(escrowCurrenyAccount.connect(player1).processWithdrawalTransaction(ethers.constants.AddressZero, 0, "")).to.be.revertedWith(
+            await expect(escrowAccount.connect(player1).processWithdrawalTransaction(ethers.constants.AddressZero, 0, "")).to.be.revertedWith(
                 "Ownable: caller is not the owner"
             );
-            await expect(escrowCurrenyAccount.connect(player1).managedTokenAddress()).to.be.revertedWith(
+            await expect(escrowAccount.connect(player1).managedTokenAddress()).to.be.revertedWith(
                 "Ownable: caller is not the owner"
             );
         });
@@ -100,7 +100,7 @@ describe("Escrow Currency Account", function () {
             ** Create a token and link it to an escrow account
             */
             var { erc20USDStableCoin, owner, escrow, player1 } = await loadFixture(deployAccountAndToken);
-            var { escrowCurrenyAccount } = await escrowSetUp(erc20USDStableCoin, owner, escrow);
+            var { escrowAccount } = await escrowSetUp(erc20USDStableCoin, owner, escrow);
 
             /* 
             ** Execute deposit transaction and ensure supply is minted.
@@ -109,12 +109,12 @@ describe("Escrow Currency Account", function () {
             const quantity = 632;
 
             // Test zero quantity
-            await expect(escrowCurrenyAccount.connect(escrow).processDepositTransaction(player1.address, 0, transId1)).to.be.revertedWith(
+            await expect(escrowAccount.connect(escrow).processDepositTransaction(player1.address, 0, transId1)).to.be.revertedWith(
                 "Transaction quantity must be greater than zero"
             );
 
             // Test bad transaction address
-            await expect(escrowCurrenyAccount.connect(escrow).processDepositTransaction(ethers.constants.AddressZero, quantity, transId1)).to.be.revertedWith(
+            await expect(escrowAccount.connect(escrow).processDepositTransaction(ethers.constants.AddressZero, quantity, transId1)).to.be.revertedWith(
                 "Transaction counter-party address must be valid"
             );
 
@@ -129,24 +129,24 @@ describe("Escrow Currency Account", function () {
                 .withArgs("USD", player1.address, depositQty, transId1, depositQty);
 
             expect(await erc20USDStableCoin.totalSupply()).to.equal(depositQty); // Total supply should be equal to amount of deposit (minted)
-            expect(await await escrowCurrenyAccount.connect(escrow).balanceOnHand()).to.equal(depositQty); // physical balance shld be eql to deposit
-            expect(await escrowCurrenyAccount.connect(escrow).isBalanced()).to.equal(true); // Escrow account physical and token balance should be in line            
+            expect(await await escrowAccount.connect(escrow).balanceOnHand()).to.equal(depositQty); // physical balance shld be eql to deposit
+            expect(await escrowAccount.connect(escrow).isBalanced()).to.equal(true); // Escrow account physical and token balance should be in line            
             expect(await erc20USDStableCoin.balanceOf(player1.address)).to.equal(depositQty); // player 1 should now have tokens = deposit made
             expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(0); // Owner account should be zero
             expect(await erc20USDStableCoin.balanceOf(escrow.address)).to.equal(0); // Escrow account should be zero
-            expect(await erc20USDStableCoin.balanceOf(await escrowCurrenyAccount.connect(escrow).contractAddress())).to.equal(0); // owner balance should be zero.
+            expect(await erc20USDStableCoin.balanceOf(await escrowAccount.connect(escrow).contractAddress())).to.equal(0); // owner balance should be zero.
 
             // Make a corresponding withdrawal and see balances zero out.
             const withdrawQty = depositQty;
 
             // Seller did not permission transfer of tokens to escrow account.
-            await expect(escrowCurrenyAccount.connect(escrow).processWithdrawalTransaction(player1.address, depositQty, transId1))
+            await expect(escrowAccount.connect(escrow).processWithdrawalTransaction(player1.address, depositQty, transId1))
                 .to.be.revertedWith(
                     "ERC20: insufficient allowance"
                 );
 
 
-            const escrowContractAddr = await escrowCurrenyAccount.connect(escrow).contractAddress();
+            const escrowContractAddr = await escrowAccount.connect(escrow).contractAddress();
             await erc20USDStableCoin.connect(player1).approve(escrowContractAddr, withdrawQty); // Permission transfer between player and escrow
             expect(await erc20USDStableCoin.allowance(player1.address, escrowContractAddr)).to.equal(withdrawQty); // escrow contract should have allowance to txfr
 
@@ -156,11 +156,11 @@ describe("Escrow Currency Account", function () {
                 .withArgs("USD", player1.address, withdrawQty, transId1, 0);
 
             expect(await erc20USDStableCoin.totalSupply()).to.equal(0); // Total supply should be equal to zero as now burned
-            expect(await await escrowCurrenyAccount.connect(escrow).balanceOnHand()).to.equal(0); // physical balance shld be eql to zero
+            expect(await await escrowAccount.connect(escrow).balanceOnHand()).to.equal(0); // physical balance shld be eql to zero
             expect(await erc20USDStableCoin.balanceOf(player1.address)).to.equal(0); // player 1 should now have zero tokens as swapped for physical
             expect(await erc20USDStableCoin.balanceOf(owner.address)).to.equal(0); // Owner account should be zero
             expect(await erc20USDStableCoin.balanceOf(escrow.address)).to.equal(0); // Escrow account should be zero
-            expect(await erc20USDStableCoin.balanceOf(await escrowCurrenyAccount.connect(escrow).contractAddress())).to.equal(0); // owner balance should be zero.            
+            expect(await erc20USDStableCoin.balanceOf(await escrowAccount.connect(escrow).contractAddress())).to.equal(0); // owner balance should be zero.            
         });
     });
 });
