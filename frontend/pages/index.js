@@ -13,7 +13,7 @@ export default function Home() {
     <>
       <div className={styles.container}>
         <Header />
-        <MainTabs handleLogChange={(newLogMessage) => { handleLogChange(SetLog, log, newLogMessage) }} />
+        <MainTabs handleLogChange={(newLogMessage) => { handleLogChange(SetLog, newLogMessage) }} />
         <Console outputContent={log} />
       </div>
     </>
