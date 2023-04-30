@@ -71,9 +71,9 @@ async function main() {
     escrow_manager,
     option_buyer,
     option_seller,
-    escrowUSDCurrenyAccount,
-    escrowEURCurrenyAccount,
-    escrowCNYCurrenyAccount,
+    escrowUSDAccount,
+    escrowEURAccount,
+    escrowCNYAccount,
     erc20USDStableCoin,
     erc20EURStableCoin,
     erc20CNYStableCoin);
