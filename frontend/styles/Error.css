@@ -1,12 +1,12 @@
-.warning-container {
+.error-container {
     padding: 10px 10px;
 }
 
-.warning {
-    background-color: rgb(170, 172, 218);
+.error {
+    background-color: rgb(245, 239, 152);
     border-radius: 8px;
     border: 1px solid white;
-    color: rgb(21, 31, 215);
+    color: rgb(243, 15, 15);
     padding: 10px 10px;
     text-align: center;
     text-decoration: none;
@@ -14,12 +14,12 @@
     font-size: 18px;
 }
 
-.icon-w {
+.icon-e {
     width: 50px;
     height: 50px;
     margin-right: 8px;
 }
 
-.icon-warn {
-    background: url("../resources/icon/warn-blue.png");
+.icon-error {
+    background: url("../resources/icon/error-red.png");
 }

@@ -31,6 +31,7 @@ contract EscrowAccount is Ownable, Pausable {
     uint256 _physicalBalance;
     uint256 _reserverPercent;
     uint256 _unitsPerToken;
+    uint256 _tokenDecimals;
 
     /**
      ** Construct an stable asset escrow account.
@@ -51,6 +52,7 @@ contract EscrowAccount is Ownable, Pausable {
 
         _erc20StableCoin = ERC20StableAsset(erc20StableCoinAddr_);
         _unitsPerToken = _erc20StableCoin.unitsPerToken();
+        _tokenDecimals = _erc20StableCoin.decimals();
         _physicalBalance = 0;
 
         require(
@@ -77,7 +79,7 @@ contract EscrowAccount is Ownable, Pausable {
     }
 
     /**
-     ** @notice regsiter a deposit transaction verified by unique transaction id
+     ** @notice Return the number of decimal adjusted tokens on hand.
      ** @return true if registered ok
      */
     function balanceOnHand() public view whenNotPaused returns (uint256) {
@@ -96,7 +98,7 @@ contract EscrowAccount is Ownable, Pausable {
      ** @notice return the name of the token being managed
      ** @return the name of the managed token
      */
-    function managedTokenName() public view onlyOwner returns (string memory) {
+    function managedTokenName() public view returns (string memory) {
         return _erc20StableCoin.name();
     }
 

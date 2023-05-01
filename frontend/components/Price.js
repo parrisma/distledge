@@ -34,7 +34,7 @@ const Contract = (props) => {
   }
 
   useEffect(() => {
-    updateUI(); // update immediatly after render
+    updateUI(); // update immediately after render
     const interval = setInterval(() => { updateUI(); }, 2000);
     return () => {
       clearInterval(interval); // Stop update after unmounted
@@ -44,7 +44,7 @@ const Contract = (props) => {
   const handleSuccess = async (tx) => {
     handleButtonClick(`Request price update ${tx}.`);
     handleNewNotification();
-    updateUI();
+    //updateUI();
   };
 
   const handleNewNotification = () => {
