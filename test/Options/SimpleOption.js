@@ -160,7 +160,7 @@ describe("Simple Option Test Suite", function () {
     );
   });
 
-  // Setup a contract based on premium in USD, settile in CNY
+  // Setup a contract based on premium in USD, settle in CNY
   beforeEach(async function () {
     // Get accounts
     [
