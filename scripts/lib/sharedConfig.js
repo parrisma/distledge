@@ -44,7 +44,7 @@ function cleanUpSharedConfig() {
 }
 
 /**
- * Write the current state of thw sharedConfig to file.
+ * Write the current state of the sharedConfig to file.
  */
 function writeSharedConfig() {
     fs.writeFile(sharedConfigFileName, JSON.stringify(sharedConfig), function (err) {
