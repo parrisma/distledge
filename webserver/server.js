@@ -9,7 +9,7 @@
 ** 4) cd webserver
 ** 5) npx hardhat run --network localhost server.js
 **
-** 6) Navigate to http://localhost:8191
+** 6) Navigate to http://localhost:8191 (or whatever URL is reported when server starts)
 ** or .. 
 ** 7) cd ..\test
 ** 8) .\createCommand.bat
@@ -23,6 +23,7 @@ const hre = require("hardhat");
 const { ethers } = require("hardhat");
 const { serverConfig } = require("./serverConfig.js");
 const { addressConfig } = require("../frontend/constants");
+const { appMessage } = require("./appMessage.js");
 
 /* Content Types
 */
@@ -81,6 +82,18 @@ function createHandler(uriParts, res) {
     }
 }
 
+/* Process a request to value option at current market
+*/
+function valuationHandler(uriParts, res) {
+    console.log(`Handle Valuation Request`);
+    const optionId = uriParts[2];
+    if (fs.existsSync(optionTermsDirName(optionId))) {
+        handleError(`Valuation not yet implemented`, res);
+    } else {
+        handleError(`Failed to value as Option Contract terms [${optionId}] does not exist`, res);
+    }
+}
+
 /* Create a JSON type response with the Json terms of the given option Id
 */
 async function optionTermsFromFileResponse(optionId, res) {
@@ -119,9 +132,18 @@ function handleIcon(res) {
 */
 function handleError(errorMessage, res) {
     console.log(`Handle error [${errorMessage}]`);
-    res.writeHead(400, text_content);
-    res.end(errorMessage);
+    res.writeHead(400, json_content);
+    res.end(JSON.stringify({ "error": `${errorMessage}` }));
 }
+
+/* App main page
+*/
+function mainPage(res) {
+    console.log(`Render main page`);
+    res.writeHead(200, text_content);
+    res.end(appMessage);
+}
+
 
 /* Handle HTTP GET Requests
 */
@@ -142,6 +164,9 @@ function handleMethodGET(req, res) {
                     case "create":
                         createHandler(uriParts, res);
                         break;
+                    case "value":
+                        valuationHandler(uriParts, res);
+                        break;
                     case "defunct":
                         defunctHandler(uriParts, res);
                         break;
@@ -153,10 +178,10 @@ function handleMethodGET(req, res) {
                         break;
                 }
             } else {
-                handleError(`Empty request, cannot process`, res);
+                mainPage(res);
             }
         } else {
-            handleError(`Empty request, cannot process`, res);
+            mainPage(res);
         }
     } catch (err) {
         handleError(`Bad GET request, cannot process [${err.message}]`, res)

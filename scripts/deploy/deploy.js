@@ -14,6 +14,7 @@ const { deployStableCoins } = require("./deployStableCoins.js");
 const { deployAndLinkEscrowAccounts } = require("./deployEscrow.js");
 const { deployEquityPrices } = require("./deployEquityPrices.js");
 const { deployFXRates } = require("./deployFXRates.js");
+const { deployERC271 } = require("./deployERC271.js");
 const { mintAndAllocate } = require("./mintAndAllocate.js");
 const { namedAccounts } = require("../lib/accounts.js");
 const { sharedConfig, cleanUpSharedConfig, writeSharedConfig } = require("../lib/sharedConfig.js");
@@ -24,6 +25,8 @@ async function main() {
   console.log(`\n========================================\n`);
   console.log(` D E P L O Y  T E S T  C O N T R A C T S`);
   console.log(`\n========================================\n`);
+
+  console.log(`\n===== Clean up old shared config\n`);
 
   cleanUpSharedConfig();
 
@@ -64,6 +67,10 @@ async function main() {
     EurEurFXRateContract,
     CnyCnyFXRateContract] = await deployFXRates(sharedConfig, hre, data_vendor, data_vendor); // data_vendor is owner and source
 
+  /* Deploy ERC217 Contracts
+  */
+  const [erc271OptionContractTypeOne] = await deployERC271(sharedConfig, hre, escrow_manager);
+
   /**
   ** Initial coin minting and allocation to trading accounts.
   */
@@ -81,14 +88,18 @@ async function main() {
   /**
    * Save the shared config for other test services to read.
    */
+  console.log(`\n===== Write new shared config\n`);
   writeSharedConfig();
+
+  /* Done, with noe issues
+  */
+  process.exitCode = 0;
+  console.log(`\n===== Done with no issues\n`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch((error) => {
-  console.log(`\nStarted\n`);
   console.error(error);
-  process.exitCode = 1;
-  console.log(`\nDone\n`);
+  console.log(`\n===== Done with Error [${error.message}]\n`);
 });

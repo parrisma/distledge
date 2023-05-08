@@ -81,7 +81,22 @@ The UI needs to know about the contracts that have been deployed to the test net
 yarn hardhat run ./scripts/exportToFrontEnd/updateFrontEnd.js --network localhost
 ```
 
-## Install
+## Run Web Service
+
+The ERC271 Option NFT Contracts are supported by a local Web Service that manages storage of the Option terms.
+
+```bash
+cd ./webserver
+npx hardhat run --network localhost server.js
+```
+
+You should then see the message below to indicate where the Web Service has started, the setting are controlled by ```./webserver/serverConfig.js```
+
+```bash
+Server Listening on [http://localhost:8191]
+```
+
+## Update Front End Components
 
 
 ```bash

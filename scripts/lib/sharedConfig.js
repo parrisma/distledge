@@ -24,7 +24,8 @@ var sharedConfig = {
     UsdCnyFXRateContract: "",
     UsdUsdFXRateContract: "",
     EurEurFXRateContract: "",
-    CnyCnyFXRateContract: ""
+    CnyCnyFXRateContract: "",
+    erc271OptionContractTypeOne: ""
 };
 
 const sharedConfigFileName = "./scripts/tmp/sharedConfig.json";
@@ -65,7 +66,7 @@ function loadSharedConfig() {
 
     } catch (err) {
         console.log('Shared config file not found [' + sharedConfigFileName + "]");
-    }    
+    }
     console.log(`Config: [${config}]`);
     return config;
 }
