@@ -35,12 +35,14 @@ function randomWalkPrice(price, factor, minVal) {
  * @param {*} hre Hardhat runtime environment
  * @param {address} data_vendor The account that owns the prices & fx with permission to change them
  * @param {contract} teslaEquityPriceContract The tesla (equity) price contract
+ * @param {contract} appleEquityPriceContract The apple (equity) price contract
  * @param {contract} UsdEurFXRateContract The FX rate contract for Usd Eur
  * @param {contract} UsdCnyFXRateContract The FX rate contract for Usd Cny
  */
 async function updatePrices(hre,
     data_vendor,
     teslaEquityPriceContract,
+    appleEquityPriceContract,
     UsdEurFXRateContract,
     UsdCnyFXRateContract) {
 
@@ -48,6 +50,11 @@ async function updatePrices(hre,
     var { value, nonce, sig } = await signedValue(hre, data_vendor, teslaPrice);
     await teslaEquityPriceContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
     console.log("Price update for [" + await teslaEquityPriceContract.getTicker() + "] with price: [" + await teslaEquityPriceContract.getVerifiedValue() / (10 ** await teslaEquityPriceContract.getDecimals()) + "]");
+
+    var applePrice = randomWalkPrice(await appleEquityPriceContract.getVerifiedValue(), 5 * (10 ** await appleEquityPriceContract.getDecimals()), (10 ** await appleEquityPriceContract.getDecimals()));
+    var { value, nonce, sig } = await signedValue(hre, data_vendor, applePrice);
+    await appleEquityPriceContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
+    console.log("Price update for [" + await appleEquityPriceContract.getTicker() + "] with price: [" + await appleEquityPriceContract.getVerifiedValue() / (10 ** await appleEquityPriceContract.getDecimals()) + "]");
 
     var UsdEurFXRate = randomWalkPrice(await UsdEurFXRateContract.getVerifiedValue(), 2 * (10 ** await UsdEurFXRateContract.getDecimals()), (10 ** await UsdCnyFXRateContract.getDecimals()));
     var { value, nonce, sig } = await signedValue(hre, data_vendor, UsdEurFXRate);
@@ -58,10 +65,10 @@ async function updatePrices(hre,
     var { value, nonce, sig } = await signedValue(hre, data_vendor, UsdCnyFXRate);
     await UsdCnyFXRateContract.connect(data_vendor).setVerifiedValue(value, nonce, ethers.utils.arrayify(sig));
     console.log("FX Rate update for [" + await UsdCnyFXRateContract.getTicker() + "] with price: [" + await UsdCnyFXRateContract.getVerifiedValue() / (10 ** await UsdCnyFXRateContract.getDecimals()) + "]");
-    
+
     console.log("--");
     // Re-set the timer, so we run forever or until user interrupt Ctrl+C
-    await setTimeout(async function () { await updatePrices(hre, data_vendor, teslaEquityPriceContract, UsdEurFXRateContract, UsdCnyFXRateContract); }, timeout);
+    await setTimeout(async function () { await updatePrices(hre, data_vendor, teslaEquityPriceContract, appleEquityPriceContract, UsdEurFXRateContract, UsdCnyFXRateContract); }, timeout);
 }
 
 async function main() {
@@ -89,13 +96,19 @@ async function main() {
      * the contract life is only while the hardhat (test) network is running
      */
     console.log("\nLoading instances of already deployed price and FX contracts\n");
+
     var teslaEquityPriceContract;
+    var appleEquityPriceContract;
+
     try {
-        [teslaEquityPriceContract] = await loadEquityPricesFromAddresses(sharedConfig);
+        [teslaEquityPriceContract, appleEquityPriceContract] = await loadEquityPricesFromAddresses(sharedConfig);
         console.log("Price contract loaded with ticker: " + await teslaEquityPriceContract.getTicker() + " and price [" + await teslaEquityPriceContract.getVerifiedValue() + "]");
+        console.log("Price contract loaded with ticker: " + await appleEquityPriceContract.getTicker() + " and price [" + await appleEquityPriceContract.getVerifiedValue() + "]");
+
     } catch (err) {
-        console.log('\nError Loading Tesla contract instance [' + err + "]");
+        console.log('\nError Loading Equity contract instance [' + err + "]");
     }
+
 
     var UsdEurFXRateContract;
     var UsdCnyFXRateContract;
@@ -104,7 +117,7 @@ async function main() {
         console.log("\nFX contract loaded with ticker: " + await UsdEurFXRateContract.getTicker());
         console.log("FX contract loaded with ticker: " + await UsdCnyFXRateContract.getTicker());
     } catch (err) {
-        console.log('\nError Loading Tesla contract instance [' + err + "]");
+        console.log('\nError Loading FX contract instance [' + err + "]");
     }
 
     /**
@@ -117,6 +130,7 @@ async function main() {
         await updatePrices(hre,
             data_vendor,
             teslaEquityPriceContract,
+            appleEquityPriceContract,
             UsdEurFXRateContract,
             UsdCnyFXRateContract);
     }, timeout);

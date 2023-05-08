@@ -20,6 +20,7 @@ var sharedConfig = {
     eurEscrowAccount: "",
     cnyEscrowAccount: "",
     teslaEquityPriceContract: "",
+    appleEquityPriceContract: "",
     UsdEurFXRateContract: "",
     UsdCnyFXRateContract: "",
     UsdUsdFXRateContract: "",

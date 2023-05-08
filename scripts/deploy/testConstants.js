@@ -7,6 +7,10 @@ const equityPriceDecimals = 2;
 const teslaPriceFeb2023 = 20831; // $208.31
 const teslaTicker = "TSLA";
 const teslaDescription = "TESLA Regular Stock"
+const applePriceFeb2023 = 16968; // $169.68
+const appleTicker = "AAPL";
+const appleDescription = "APPLE Regular Stock"
+
 
 // Initial FX Rates
 const fxRateDecimals = 5;
@@ -60,5 +64,8 @@ module.exports = {
     equityPriceDecimals,
     teslaPriceFeb2023,
     teslaTicker,
-    teslaDescription
+    teslaDescription,
+    applePriceFeb2023,
+    appleTicker,
+    appleDescription
 }

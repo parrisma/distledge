@@ -32,7 +32,15 @@ const Contract = (props) => {
                 </div>
                 <div className="div-table-row">
                     <div className="div-table-col-fix-wide">
-                        <p>-</p>
+                        <Price
+                            contract={{
+                                address: addressConfig["appleEquityPriceContract"]
+                                    ? addressConfig["appleEquityPriceContract"]
+                                    : null,
+                                type: "equity",
+                            }}
+                            onAddInfo={props.handleLogChange}
+                        />
                     </div>
                     <div className="div-table-col-fix-wide">
                         <Price
