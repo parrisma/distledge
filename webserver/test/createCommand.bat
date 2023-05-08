@@ -1,0 +1,1 @@
+curl -v POST http://localhost:8191 -d @createCommand1.json --header "Content-Type: application/json"
