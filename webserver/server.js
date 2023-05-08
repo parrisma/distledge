@@ -24,9 +24,10 @@ const { ethers } = require("hardhat");
 const { serverConfig } = require("./serverConfig.js");
 const { addressConfig } = require("../frontend/constants");
 
-/* Text Content Type
+/* Content Types
 */
 const text_content = { 'Content-Type': 'text/html' };
+const json_content = { "Content-Type": "application/json" };
 
 /*  Accounts from Test network
 */
@@ -74,21 +75,33 @@ function createHandler(uriParts, res) {
     console.log(`Handle Create Request`);
     const optionId = uriParts[2];
     if (!fs.existsSync(optionTermsDirName(optionId))) {
-        res.writeHead(200,);
-        res.end(`Handled Create`);
+        handleError(`Create Option terms only supported as POST operation`, res);
     } else {
         handleError(`Failed to create as Option Contract terms [${optionId}] already exists`, res);
     }
 }
 
+/* Create a JSON type response with the Json terms of the given option Id
+*/
+async function optionTermsFromFileResponse(optionId, res) {
+    try {
+        const files = fs.readdirSync(optionTermsDirName(optionId));
+        const optionTermsFileName = path.join(optionTermsDirName(optionId), files[0]);
+        optionTermsAsJson = JSON.parse(fs.readFileSync(optionTermsFileName));
+        res.writeHead(200, json_content);
+        res.end(JSON.stringify(optionTermsAsJson));
+    } catch (err) {
+        handleError(`Failed load option terms from file[${err}]`, res);
+    }
+}
+
 /* Process a request to get an Option NFT terms
 */
-function getHandler(uriParts, res) {
-    console.log(`Handle Get Terms Request`);
+function pullHandler(uriParts, res) {
+    console.log(`Handle Pull Terms Request`);
     const optionId = uriParts[1];
     if (fs.existsSync(optionTermsDirName(optionId))) {
-        res.writeHead(200, text_content);
-        res.end(`Handled Get`);
+        optionTermsFromFileResponse(optionId, res)
     } else {
         handleError(`Failed to pull terms as Option Contract [${optionId}] does not exists`, res);
     }
@@ -124,7 +137,7 @@ function handleMethodGET(req, res) {
                 }
                 switch (command) {
                     case "pull":
-                        getHandler(uriParts, res);
+                        pullHandler(uriParts, res);
                         break;
                     case "create":
                         createHandler(uriParts, res);
