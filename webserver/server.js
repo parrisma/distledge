@@ -57,11 +57,10 @@ function handleError(errorMessage, res) {
     res.end(errorMessage);
 }
 
-
-/* Main request processing
+/* Handle HTTP GET Requests
 */
-const requestListener = function (req, res) {
-    console.log(`Processing request [${req.url}]`);
+function handleMethodGET(req, res) {
+    console.log(`Handle GET`);
     try {
         let uriParts = req.url.split("/");
         console.log(uriParts);
@@ -84,7 +83,7 @@ const requestListener = function (req, res) {
                     case "favicon.ico":
                         break;
                     default:
-                        handleError(`Unknown command [${command}]`);
+                        handleError(`Unknown command [${command}]`, res);
                         break;
                 }
             } else {
@@ -94,14 +93,64 @@ const requestListener = function (req, res) {
             handleError(`Empty request, cannot process`, res);
         }
     } catch (err) {
-        handleError(`Bad request, cannot process [${err.message}]`, res)
+        handleError(`Bad GET request, cannot process [${err.message}]`, res)
+    }
+}
+
+/* Process posted JSON
+*/
+function handlePOSTedJson(bodyAsJson, req, res) {
+    console.log(bodyAsJson);
+    // Processing logic for JSON body goes here
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(`Handle POST Json OK`);
+}
+
+/* Handle HTTP POST Requests
+*/
+function handleMethodPOST(req, res) {
+    try {
+        console.log(`Handle POST`);
+        var body = '';
+        req.on('data', function (data) {
+            body += data;
+            if (body.length > 1e6) {
+                req.connection.destroy();
+            }
+        });
+        req.on('end', function () {
+            handlePOSTedJson(JSON.parse(body), req, res);
+        });
+    } catch (err) {
+        handleError(`Bad POST request, cannot process [${err.message}]`, res)
+    }
+}
+
+/* Main request processing
+*/
+const requestListener = function (req, res) {
+    console.log(`Processing request [${req.method}]`);
+    try {
+        switch (req.method.toLowerCase()) {
+            case "get":
+                handleMethodGET(req, res);
+                break;
+            case "post":
+                handleMethodPOST(req, res);
+                break;
+            default:
+                handleError(`Unknown htth method [${req.method}]`, res);
+                break;
+        }
+    } catch (err) {
+        handleError(`Bad method request, cannot process [${err.message}]`, res)
     }
 }
 
 async function main() {
     /* Start Web Server on port 8191
     */
-    console.log("Here");
+    console.log(`Server Listening on [http://localhost:${serverConfig.port}`);
     http.createServer(requestListener).listen(serverConfig.port);
 }
 
