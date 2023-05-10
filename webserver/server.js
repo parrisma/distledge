@@ -24,6 +24,9 @@ const { ethers } = require("hardhat");
 const { serverConfig } = require("./serverConfig.js");
 const { addressConfig } = require("../frontend/constants");
 const { appMessage } = require("./appMessage.js");
+const { ERR_OPTION_ALREADY_EXISTS, ERR_DEFUNCT_DNE,
+    getErrorWithOptionIdAsMetaData,
+    getError } = require("./serverErrors");
 
 /* Content Types
 */
@@ -61,12 +64,17 @@ async function fullPathAndNameOfOptionTermsJson(optionTermsDirName,
 */
 function defunctHandler(uriParts, res) {
     console.log(`Handle Defunct Request`);
-    const optionId = uriParts[2];
-    if (fs.existsSync(optionTermsDirName(optionId))) {
-        res.writeHead(200, text_content);
-        res.end(`Handled Defunct`);
+    var optionId = uriParts[2];
+    if (null == optionId) {
+        optionId = "NotSpecified";
+        handleJsonError(getErrorWithOptionIdAsMetaData(ERR_DEFUNCT_DNE, optionId), res);
     } else {
-        handleError(`Failed to defunct as Option Contract terms [${optionId}] does not exists`, res);
+        if (fs.existsSync(optionTermsDirName(optionId))) {
+            res.writeHead(200, text_content);
+            res.end(`Handled Defunct`);
+        } else {
+            handleJsonError(getErrorWithOptionIdAsMetaData(ERR_DEFUNCT_DNE, optionId), res);
+        }
     }
 }
 
@@ -116,7 +124,7 @@ function pullHandler(uriParts, res) {
     if (fs.existsSync(optionTermsDirName(optionId))) {
         optionTermsFromFileResponse(optionId, res)
     } else {
-        handleError(`Failed to pull terms as Option Contract [${optionId}] does not exists`, res);
+        handleJsonError(getErrorWithOptionIdAsMetaData(ERR_OPTION_ALREADY_EXISTS, optionId), res);
     }
 }
 
@@ -132,8 +140,17 @@ function handleIcon(res) {
 */
 function handleError(errorMessage, res) {
     console.log(`Handle error [${errorMessage}]`);
-    res.writeHead(400, json_content);
+    res.writeHead(400, text_content);
     res.end(JSON.stringify({ "error": `${errorMessage}` }));
+}
+
+/* Return a Json error response.
+*/
+function handleJsonError(JsonErrorMessage, res) {
+    errorMessage = JSON.stringify(JsonErrorMessage);
+    console.log(`Handle error [${errorMessage}]`);
+    res.writeHead(400, json_content);
+    res.end(errorMessage);
 }
 
 /* App main page
