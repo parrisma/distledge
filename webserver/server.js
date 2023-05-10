@@ -16,115 +16,45 @@
 */
 var fs = require('fs');
 var http = require('http');
-var url = require('url');
 var path = require('path');
-const crypto = require("crypto");
 const hre = require("hardhat");
-const { ethers } = require("hardhat");
 const { serverConfig } = require("./serverConfig.js");
 const { addressConfig } = require("../frontend/constants");
 const { appMessage } = require("./appMessage.js");
-const { ERR_OPTION_ALREADY_EXISTS, ERR_DEFUNCT_DNE,
+const {
+    ERR_DEFUNCT_DNE, ERR_OPTION_ID_NOT_SPECIFIED, ERR_BAD_GET, ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL,
     getErrorWithOptionIdAsMetaData,
-    getError } = require("./serverErrors");
+    getErrorWithMessage,
+    getError,
+    handleJsonError
+} = require("./serverErrors");
 
-/* Content Types
-*/
-const text_content = { 'Content-Type': 'text/html' };
-const json_content = { "Content-Type": "application/json" };
+const {
+    HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL, COMMAND_VALUE, OK_DEFUNCT,
+    getOKWithOptionId,
+    handleJsonOK
+} = require("./serverResponse");
 
-/*  Accounts from Test network
-*/
-let owner;
-let traderOne;
-let traderTwo;
-
-/* True if [value] is a positive integer
-*/
-function isNumeric(value) {
-    return /^\d+$/.test(value);
-}
-
-/* The directory where the Option terms are stored
-*/
-function optionTermsDirName(optionId) {
-    return path.join(__dirname, `terms`, `${optionId}`);
-}
-
-/* The full path and name of option terms
-*/
-async function fullPathAndNameOfOptionTermsJson(optionTermsDirName,
-    termsAsJson,
-    signingAccount) {
-    const sig = await getSignedHashOfOptionTerms(termsAsJson, signingAccount);
-    return [sig, path.join(optionTermsDirName, `${sig}.json`)];
-}
+const { getOwnerAccount } = require("./accounts");
+const { text_content, isNumeric, optionTermsDirName } = require("./utility");
+const { valuationHandler } = require("./commandValue");
+const { createHandler, handlePOSTCreateTermsRequest } = require("./commandCreate");
+const { pullHandler } = require("./commandPull");
 
 /* Process a request to defunct an Option NFT
 */
 function defunctHandler(uriParts, res) {
     console.log(`Handle Defunct Request`);
     var optionId = uriParts[2];
-    if (null == optionId) {
-        optionId = "NotSpecified";
-        handleJsonError(getErrorWithOptionIdAsMetaData(ERR_DEFUNCT_DNE, optionId), res);
+    console.log(`[${optionId}]`);
+    if (null == optionId || 0 == `${optionId}`.length) {
+        handleJsonError(getError(ERR_OPTION_ID_NOT_SPECIFIED), res);
     } else {
         if (fs.existsSync(optionTermsDirName(optionId))) {
-            res.writeHead(200, text_content);
-            res.end(`Handled Defunct`);
+            handleJsonOK(getOKWithOptionId(OK_DEFUNCT, optionId), res);
         } else {
             handleJsonError(getErrorWithOptionIdAsMetaData(ERR_DEFUNCT_DNE, optionId), res);
         }
-    }
-}
-
-/* Process a request to create an Option NFT
-*/
-function createHandler(uriParts, res) {
-    console.log(`Handle Create Request`);
-    const optionId = uriParts[2];
-    if (!fs.existsSync(optionTermsDirName(optionId))) {
-        handleError(`Create Option terms only supported as POST operation`, res);
-    } else {
-        handleError(`Failed to create as Option Contract terms [${optionId}] already exists`, res);
-    }
-}
-
-/* Process a request to value option at current market
-*/
-function valuationHandler(uriParts, res) {
-    console.log(`Handle Valuation Request`);
-    const optionId = uriParts[2];
-    if (fs.existsSync(optionTermsDirName(optionId))) {
-        handleError(`Valuation not yet implemented`, res);
-    } else {
-        handleError(`Failed to value as Option Contract terms [${optionId}] does not exist`, res);
-    }
-}
-
-/* Create a JSON type response with the Json terms of the given option Id
-*/
-async function optionTermsFromFileResponse(optionId, res) {
-    try {
-        const files = fs.readdirSync(optionTermsDirName(optionId));
-        const optionTermsFileName = path.join(optionTermsDirName(optionId), files[0]);
-        optionTermsAsJson = JSON.parse(fs.readFileSync(optionTermsFileName));
-        res.writeHead(200, json_content);
-        res.end(JSON.stringify(optionTermsAsJson));
-    } catch (err) {
-        handleError(`Failed load option terms from file[${err}]`, res);
-    }
-}
-
-/* Process a request to get an Option NFT terms
-*/
-function pullHandler(uriParts, res) {
-    console.log(`Handle Pull Terms Request`);
-    const optionId = uriParts[1];
-    if (fs.existsSync(optionTermsDirName(optionId))) {
-        optionTermsFromFileResponse(optionId, res)
-    } else {
-        handleJsonError(getErrorWithOptionIdAsMetaData(ERR_OPTION_ALREADY_EXISTS, optionId), res);
     }
 }
 
@@ -134,23 +64,6 @@ function handleIcon(res) {
     console.log(`Handle Get favicon`);
     res.setHeader('Content-Type', 'image/x-icon');
     fs.createReadStream(path.join(__dirname, 'icon', 'favicon.png')).pipe(res);
-}
-
-/* Return an error response.
-*/
-function handleError(errorMessage, res) {
-    console.log(`Handle error [${errorMessage}]`);
-    res.writeHead(400, text_content);
-    res.end(JSON.stringify({ "error": `${errorMessage}` }));
-}
-
-/* Return a Json error response.
-*/
-function handleJsonError(JsonErrorMessage, res) {
-    errorMessage = JSON.stringify(JsonErrorMessage);
-    console.log(`Handle error [${errorMessage}]`);
-    res.writeHead(400, json_content);
-    res.end(errorMessage);
 }
 
 /* App main page
@@ -170,28 +83,28 @@ function handleMethodGET(req, res) {
         let uriParts = req.url.split("/");
         if (uriParts.length >= 2) {
             var command = uriParts[1].toLowerCase();
-            if (command != ``) {
+            if (0 != command.length) {
                 if (isNumeric(command)) {
-                    command = "pull"
+                    command = COMMAND_PULL;
                 }
                 switch (command) {
-                    case "pull":
+                    case COMMAND_PULL:
                         pullHandler(uriParts, res);
                         break;
-                    case "create":
+                    case COMMAND_CREATE:
                         createHandler(uriParts, res);
                         break;
-                    case "value":
+                    case COMMAND_VALUE:
                         valuationHandler(uriParts, res);
                         break;
-                    case "defunct":
+                    case COMMAND_DEFUNCT:
                         defunctHandler(uriParts, res);
                         break;
-                    case "favicon.ico":
+                    case COMMAND_ICON:
                         handleIcon(res);
                         break;
                     default:
-                        handleError(`Unknown command [${command}]`, res);
+                        handleJsonError(getErrorWithMessage(ERR_UNKNOWN_COMMAND, command), res);
                         break;
                 }
             } else {
@@ -201,61 +114,7 @@ function handleMethodGET(req, res) {
             mainPage(res);
         }
     } catch (err) {
-        handleError(`Bad GET request, cannot process [${err.message}]`, res)
-    }
-}
-
-
-/*
-** Take Json object and return signature of terms.
-*/
-async function getSignedHashOfOptionTerms(terms, signingAccount) {
-    const secretMessage = ethers.utils.solidityPack(["string"], [JSON.stringify(terms)]);
-
-    /* We now hash the message, and we will sign the hash of the message rather than the raw
-    ** raw encoded (packed) message
-    */
-    const secretMessageHash = ethers.utils.keccak256(secretMessage);
-
-    /*
-    ** The message is now signed by the signingAccount
-    */
-    const sig = await signingAccount.signMessage(ethers.utils.arrayify(secretMessageHash)); // Don't forget to arrayify to send bytes
-
-    return sig;
-}
-
-/**
- * Write the option terms to a file
- */
-async function writeOptionTerms(optionTermsDirName, termsAsJson, req, res) {
-    fs.mkdirSync(optionTermsDirName);
-    const [sig, optionTermsFileName] = await fullPathAndNameOfOptionTermsJson(optionTermsDirName, termsAsJson, owner);
-    fs.writeFile(optionTermsFileName, JSON.stringify(termsAsJson.terms), function (err) {
-        if (err) {
-            console.log(`Failed to write option Terms file [${optionTermsFileName}] with Error [${err}]`);
-            throw err;
-        } else {
-            console.log(`Option Terms written Ok to [${optionTermsDirName}]`);
-            res.writeHead(200,);
-            res.end(`Handle Create of terms [${sig}]`);
-        }
-    });
-}
-
-/* Handle POST Create request
-*/
-async function handlePOSTCreateTermsRequest(termsAsJson, req, res) {
-    console.log(`Handle POST Create Terms Request for Id [${termsAsJson.id}]`);
-    const optionId = termsAsJson.id;
-    if (isNumeric(optionId)) {
-        if (!fs.existsSync(optionTermsDirName(optionId))) {
-            await writeOptionTerms(optionTermsDirName(optionId), termsAsJson, req, res);
-        } else {
-            handleError(`Failed to create as Option Contract terms [${optionId}] already exists`, res);
-        }
-    } else {
-        handleError(`Option Id must be numeric for POSt Create Terms, but given [${optionId}] already exists`, res);
+        handleJsonError(getErrorWithMessage(ERR_BAD_GET, err.message), res)
     }
 }
 
@@ -264,11 +123,11 @@ async function handlePOSTCreateTermsRequest(termsAsJson, req, res) {
 async function handlePOSTedJson(bodyAsJson, req, res) {
     console.log(bodyAsJson);
     switch (bodyAsJson.command) {
-        case "create":
+        case COMMAND_CREATE:
             handlePOSTCreateTermsRequest(bodyAsJson, req, res);
             break;
         default:
-            handleError(`Bad POST command, cannot process [${bodyAsJson.command}]`, res)
+            handleJsonError(getErrorWithMessage(ERR_BAD_POST, bodyAsJson.command), res);
             break
     }
 }
@@ -281,7 +140,7 @@ async function handleMethodPOST(req, res) {
         var body = '';
         req.on('data', function (data) {
             body += data;
-            if (body.length > 1e6) {
+            if (body.length > 1e7) {
                 req.connection.destroy();
             }
         });
@@ -291,11 +150,11 @@ async function handleMethodPOST(req, res) {
                 jsonPayload = JSON.parse(body);
                 handlePOSTedJson(jsonPayload, req, res);
             } catch (err) {
-                handleError(`Bad POST request, cannot process JSON payload [${err.message}]`, res)
+                handleJsonError(getErrorWithMessage(ERR_BAD_POST, err.message), res);
             }
         });
     } catch (err) {
-        handleError(`Bad POST request, cannot process [${err.message}]`, res)
+        handleJsonError(getErrorWithMessage(ERR_BAD_POST, err.message), res);
     }
 }
 
@@ -305,18 +164,18 @@ const requestListener = function (req, res) {
     console.log(`Processing request [${req.method}]`);
     try {
         switch (req.method.toLowerCase()) {
-            case "get":
+            case HTTP_GET:
                 handleMethodGET(req, res);
                 break;
-            case "post":
+            case HTTP_POST:
                 handleMethodPOST(req, res);
                 break;
             default:
-                handleError(`Unknown http method [${req.method}]`, res);
+                handleJsonError(getErrorWithMessage(ERR_BAD_HTTP, req.method), res);
                 break;
         }
     } catch (err) {
-        handleError(`Bad method request, cannot process [${err.message}]`, res)
+        handleJsonError(getErrorWithMessage(ERR_BAD_HTTP_CALL, err.message), res)
     }
 }
 
@@ -324,7 +183,6 @@ async function main() {
     /* Start Web Server on port as defined in serverConfig.js
     */
     console.log(`Server Listening on [http://localhost:${serverConfig.port}]`);
-    [owner, traderOne, traderTwo] = await ethers.getSigners();
     http.createServer(requestListener).listen(serverConfig.port);
 }
 
