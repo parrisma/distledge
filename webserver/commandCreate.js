@@ -1,38 +1,20 @@
 
 var fs = require('fs');
-const { fullPathAndNameOfOptionTermsJson, optionTermsDirName, isNumeric } = require("./utility.js");
+const { fullPathAndNameOfOptionTermsJson, optionTermsDirName, isNumeric, currentDateTime } = require("./utility.js");
 const {
-    ERR_OPTION_ALREADY_EXISTS, ERR_CREATE_ONLY_BY_POST, ERR_OPTION_ID_NOT_SPECIFIED,
     getErrorWithOptionIdAsMetaData,
     getError,
     handleJsonError
 } = require("./serverErrors");
 const {
-    OK_CREATE_TERMS,
+    ERR_OPTION_ALREADY_EXISTS, ERR_OPTION_ID_NOT_SPECIFIED
+} = require("./serverErrorCodes.js");
+const {
     getOKWithMessage,
     handleJsonOK
 } = require("./serverResponse");
+const { OK_CREATE_TERMS } = require("./serverResponseCodes");
 const { getOwnerAccount } = require("./accounts");
-
-/*
-** By GET
-*/
-
-/* Process a request to create an Option NFT
-*/
-function createHandler(uriParts, res) {
-    console.log(`Handle Create Request`);
-    const optionId = uriParts[2];
-    if (null == optionId || 0 == `${optionId}`.length) {
-        handleJsonError(getError(ERR_OPTION_ID_NOT_SPECIFIED), res);
-    } else {
-        if (!fs.existsSync(optionTermsDirName(optionId))) {
-            handleJsonError(getError(ERR_CREATE_ONLY_BY_POST), res);
-        } else {
-            handleJsonError(getErrorWithOptionIdAsMetaData(ERR_OPTION_ALREADY_EXISTS, optionId), res);
-        }
-    }
-}
 
 /*
 ** By POST
@@ -44,7 +26,17 @@ function createHandler(uriParts, res) {
 async function writeOptionTerms(optionTermsDirName, termsAsJson, optionId, req, res) {
     fs.mkdirSync(optionTermsDirName);
     const [sig, optionTermsFileName] = await fullPathAndNameOfOptionTermsJson(optionTermsDirName, termsAsJson, await getOwnerAccount());
-    fs.writeFile(optionTermsFileName, JSON.stringify(termsAsJson.terms), function (err) {
+
+    var doc = {
+        "optionId": `${optionId}`,
+        "signature": `${sig}`,
+        "signedBy": `${(await getOwnerAccount()).address}`,
+        "created": `${currentDateTime()}`,
+        "terms": {}
+    };
+    doc.terms = termsAsJson.terms;
+
+    fs.writeFile(optionTermsFileName, JSON.stringify(doc), function (err) {
         if (err) {
             console.log(`Failed to write option Terms file [${optionTermsFileName}] with Error [${err}]`);
             throw err;
@@ -76,7 +68,6 @@ async function handlePOSTCreateTermsRequest(termsAsJson, req, res) {
 }
 
 module.exports = {
-    createHandler,
     handlePOSTCreateTermsRequest
 }
 

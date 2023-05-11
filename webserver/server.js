@@ -19,45 +19,27 @@ var http = require('http');
 var path = require('path');
 const hre = require("hardhat");
 const { serverConfig } = require("./serverConfig.js");
-const { addressConfig } = require("../frontend/constants");
 const { appMessage } = require("./appMessage.js");
 const {
-    ERR_DEFUNCT_DNE, ERR_OPTION_ID_NOT_SPECIFIED, ERR_BAD_GET, ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL,
-    getErrorWithOptionIdAsMetaData,
     getErrorWithMessage,
-    getError,
     handleJsonError
 } = require("./serverErrors");
+const {
+    ERR_BAD_GET, ERR_UNKNOWN_COMMAND, ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL
+} = require("./serverErrorCodes.js");
 
 const {
     HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
-    COMMAND_VALUE, OK_DEFUNCT, COMMAND_LIST,
-    getOKWithOptionId,
-    handleJsonOK
+    COMMAND_VALUE, COMMAND_LIST,
 } = require("./serverResponse");
 
-const { text_content, isNumeric, optionTermsDirName, getAllTerms } = require("./utility");
+const { text_content, isNumeric, currentDateTime } = require("./utility");
 const { valuationHandler } = require("./commandValue");
-const { createHandler, handlePOSTCreateTermsRequest } = require("./commandCreate");
+const { handlePOSTCreateTermsRequest } = require("./commandCreate");
 const { pullHandler } = require("./commandPull");
 const { listHandler } = require("./commandList");
+const { defunctHandler } = require("./commandDefunct");
 
-/* Process a request to defunct an Option NFT
-*/
-function defunctHandler(uriParts, res) {
-    console.log(`Handle Defunct Request`);
-    var optionId = uriParts[2];
-    console.log(`[${optionId}]`);
-    if (null == optionId || 0 == `${optionId}`.length) {
-        handleJsonError(getError(ERR_OPTION_ID_NOT_SPECIFIED), res);
-    } else {
-        if (fs.existsSync(optionTermsDirName(optionId))) {
-            handleJsonOK(getOKWithOptionId(OK_DEFUNCT, optionId), res);
-        } else {
-            handleJsonError(getErrorWithOptionIdAsMetaData(ERR_DEFUNCT_DNE, optionId), res);
-        }
-    }
-}
 
 /* Return site icon
 */
@@ -79,7 +61,7 @@ function mainPage(res) {
 /* Handle HTTP GET Requests
 */
 function handleMethodGET(req, res) {
-    console.log(`Handle GET`);
+    console.log(`${currentDateTime()} : Handle GET`);
     try {
         let uriParts = req.url.split("/");
         if (uriParts.length >= 2) {
@@ -91,9 +73,6 @@ function handleMethodGET(req, res) {
                 switch (command) {
                     case COMMAND_PULL:
                         pullHandler(uriParts, res);
-                        break;
-                    case COMMAND_CREATE:
-                        createHandler(uriParts, res);
                         break;
                     case COMMAND_VALUE:
                         valuationHandler(uriParts, res);

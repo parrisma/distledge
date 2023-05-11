@@ -1,10 +1,12 @@
 var fs = require('fs');
 const {
-    ERR_OPTION_ID_NOT_SPECIFIED, ERR_NOT_IMPLEMENTED, ERR_VALUE_OPTION_ID_NONEXISTENT,
     getErrorWithOptionIdAsMetaData,
     getError,
     handleJsonError
 } = require("./serverErrors");
+const {
+    ERR_OPTION_ID_NOT_SPECIFIED, ERR_NOT_IMPLEMENTED, ERR_VALUE_OPTION_ID_NONEXISTENT
+} = require("./serverErrorCodes.js");
 const { optionTermsDirName } = require("./utility.js");
 
 /* Process a request to value option at current market

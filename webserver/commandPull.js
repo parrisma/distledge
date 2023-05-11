@@ -1,18 +1,19 @@
 var fs = require('fs');
 var path = require('path');
 const {
-    ERR_OPTION_ID_NOT_SPECIFIED, ERR_FAILED_TO_LOAD_TERMS, ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST,
     getErrorWithOptionIdAsMetaData,
     getErrorWithMessage,
     getError,
     handleJsonError
 } = require("./serverErrors");
-
 const {
-    OK_PULL_TERMS,
+    ERR_OPTION_ID_NOT_SPECIFIED, ERR_FAILED_TO_LOAD_TERMS, ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST
+} = require("./serverErrorCodes.js");
+const {
     getOKWithMessage,
     handleJsonOK
 } = require("./serverResponse.js");
+const { OK_PULL_TERMS } = require("./serverResponseCodes");
 
 const { optionTermsDirName } = require("./utility.js");
 
