@@ -1,3 +1,6 @@
+const { serverConfig } = require("./serverConfig.js");
+var fs = require('fs');
+
 var path = require('path');
 
 /* Content Types
@@ -11,10 +14,33 @@ function isNumeric(value) {
     return /^\d+$/.test(value);
 }
 
+/* Get the toor path where option terms are stored.
+*/
+function baseTermsDir() {
+    return path.join(__dirname, `${serverConfig.dbPath}`);
+}
 /* The directory where the Option terms are stored
 */
 function optionTermsDirName(optionId) {
-    return path.join(__dirname, `terms`, `${optionId}`);
+    return path.join(baseTermsDir(), `${optionId}`);
+}
+
+/* Get a list of all current option ID's and their associated terms
+*/
+function getAllTerms() {
+    var optionsList = { "terms": [] };
+    const options = fs.readdirSync(baseTermsDir());
+    options.forEach((value, index, array) => {
+        if (isNumeric(value)) {
+            const terms = fs.readdirSync(path.join(baseTermsDir(), `${value}`));
+            terms.forEach((value1, index1, array1) => {
+                const optionId = value;
+                const contractHash = value1.substring(0, value1.length - 5);
+                optionsList.terms.push({ "optionId": `${optionId}`, "contract": `${contractHash}` });
+            });
+        }
+    });
+    return optionsList;
 }
 
 /* The full path and name of option terms
@@ -49,7 +75,9 @@ module.exports = {
     text_content,
     json_content,
     isNumeric,
+    baseTermsDir,
     optionTermsDirName,
+    getAllTerms,
     fullPathAndNameOfOptionTermsJson,
     getSignedHashOfOptionTerms
 };

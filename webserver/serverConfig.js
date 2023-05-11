@@ -3,7 +3,8 @@
 */
 
 var serverConfig = {
-    port: 8191
+    port: 8191,
+    dbPath: "terms"
 };
 
 module.exports = {

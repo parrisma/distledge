@@ -14,8 +14,15 @@ const ERR_BAD_POST = "4afb0e49-bd12-43b9-8a7e-9a2e1039ae2e";
 const ERR_BAD_HTTP = "a2f1274f-2782-4a12-9d96-822743f8fa72";
 const ERR_BAD_HTTP_CALL = "a91e7ade-1224-4699-b5cb-a97824479cc3";
 const ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST = "587ab271-2366-44d8-a507-adc08b99cd8f";
+const ERR_FAILED_LIST = "a7ad3010-efc2-11ed-a05b-0242ac120003";
 
 var errorsDict = {};
+
+errorsDict[ERR_FAILED_LIST] =
+{
+    "errorCode": `${ERR_FAILED_LIST}`,
+    "errorMessage": `Failed to get list of all existing option terms`
+};
 
 errorsDict[ERR_OPTION_ALREADY_EXISTS] =
 {
@@ -142,6 +149,7 @@ module.exports = {
     ERR_BAD_HTTP,
     ERR_BAD_HTTP_CALL,
     ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST,
+    ERR_FAILED_LIST,
     getErrorWithOptionIdAsMetaData,
     getErrorWithMessage,
     getError,

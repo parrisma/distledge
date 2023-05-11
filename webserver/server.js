@@ -30,16 +30,17 @@ const {
 } = require("./serverErrors");
 
 const {
-    HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL, COMMAND_VALUE, OK_DEFUNCT,
+    HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
+    COMMAND_VALUE, OK_DEFUNCT, COMMAND_LIST,
     getOKWithOptionId,
     handleJsonOK
 } = require("./serverResponse");
 
-const { getOwnerAccount } = require("./accounts");
-const { text_content, isNumeric, optionTermsDirName } = require("./utility");
+const { text_content, isNumeric, optionTermsDirName, getAllTerms } = require("./utility");
 const { valuationHandler } = require("./commandValue");
 const { createHandler, handlePOSTCreateTermsRequest } = require("./commandCreate");
 const { pullHandler } = require("./commandPull");
+const { listHandler } = require("./commandList");
 
 /* Process a request to defunct an Option NFT
 */
@@ -99,6 +100,9 @@ function handleMethodGET(req, res) {
                         break;
                     case COMMAND_DEFUNCT:
                         defunctHandler(uriParts, res);
+                        break;
+                    case COMMAND_LIST:
+                        listHandler(res);
                         break;
                     case COMMAND_ICON:
                         handleIcon(res);
