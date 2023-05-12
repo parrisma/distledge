@@ -9,6 +9,7 @@ yarn.lock
 yarn-error.log
 .vs
 .prettierignore
+.vscode-server
 
 # Hardhat files
 **/cache
@@ -19,5 +20,7 @@ deployments
 ## Contract constants used by UI
 **/frontend/constants/*.json
 
+
 ## Test terms database
 **/terms
+
