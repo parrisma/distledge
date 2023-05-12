@@ -32,7 +32,7 @@ export default function Contract(props) {
     }
 
     useEffect(() => {
-        updateUI(); // update immediatly after render
+        updateUI(); // update immediately after render
         const interval = setInterval(() => { if (isWeb3Enabled) { updateUI(); } }, 2500);
         return () => {
             clearInterval(interval); // Stop update after unmounted

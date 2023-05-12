@@ -19,3 +19,8 @@ deployments
 
 ## Contract constants used by UI
 **/frontend/constants/*.json
+
+
+## Test terms database
+**/terms
+

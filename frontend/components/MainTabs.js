@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { useMoralis } from "react-moralis";
 import TabButton from "../components/TabButton";
 import PriceTab from "../components/PricesTab";
 import EscrowTab from "../components/EscrowTab";
 import SellerTab from "../components/SellerTab";
 import BuyerTab from "../components/BuyerTab";
 import AccountsTab from "../components/AccountsTab";
+import Info from "../components/Info";
 
 const Contract = (props) => {
+    const { isWeb3Enabled } = useMoralis();
     const tabs = ["Accounts", "Price", "Escrow", "Seller", "Buyer"];
     const defaultTabId = 0;
     const [tab, setTab] = useState(tabs[defaultTabId]);
@@ -24,30 +27,38 @@ const Contract = (props) => {
 
     return (
         <div>
-            <div className="tab-row">
-                <TabButton tabName={tabs[0]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
-                <TabButton tabName={tabs[1]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
-                <TabButton tabName={tabs[2]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
-                <TabButton tabName={tabs[3]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
-                <TabButton tabName={tabs[4]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
-            </div>
-            <div>
-                {activeTab === tabs[0] ? (
-                    <AccountsTab handleLogChange={props.handleLogChange} />
-                ) : null}
-                {activeTab === tabs[1] ? (
-                    <PriceTab handleLogChange={props.handleLogChange} />
-                ) : null}
-                {activeTab === tabs[2] ? (
-                    <EscrowTab handleLogChange={props.handleLogChange} />
-                ) : null}
-                {activeTab === tabs[3] ? (
-                    <SellerTab handleLogChange={props.handleLogChange} />
-                ) : null}
-                {activeTab === tabs[4] ? (
-                    <BuyerTab handleLogChange={props.handleLogChange} />
-                ) : null}
-            </div>
+            {isWeb3Enabled ? (
+                <div>
+                    <div className="tab-row">
+                        <TabButton tabName={tabs[0]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
+                        <TabButton tabName={tabs[1]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
+                        <TabButton tabName={tabs[2]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
+                        <TabButton tabName={tabs[3]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
+                        <TabButton tabName={tabs[4]} onHandleButtonClick={handleButtonClick} currentTab={tab} />
+                    </div>
+                    <div>
+                        {activeTab === tabs[0] ? (
+                            <AccountsTab handleLogChange={props.handleLogChange} />
+                        ) : null}
+                        {activeTab === tabs[1] ? (
+                            <PriceTab handleLogChange={props.handleLogChange} />
+                        ) : null}
+                        {activeTab === tabs[2] ? (
+                            <EscrowTab handleLogChange={props.handleLogChange} />
+                        ) : null}
+                        {activeTab === tabs[3] ? (
+                            <SellerTab handleLogChange={props.handleLogChange} />
+                        ) : null}
+                        {activeTab === tabs[4] ? (
+                            <BuyerTab handleLogChange={props.handleLogChange} />
+                        ) : null}
+                    </div>
+                </div>)
+                :
+                (
+                    <div>
+                        <Info message = "Press the Connect Wallet button to start"/><br/>
+                    </div>)}
         </div>
     );
 };

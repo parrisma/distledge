@@ -3,13 +3,23 @@
 }
 
 .info {
-    background-color: white;
+    background-color: rgb(215, 233, 207);
     border-radius: 8px;
     border: 1px solid white;
-    color: rgb(37, 215, 21);
+    color: rgb(26, 216, 8);
     padding: 10px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 14px;
+    font-size: 18px;
+}
+
+.icon-i {
+    width: 50px;
+    height: 50px;
+    margin-right: 8px;
+}
+
+.icon-info {
+    background: url("../resources/icon/info-green.png");
 }

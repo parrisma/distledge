@@ -105,8 +105,8 @@ abstract contract OptionContract is Ownable, Pausable {
     }
 
     /**
-     ** @notice Has the option beeb struck and premium paid
-     ** @return true if teh option is live.
+     ** @notice Has the option been struck and premium paid
+     ** @return true if the option is live.
      */
     function optionLive() public virtual returns (bool) {
         return _alive;

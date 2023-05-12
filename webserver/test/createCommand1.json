@@ -1,0 +1,12 @@
+{
+    "command": "create",
+    "id": 1,
+    "terms": {
+        "term_one": "Term One Value - 1",
+        "term_two": 3241,
+        "term_three": {
+            "term_four": "577c146e-ecaf-11ed-a05b-0242ac120003",
+            "term_five": 453209756635401243
+        }
+    }
+}

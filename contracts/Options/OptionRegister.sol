@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/security/Pausable.sol";
  ** @author Mark Parris
  ** @title Implements protocol for option registration
  */
-abstract contract OptionContract is Ownable, Pausable {
+abstract contract OptionRegister is Ownable, Pausable {
     event OptionRegistered(address _seller, address _optionContract);
     event OptionPurged(address _optionContract);
 
@@ -36,7 +36,7 @@ abstract contract OptionContract is Ownable, Pausable {
      */
     function registerContract(
         address optionContractAddressToRegister
-    ) public view virtual;
+    ) public virtual;
 
     /**
      ** @notice Get the list of option contract addresses for the given seller

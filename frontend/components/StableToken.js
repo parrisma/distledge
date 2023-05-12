@@ -32,12 +32,12 @@ export default function Contract(props) {
       setTicker(_symbol);
       setDecimals(_decimals);
       setTokenName(_token_name);
-      setTokenSupply(_token_supply / (10 ** decimals));
+      setTokenSupply(_token_supply / (10 ** _decimals));
     }
   }
 
   useEffect(() => {
-    updateUI(); // update immediatly after render
+    updateUI(); // update immediately after render
     const interval = setInterval(() => { updateUI(); }, 2500);
     return () => {
       clearInterval(interval); // Stop update after unmounted

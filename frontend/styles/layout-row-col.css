@@ -58,3 +58,12 @@
   float: left;
   display: table-column;
 }
+
+.side-by-side-container {
+  align-items: center;
+  display: flex;
+}
+
+.side-by-side-item {
+  flex-grow: 1;
+}

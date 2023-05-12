@@ -6,7 +6,11 @@
 
 @import "./app.css";
 
+@import "./error.css";
+
 @import "./warning.css";
+
+@import "./info.css";
 
 @import "./header.css";
 

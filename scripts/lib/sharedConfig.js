@@ -25,7 +25,8 @@ var sharedConfig = {
     UsdCnyFXRateContract: "",
     UsdUsdFXRateContract: "",
     EurEurFXRateContract: "",
-    CnyCnyFXRateContract: ""
+    CnyCnyFXRateContract: "",
+    erc271OptionContractTypeOne: ""
 };
 
 const sharedConfigFileName = "./scripts/tmp/sharedConfig.json";
@@ -45,7 +46,7 @@ function cleanUpSharedConfig() {
 }
 
 /**
- * Write the current state of thw sharedConfig to file.
+ * Write the current state of the sharedConfig to file.
  */
 function writeSharedConfig() {
     fs.writeFile(sharedConfigFileName, JSON.stringify(sharedConfig), function (err) {
@@ -67,7 +68,7 @@ function loadSharedConfig() {
     } catch (err) {
         console.log('Shared config file not found [' + sharedConfigFileName + "]");
     }
-
+    console.log(`Config: [${config}]`);
     return config;
 }
 
