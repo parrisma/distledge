@@ -80,6 +80,10 @@ var uniqueOptionId;
 var settlementAmount;
 
 /**
+* SimpleOption Register
+*/
+var simpleOptionRegister;
+/**
  * This suite uses globals, so you cannot run the tests individually, or out of sequence - but the aim here
  * is to show an end to end integration. 
  * 
@@ -389,6 +393,31 @@ describe("Financial Contract Full Integration Test and Simulation", function () 
             console.log("\nOption buyer has " + await erc20USDStableCoin.balanceOf(option_buyer.address) + " USD Token");
             console.log("Option buyer has " + await erc20CNYStableCoin.balanceOf(option_buyer.address) + " CNY Token");
             console.log("Option buyer has " + await erc20EURStableCoin.balanceOf(option_buyer.address) + " EUR Token");
+        });
+
+        it("Register Option Contract", async function () {
+            const SimpleOptionRegister = await ethers.getContractFactory("SimpleOptionRegister");
+            simpleOptionRegister = await SimpleOptionRegister.deploy();
+            const optionAddr = await simpleOption.contractAddress();
+            var options = await simpleOptionRegister.getOptions();
+            console.log("Option size before register:" + options.length);
+            console.log("Registering option with address: " + optionAddr);
+            await simpleOptionRegister.registerContract(optionAddr);
+            options = await simpleOptionRegister.getOptions();
+            console.log("Option size after register:" + options.length);
+            expect(options.length).to.equal(1);
+            expect(options[0]).to.equal(optionAddr);
+        });
+
+        it("Purge Option Contract", async function () {
+            const optionAddr = await simpleOption.contractAddress();
+            var options = await simpleOptionRegister.getOptions();
+            console.log("Option size before purge:" + options.length);
+            console.log("Purging option with address: " + optionAddr);
+            await simpleOptionRegister.purgeContract(optionAddr);
+            options = await simpleOptionRegister.getOptions();
+            console.log("Option size after purge:" + options.length);
+            expect(options.length).to.equal(0);
         });
     });
 });

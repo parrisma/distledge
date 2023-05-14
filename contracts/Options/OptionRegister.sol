@@ -77,5 +77,5 @@ abstract contract OptionRegister is Ownable, Pausable {
      */
     function purgeContract(
         address optionContractAddressToPurge
-    ) public view virtual;
+    ) public virtual;
 }
