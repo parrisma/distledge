@@ -6,7 +6,7 @@ require("hardhat-deploy");
 require("@nomiclabs/hardhat-etherscan");
 require("solidity-coverage");
 require("hardhat-gas-reporter");
-require('hardhat-contract-sizer');
+require("hardhat-contract-sizer");
 
 //Assign environment variables for local use.
 const GOERLI_RPC_URL =
@@ -15,6 +15,7 @@ const GOERLI_RPC_URL =
 const PRIVATE_KEY =
   process.env.PRIVATE_KEY ||
   "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "key";
 
 const ETHERSCAN_API_KEY =
   process.env.ETHERSCAN_API_KEY || "Your etherscan API key";
@@ -29,13 +30,12 @@ module.exports = {
           optimizer: {
             enabled: true,
             runs: 200,
-            details:
-            {
-              yul: false
+            details: {
+              yul: false,
             },
           },
-        }
-      }
+        },
+      },
     ],
   },
   defaultNetwork: "hardhat",
@@ -63,5 +63,15 @@ module.exports = {
   },
   mocha: {
     timeout: 500000,
+  },
+  gasReporter: {
+    enabled: COINMARKETCAP_API_KEY === "key" ? false : true,
+    outputFile: "gas-report.txt",
+    noColors: false,
+    currency: "USD",
+    coinmarketcap: COINMARKETCAP_API_KEY,
+    // gasPrice: 2000,
+    // token: "MATIC",
+    token: "ETH",
   },
 };

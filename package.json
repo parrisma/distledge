@@ -24,6 +24,7 @@
   "dependencies": {
     "@chainlink/contracts": "^0.5.1",
     "@openzeppelin/contracts": "^4.8.1",
+    "hardhat-gas-reporter": "^1.0.9",
     "dotenv": "^16.0.3",
     "eslint": "^8.32.0",
     "hardhat": "^2.12.7",
