@@ -1,5 +1,6 @@
 require('module-alias/register'); // npm i --save module-alias
 var fs = require('fs');
+const hre = require("hardhat");
 const { fullPathAndNameOfOptionTermsJson, optionTermsDirName, isNumeric, currentDateTime } = require("@webserver/utility.js");
 const {
     getErrorWithOptionIdAsMetaData,
@@ -14,6 +15,14 @@ const {
     handleJsonOK
 } = require("@webserver/serverResponse");
 const { OK_CREATE_TERMS } = require("@webserver/serverResponseCodes");
+
+/**
+ * Deploy option of given terms
+ */
+function deployOption(termsAsJson)
+{
+
+}
 
 /**
  * Write the option terms to a file

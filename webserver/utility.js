@@ -52,7 +52,6 @@ async function verifyTerms(optionTermsAsJson,
     // Hash & sign and ensure new signature matches manager account
     const sigMgr = `${await getSignedHashOfOptionTerms(JSON.stringify(optionTermsToVerify), managerAccount)}`;
     const mgrSignatureToVerify = optionTermsAsJson.managerSignature;
-    console.log(`NEW SIG ${JSON.stringify(optionTermsToVerify)} - ${mgrSignatureToVerify}`);
     if (sigMgr != mgrSignatureToVerify) {
         const errMsg = `The new signature manager [${sigMgr}] does not match the expected signature [${mgrSignatureToVerify}]`;
         throw new Error(errMsg);
@@ -117,7 +116,6 @@ async function fullPathAndNameOfOptionTermsJson(optionTermsDirName,
     termsAsJson,
     signingAccount) {
     const sig = await getSignedHashOfOptionTerms(JSON.stringify(termsAsJson), signingAccount);
-    console.log(`MGR SIG ${JSON.stringify(termsAsJson)} - ${sig}`);
     return [sig, path.join(optionTermsDirName, `${sig}.json`)];
 }
 

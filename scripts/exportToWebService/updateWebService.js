@@ -1,7 +1,9 @@
+require('module-alias/register'); // npm i --save module-alias
 const fs = require("fs");
-const { loadSharedConfig } = require("../lib/sharedConfig.js");
-
-const exportAddressName = ".//webserver/constants/contractAddressesConfig.json";
+const { loadSharedConfig } = require("@scripts/lib/sharedConfig.js");
+const { webServerAbiLocation } = require("../../helper-hardhat-config");
+const {exportAbiAndBytecodeFromBuildArtifacts} = require("@scripts/lib/abiAndByteCodeUtil");
+const exportAddressName = "./webserver/constants/contractAddressesConfig.json";
 
 async function main() {
   console.log("Exporting details to WebService");
@@ -9,6 +11,22 @@ async function main() {
 
   var sharedConfig = loadSharedConfig();
   exportSharedConfigToWebService(sharedConfig);
+
+  // ABI for contracts that have not been deployed.
+  console.log("Exporting Contract ABI")
+  await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimpleOption", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimplePutOption", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Deals", "FXDeal", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "EquityPrice", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "FXPrice", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Mint", "EscrowCurrenyAccount", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20CNYStableCoin", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20EURStableCoin", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20USDStableCoin", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20AppleStableShare", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("HelloWorld", "HelloWorld", webServerAbiLocation);
+  console.log("Update ./webserver/constants/index.js if you have added new contracts");
+
 }
 
 

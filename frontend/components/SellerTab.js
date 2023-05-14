@@ -17,7 +17,7 @@ const Contract = (props) => {
                 <SimpleOption />
             ) : (
                 <Warning
-                    message={"Install and/or connect to virtua wallet e.g. MetaMask"}
+                    message={"Install and/or connect to virtual wallet e.g. MetaMask"}
                 />
             )}
         </div>

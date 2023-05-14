@@ -1,8 +1,9 @@
+require('module-alias/register'); // npm i --save module-alias
 const { ethers } = require("hardhat");
 const fs = require("fs");
 const { frontEndAbiLocation } = require("../../helper-hardhat-config");
-const { loadSharedConfig } = require("../lib/sharedConfig.js");
-
+const { loadSharedConfig } = require("@scripts/lib/sharedConfig.js");
+const {exportAbiAndBytecodeFromBuildArtifacts} = require("@scripts/lib/abiAndByteCodeUtil");
 const exportAddressName = "./frontend/constants/contractAddressesConfig.json";
 
 async function main() {
@@ -13,61 +14,20 @@ async function main() {
   var sharedConfig = loadSharedConfig();
   exportSharedConfigToFrontEnd(sharedConfig);
 
-  // Only export one abi where the different contracts share the same interface
-  // await updateAbiFromDeployedContractAddress("<contract name>", <contract address>>);
-
   // ABI for contracts that have not been deployed.
   console.log("Exporting Contract ABI")
-  await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimpleOption");
-  await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimplePutOption");
-  await exportAbiAndBytecodeFromBuildArtifacts("Deals", "FXDeal");
-  await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "EquityPrice");
-  await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "FXPrice");
-  await exportAbiAndBytecodeFromBuildArtifacts("Mint", "EscrowCurrenyAccount");
-  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20CNYStableCoin");
-  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20EURStableCoin");
-  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20USDStableCoin");
-  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20AppleStableShare");
-  await exportAbiAndBytecodeFromBuildArtifacts("HelloWorld", "HelloWorld");
+  await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimpleOption", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimplePutOption", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Deals", "FXDeal", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "EquityPrice", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "FXPrice", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Mint", "EscrowCurrenyAccount", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20CNYStableCoin", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20EURStableCoin", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20USDStableCoin", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20AppleStableShare", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("HelloWorld", "HelloWorld", frontEndAbiLocation);
   console.log("Update ./frontend/constants/index.js if you have added new contracts");
-}
-
-/* Export ABI to front end where from given address of a deployed contract
-*/
-async function updateAbiFromDeployedContractAddress(contractName, contractAddress) {
-  try {
-    const deployedContract = await ethers.getContractAt(
-      contractName,
-      contractAddress
-    );
-    fs.writeFileSync(
-      `${frontEndAbiLocation}${contractName}.json`,
-      deployedContract.interface.format(ethers.utils.FormatTypes.json)
-    );
-    console.log(`Exported ABI for [${contractName}] at deployed address [${contractAddress}]`)
-  } catch (err) {
-    console.log(`Failed to export ABI for ${contractName} with error [${err}]`);
-  }
-}
-
-/* Export ABI & Bytecode file to front end, by taking latest builds from project artifacts
-*/
-async function exportAbiAndBytecodeFromBuildArtifacts(contractGroup, contractName) {
-  try {
-    const contractFile = `./artifacts/contracts/${contractGroup}/${contractName}.sol/${contractName}.json`;
-    let jsonData = JSON.parse(fs.readFileSync(contractFile, 'utf-8'));
-    const iface = new ethers.utils.Interface(jsonData.abi);
-    fs.writeFileSync(
-      `${frontEndAbiLocation}${contractName}.json`,
-      iface.format(ethers.utils.FormatTypes.json));
-    console.log(`Exported ABI for [${contractFile}]`);
-    fs.writeFileSync(
-      `${frontEndAbiLocation}${contractName}-bytecode.json`,
-      `{"bytecode":"${jsonData.bytecode}"}`);
-    console.log(`Exported Bytecode for [${contractFile}]`);
-  } catch (err) {
-    console.log(`Failed to export for ${contractName} with error [${err}]`);
-  }
 }
 
 /**
