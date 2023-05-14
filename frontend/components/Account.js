@@ -43,7 +43,7 @@ const Contract = (props) => {
                 {props.withHeader ? (
                     <div className="div-table-row">
                         <div className="div-table-col-fix-lab">
-                            :
+                            &nbsp;
                         </div>
                         <div className="div-table-col-fix-lab">
                             Name:
