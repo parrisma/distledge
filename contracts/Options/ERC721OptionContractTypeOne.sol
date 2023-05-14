@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 
-contract ERC271OptionContractTypeOne is ERC721URIStorage, Pausable, Ownable {
+contract ERC721OptionContractTypeOne is ERC721URIStorage, Pausable, Ownable {
     event ChangeOfBaseURI(string oldURI, string newURI);
     event OptionMinted(string optionURI);
     event OptionBurned(string optionURI);

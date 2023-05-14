@@ -31,9 +31,9 @@ async function getSignedHashOfOptionTerms(terms, signingAccount) {
 /*
 **
 */
-async function verifySignedTerms(terms, signingAccount, ERC271OptionURI) {
+async function verifySignedTerms(terms, signingAccount, ERC721OptionURI) {
     // Split URI to extract signature
-    signature = (ERC271OptionURI.split("/"))[4];
+    signature = (ERC721OptionURI.split("/"))[4];
 
     // Hash the terms
     const secretMessage = ethers.utils.solidityPack(["string"], [JSON.stringify(terms)]);
@@ -50,9 +50,9 @@ async function verifySignedTerms(terms, signingAccount, ERC271OptionURI) {
 }
 
 /*
-* This suite tests the ERC271 Option Type One.
+* This suite tests the ERC721 Option Type One.
 */
-describe("ERC271 Option Test Suite", function () {
+describe("ERC721 Option Test Suite", function () {
 
     /*
     ** Test constants.
@@ -70,8 +70,8 @@ describe("ERC271 Option Test Suite", function () {
     let traderTwo;
     let agent;
 
-    // Master ERC271 Contract
-    let erc271OptionContractTypeOne;
+    // Master ERC721 Contract
+    let erc721OptionContractTypeOne;
 
     // Payment Token
     let erc20USDStableCoin;
@@ -98,7 +98,7 @@ describe("ERC271 Option Test Suite", function () {
     }
 
     /**
-     * Create the ERC271 Contract Against which all the tests will run.
+     * Create the ERC721 Contract Against which all the tests will run.
      */
     before(async function () {
         console.log(`\t>> Starting set-up that runs once before all tests`);
@@ -106,9 +106,9 @@ describe("ERC271 Option Test Suite", function () {
         // Assign accounts.
         [owner, traderOne, traderTwo, agent] = await ethers.getSigners();
 
-        // Create the ERC271 Option Contract.
-        const ERC271OptionContractTypeOne = await ethers.getContractFactory("ERC271OptionContractTypeOne");
-        erc271OptionContractTypeOne = await ERC271OptionContractTypeOne.deploy();
+        // Create the ERC721 Option Contract.
+        const ERC721OptionContractTypeOne = await ethers.getContractFactory("ERC721OptionContractTypeOne");
+        erc721OptionContractTypeOne = await ERC721OptionContractTypeOne.deploy();
 
         //Token that will be used for option transfer - but could be any ERC20 token.
         const ERC20USDStableCoin = await ethers.getContractFactory("ERC20USDStableCoin");
@@ -126,94 +126,94 @@ describe("ERC271 Option Test Suite", function () {
         expect(await erc20USDStableCoin.connect(owner).balanceOf(traderTwo.address)).to.equal(100);
     });
 
-    it("ERC271 Option Basic Checks", async function () {
-        expect(await erc271OptionContractTypeOne.connect(owner).name()).to.equal(expectedName);
-        expect(await erc271OptionContractTypeOne.connect(owner).symbol()).to.equal(expectedSymbol);
-        expect(await erc271OptionContractTypeOne.connect(owner).getBaseURI()).to.equal(expectedBaseURI);
-        expect(await erc271OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(0);
-        expect(await erc271OptionContractTypeOne.connect(owner).balanceOf(traderOne.address)).to.equal(0);
-        expect(await erc271OptionContractTypeOne.connect(owner).balanceOf(traderTwo.address)).to.equal(0);
+    it("ERC721 Option Basic Checks", async function () {
+        expect(await erc721OptionContractTypeOne.connect(owner).name()).to.equal(expectedName);
+        expect(await erc721OptionContractTypeOne.connect(owner).symbol()).to.equal(expectedSymbol);
+        expect(await erc721OptionContractTypeOne.connect(owner).getBaseURI()).to.equal(expectedBaseURI);
+        expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(0);
+        expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(traderOne.address)).to.equal(0);
+        expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(traderTwo.address)).to.equal(0);
     });
 
-    it("ERC271 Option Base URI Checks", async function () {
-        await expect(erc271OptionContractTypeOne.connect(traderOne).setBaseURI("NotOwnerSoShouldRevert")).to.be.revertedWith(
+    it("ERC721 Option Base URI Checks", async function () {
+        await expect(erc721OptionContractTypeOne.connect(traderOne).setBaseURI("NotOwnerSoShouldRevert")).to.be.revertedWith(
             "Ownable: caller is not the owner"
         );
 
-        await expect(erc271OptionContractTypeOne.connect(owner).setBaseURI(testBaseURI))
-            .to.emit(erc271OptionContractTypeOne, 'ChangeOfBaseURI')
+        await expect(erc721OptionContractTypeOne.connect(owner).setBaseURI(testBaseURI))
+            .to.emit(erc721OptionContractTypeOne, 'ChangeOfBaseURI')
             .withArgs(expectedBaseURI, testBaseURI);
-        expect(await erc271OptionContractTypeOne.connect(owner).getBaseURI()).to.equal(testBaseURI);
+        expect(await erc721OptionContractTypeOne.connect(owner).getBaseURI()).to.equal(testBaseURI);
 
-        await expect(erc271OptionContractTypeOne.connect(owner).setBaseURI(expectedBaseURI))
-            .to.emit(erc271OptionContractTypeOne, 'ChangeOfBaseURI')
+        await expect(erc721OptionContractTypeOne.connect(owner).setBaseURI(expectedBaseURI))
+            .to.emit(erc721OptionContractTypeOne, 'ChangeOfBaseURI')
             .withArgs(testBaseURI, expectedBaseURI);
-        expect(await erc271OptionContractTypeOne.connect(owner).getBaseURI()).to.equal(expectedBaseURI);
+        expect(await erc721OptionContractTypeOne.connect(owner).getBaseURI()).to.equal(expectedBaseURI);
     });
 
-    it("ERC271 Option Mint", async function () {
-        await expect(erc271OptionContractTypeOne.connect(traderOne).mintOption("NotOwnerSoShouldRevert")).to.be.revertedWith(
+    it("ERC721 Option Mint", async function () {
+        await expect(erc721OptionContractTypeOne.connect(traderOne).mintOption("NotOwnerSoShouldRevert")).to.be.revertedWith(
             "Ownable: caller is not the owner"
         );
 
         const expectedOptionId = 1;
         signedHashOfTerms = await getSignedHashOfOptionTerms(optionOneTerms, owner);
         const expectedOptionURI = `${expectedBaseURI}/${expectedOptionId}/${signedHashOfTerms}`
-        await expect(erc271OptionContractTypeOne.connect(owner).mintOption(signedHashOfTerms))
-            .to.emit(erc271OptionContractTypeOne, 'OptionMinted')
+        await expect(erc721OptionContractTypeOne.connect(owner).mintOption(signedHashOfTerms))
+            .to.emit(erc721OptionContractTypeOne, 'OptionMinted')
             .withArgs(expectedOptionURI);
 
         expect(await verifySignedTerms(optionOneTerms, owner, expectedOptionURI)).to.equal(true);
-        expect(await erc271OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(1);
-        expect(await erc271OptionContractTypeOne.connect(owner).tokenURI(expectedOptionId)).to.equal(expectedOptionURI);
+        expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(1);
+        expect(await erc721OptionContractTypeOne.connect(owner).tokenURI(expectedOptionId)).to.equal(expectedOptionURI);
     });
 
-    it("ERC271 Option Burn", async function () {
+    it("ERC721 Option Burn", async function () {
         // Burns the option created by Option Mint tests.
 
         const nonExistentOptionId = 99999;
-        await expect(erc271OptionContractTypeOne.connect(traderOne).burnOption(nonExistentOptionId)).to.be.revertedWith(
+        await expect(erc721OptionContractTypeOne.connect(traderOne).burnOption(nonExistentOptionId)).to.be.revertedWith(
             "Ownable: caller is not the owner"
         );
 
-        await expect(erc271OptionContractTypeOne.connect(owner).burnOption(nonExistentOptionId)).to.be.revertedWith(
+        await expect(erc721OptionContractTypeOne.connect(owner).burnOption(nonExistentOptionId)).to.be.revertedWith(
             "ERC721: invalid token ID"
         );
 
         const optionIdCreatedByMintTest = 1;
         signedHashOfTerms = await getSignedHashOfOptionTerms(optionOneTerms, owner);
         const expectedOptionURI = `${expectedBaseURI}/${optionIdCreatedByMintTest}/${signedHashOfTerms}`
-        await expect(erc271OptionContractTypeOne.connect(owner).burnOption(optionIdCreatedByMintTest))
-            .to.emit(erc271OptionContractTypeOne, 'OptionBurned')
+        await expect(erc721OptionContractTypeOne.connect(owner).burnOption(optionIdCreatedByMintTest))
+            .to.emit(erc721OptionContractTypeOne, 'OptionBurned')
             .withArgs(expectedOptionURI);
 
-        expect(await erc271OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(0);
+        expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(0);
     });
 
-    it("ERC271 Mint and Transfer", async function () {
+    it("ERC721 Mint and Transfer", async function () {
 
         // Mint an Option that can be transferred
         const expectedOptionId = 2;
         signedHashOfTerms = await getSignedHashOfOptionTerms(optionOneTerms, owner);
         const expectedOptionURI = `${expectedBaseURI}/${expectedOptionId}/${signedHashOfTerms}`
-        await expect(erc271OptionContractTypeOne.connect(owner).mintOption(signedHashOfTerms))
-            .to.emit(erc271OptionContractTypeOne, 'OptionMinted')
+        await expect(erc721OptionContractTypeOne.connect(owner).mintOption(signedHashOfTerms))
+            .to.emit(erc721OptionContractTypeOne, 'OptionMinted')
             .withArgs(expectedOptionURI);
-        expect(await erc271OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(1);
+        expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(1);
 
         const paymentAmount = 25;
         // Transfer will fail, if buyer does not have required funds authorized, for current owner to transfer
-        await expect(erc271OptionContractTypeOne.connect(owner).safeTransferOptionFrom(owner.address, traderOne.address, expectedOptionId, erc20USDStableCoin.address, paymentAmount)).to.be.revertedWith(
+        await expect(erc721OptionContractTypeOne.connect(owner).safeTransferOptionFrom(owner.address, traderOne.address, expectedOptionId, erc20USDStableCoin.address, paymentAmount)).to.be.revertedWith(
             "ERC20: insufficient allowance"
         );
 
         // Grant allowance, so contract can spend buyer ERC20 tokens.
-        await expect(await erc20USDStableCoin.connect(traderOne).approve(erc271OptionContractTypeOne.address, paymentAmount))
+        await expect(await erc20USDStableCoin.connect(traderOne).approve(erc721OptionContractTypeOne.address, paymentAmount))
             .to.emit(erc20USDStableCoin, 'Approval')
-            .withArgs(traderOne.address, erc271OptionContractTypeOne.address, paymentAmount);
+            .withArgs(traderOne.address, erc721OptionContractTypeOne.address, paymentAmount);
 
         // Transfer will fail, if seller has not approved transfer
-        await expect(erc271OptionContractTypeOne.connect(agent).safeTransferOptionFrom(
+        await expect(erc721OptionContractTypeOne.connect(agent).safeTransferOptionFrom(
             owner.address,
             traderOne.address,
             expectedOptionId,
@@ -223,19 +223,19 @@ describe("ERC271 Option Test Suite", function () {
             );
 
         // Approve transfer of Option NFT
-        await expect(await erc271OptionContractTypeOne.connect(owner).approve(traderOne.address, expectedOptionId))
-            .to.emit(erc271OptionContractTypeOne, 'Approval')
+        await expect(await erc721OptionContractTypeOne.connect(owner).approve(traderOne.address, expectedOptionId))
+            .to.emit(erc721OptionContractTypeOne, 'Approval')
             .withArgs(owner.address, traderOne.address, expectedOptionId);
 
         // Transfer will fail, if seller has not approved transfer
-        await expect(erc271OptionContractTypeOne.connect(owner).safeTransferOptionFrom(
+        await expect(erc721OptionContractTypeOne.connect(owner).safeTransferOptionFrom(
             owner.address,
             traderOne.address,
             expectedOptionId,
             erc20USDStableCoin.address,
             paymentAmount)
         )
-            .to.emit(erc271OptionContractTypeOne, 'OptionTransfer')
+            .to.emit(erc721OptionContractTypeOne, 'OptionTransfer')
             .withArgs(expectedOptionURI, owner.address, traderOne.address);
 
         // Check Token Balances
@@ -244,9 +244,9 @@ describe("ERC271 Option Test Suite", function () {
         expect(await erc20USDStableCoin.connect(owner).balanceOf(traderTwo.address)).to.equal(100);
 
         // Check Option NFT Balances
-        expect(await erc271OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(0);
-        expect(await erc271OptionContractTypeOne.connect(owner).balanceOf(traderOne.address)).to.equal(1);
-        expect(await erc271OptionContractTypeOne.connect(owner).balanceOf(traderTwo.address)).to.equal(0);
+        expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(0);
+        expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(traderOne.address)).to.equal(1);
+        expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(traderTwo.address)).to.equal(0);
     });
 
 });

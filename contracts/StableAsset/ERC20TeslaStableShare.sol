@@ -7,7 +7,7 @@ import "./ERC20StableAsset.sol";
 /**
  ** @title Stable Share for AppTeslale
  */
-contract ERC20TeslaShare is ERC20StableAsset {
+contract ERC20TeslaStableShare is ERC20StableAsset {
     string private constant _token_symbol = "TeslaSS";
     string private constant _token_name = "TeslaStableShare";
     string private constant _asset_code = "US88160R1014"; // isin code

@@ -15,13 +15,13 @@ const {
     handleJsonOK
 } = require("@webserver/serverResponse");
 const { OK_CREATE_TERMS } = require("@webserver/serverResponseCodes");
+const { ERC20USDStableCoin } = require("@webserver/constants");
 
 /**
  * Deploy option of given terms
  */
-function deployOption(termsAsJson)
-{
-
+function deployOption(termsAsJson) {
+    const
 }
 
 /**
