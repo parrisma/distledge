@@ -16,7 +16,10 @@ async function main() {
   console.log("Exporting Contract ABI")
   await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimpleOption", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimplePutOption", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Options", "ERC721OptionContractTypeOne", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("Deals", "FXDeal", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Libs", "VerifySigner", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Libs", "UniqueId", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "EquityPrice", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "FXPrice", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20CNYStableCoin", webServerAbiLocation);

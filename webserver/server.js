@@ -86,11 +86,9 @@ function handleMethodGET(
             if (0 != command.length) {
                 if (isNumeric(command)) {
                     command = COMMAND_PULL;
-                    console.log(`PARTS1: [${uriParts}]`);
                     uriParts.shift();
                     uriParts.unshift(``, COMMAND_PULL);
                 }
-                console.log(`PARTS2: [${uriParts}]`);
                 switch (command) {
                     case COMMAND_PULL:
                         pullHandler(uriParts, res);

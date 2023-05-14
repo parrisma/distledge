@@ -20,8 +20,8 @@ const { ERC20USDStableCoin } = require("@webserver/constants");
 /**
  * Deploy option of given terms
  */
-function deployOption(termsAsJson) {
-    const
+async function deployOption(termsAsJson) {
+    const contract = await hre.ethers.getContractAt(ERC20USDStableCoin, contractAddress);
 }
 
 /**

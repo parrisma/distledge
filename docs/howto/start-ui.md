@@ -4,10 +4,10 @@
 
 ```text
 cd .\frontend
-```
+```text
 Install [Hardhat](https://www.npmjs.com/package/hardhat)
 Install [yarn](https://classic.yarnpkg.com/en/docs/install#windows-stable)
-```
+```text
 cd ..
 ```
 
@@ -20,6 +20,7 @@ This Hardhat network is set-up according to the details in ```hardhat.config.js`
 ```text
 npx hardhat node
 ```
+
 and you should see something as below.
 
 ![Hardhat Node](../resources/hardhat-node-start.png)
@@ -34,7 +35,7 @@ To deploy our test contracts, we run the deploy script as below.
 npx hardhat run --network localhost scripts\deploy\deploy.js
 ```
 
-When this has run it will have deployed all of the test contracts and exported their details into ```scripts\tmp\sharedConfig.json```. These details can be read by any javascript module using the ```scripts\lib\sharedConfig.js``` utility. 
+When this has run it will have deployed all of the test contracts and exported their details into ```scripts\tmp\sharedConfig.json```. These details can be read by any javascript module using the ```scripts\lib\sharedConfig.js``` utility.
 
 You should see something like
 
@@ -55,7 +56,6 @@ You will find the ```RPC URL``` as the first line in the console from which the 
 The network name ```Hardhat```, is free text as a name for these settings, however as these settings connect to the local hardhat network, ```Hardhat``` seems like a fitting name.
 
 ![Metamask Network](../resources/meta-mask-add-hardhat.png)
-
 
 ## Import the Test accounts from the Hardhat Test network.
 
@@ -83,7 +83,7 @@ yarn hardhat run ./scripts/exportToFrontEnd/updateFrontEnd.js --network localhos
 
 ## Run Web Service
 
-The ERC271 Option NFT Contracts are supported by a local Web Service that manages storage of the Option terms.
+The ERC721 Option NFT Contracts are supported by a local Web Service that manages storage of the Option terms.
 
 from the project root, run the command below to export all deployed addresses, such that WebServer can see them.
 
@@ -106,7 +106,6 @@ Server Listening on [http://localhost:8191]
 
 ## Update Front End Components
 
-
 ```bash
 cd ./frontend/
 yarn
@@ -126,6 +125,7 @@ yarn dev
 4. You should see the Equity price update and you are off an running.
 
 ## Debugging the Front-end
+
 1. Run UI by following instructions above.
 2. Open VSCode with ./frontend/ as root directory.
 3. Choose debug configuration "attach debugger in front end" and Press F5

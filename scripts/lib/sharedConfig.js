@@ -27,7 +27,7 @@ var sharedConfig = {
     UsdUsdFXRateContract: "",
     EurEurFXRateContract: "",
     CnyCnyFXRateContract: "",
-    erc271OptionContractTypeOne: ""
+    erc721OptionContractTypeOne: ""
 };
 
 const configRoot = "./scripts/tmp";
