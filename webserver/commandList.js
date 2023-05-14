@@ -1,4 +1,5 @@
-const { getAllTerms } = require("./utility");
+require('module-alias/register'); // npm i --save module-alias
+const { getAllTerms } = require("@webserver/utility");
 const {
     getErrorWithMessage,
     handleJsonError
@@ -10,8 +11,11 @@ const {
 } = require("./serverResponse.js");
 const { OK_LIST_TERMS } = require("./serverResponseCodes");
 
-/* Process a request to get a list of all Option NFT terms
-*/
+/**
+ * Return a list of all current terms as Json response
+ * 
+ * @param {*} res - http response
+ */
 function listHandler(res) {
     console.log(`Handle List all Terms Request`);
     try {

@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 const fs = require("fs");
 const { frontEndAbiLocation } = require("../../helper-hardhat-config");
-const { loadSharedConfig, sharedConfig } = require("../lib/sharedConfig.js");
+const { loadSharedConfig } = require("../lib/sharedConfig.js");
 
 const exportAddressName = "./frontend/constants/contractAddressesConfig.json";
 
@@ -85,8 +85,6 @@ function exportSharedConfigToFrontEnd(sharedConfig) {
 }
 
 main(hre).catch((error) => {
-  console.log(`\nStarted Export ABI\n`);
   console.error(error);
   process.exitCode = 1;
-  console.log(`\nDone Export ABI\n`);
 });

@@ -1,11 +1,24 @@
-const { json_content } = require("./utility.js");
+require('module-alias/register'); // npm i --save module-alias
+const { json_content } = require("@webserver/utility.js");
 const {
-    ERR_OPTION_ALREADY_EXISTS, ERR_DEFUNCT_DNE, ERR_OPTION_ID_NOT_SPECIFIED, ERR_NOT_IMPLEMENTED,
+    ERR_OPTION_ALREADY_EXISTS, ERR_DEFUNCT_DNE, ERR_OPTION_ID_NOT_SPECIFIED, ERR_NOT_IMPLEMENTED, ERR_PURGE,
     ERR_VALUE_OPTION_ID_NONEXISTENT, ERR_FAILED_TO_LOAD_TERMS, ERR_BAD_GET, ERR_UNKNOWN_COMMAND, ERR_OPTION_ID_NON_NUMERIC,
-    ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL, ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, ERR_FAILED_LIST
-} = require("./serverErrorCodes.js");
+    ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL, ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, ERR_FAILED_LIST, ERR_BAD_TERMS
+} = require("@webserver/serverErrorCodes.js");
 
 var errorsDict = {};
+
+errorsDict[ERR_PURGE] =
+{
+    "errorCode": `${ERR_PURGE}`,
+    "errorMessage": `Failed to purge all existing terms`
+};
+
+errorsDict[ERR_BAD_TERMS] =
+{
+    "errorCode": `${ERR_BAD_TERMS}`,
+    "errorMessage": `Failed to persist terms as given terms were malformed`
+};
 
 errorsDict[ERR_FAILED_LIST] =
 {

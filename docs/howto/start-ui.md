@@ -85,6 +85,14 @@ yarn hardhat run ./scripts/exportToFrontEnd/updateFrontEnd.js --network localhos
 
 The ERC271 Option NFT Contracts are supported by a local Web Service that manages storage of the Option terms.
 
+from the project root, run the command below to export all deployed addresses, such that WebServer can see them.
+
+```bash
+yarn hardhat run ./scripts/exportToWebService/updateWebService.js --network localhost
+```
+
+To run the WebServer ...
+
 ```bash
 cd ./webserver
 npx hardhat run --network localhost server.js

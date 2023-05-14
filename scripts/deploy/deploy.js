@@ -9,15 +9,16 @@
 * to the specific instance of the contract addresses that are created here.
 * 
 */
+require('module-alias/register'); // npm i --save module-alias
 const hre = require("hardhat");
-const { deployStableCoins } = require("./deployStableCoins.js");
-const { deployAndLinkEscrowAccounts } = require("./deployEscrow.js");
-const { deployEquityPrices } = require("./deployEquityPrices.js");
-const { deployFXRates } = require("./deployFXRates.js");
-const { deployERC271 } = require("./deployERC271.js");
-const { mintAndAllocate } = require("./mintAndAllocate.js");
-const { namedAccounts } = require("../lib/accounts.js");
-const { sharedConfig, cleanUpSharedConfig, writeSharedConfig } = require("../lib/sharedConfig.js");
+const { deployStableCoins } = require("@deploy/deployStableCoins.js");
+const { deployAndLinkEscrowAccounts } = require("@deploy/deployEscrow.js");
+const { deployEquityPrices } = require("@deploy/deployEquityPrices.js");
+const { deployFXRates } = require("@deploy/deployFXRates.js");
+const { deployERC271 } = require("@deploy/deployERC271.js");
+const { mintAndAllocate } = require("@deploy/mintAndAllocate.js");
+const { namedAccounts } = require("@scripts/lib/accounts.js");
+const { sharedConfig, cleanUpSharedConfig, writeSharedConfig } = require("@scripts/lib/sharedConfig.js");
 
 
 async function main() {

@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { depositQtyUSD, depositQtyEUR, depositQtyCNY } = require("./testConstants.js");
+const { depositQtyUSD, depositQtyEUR, depositQtyCNY } = require("@deploy/testConstants.js");
 
 /**
  * 
