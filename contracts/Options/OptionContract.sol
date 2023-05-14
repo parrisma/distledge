@@ -216,4 +216,12 @@ abstract contract OptionContract is Ownable, Pausable {
             "OptionContract: caller is not the seller"
         );
     }
+
+    function getSeller() public view returns (address) {
+        return _seller;
+    }
+
+    function getBuyer() public view returns (address) {
+        return _buyer;
+    }
 }
