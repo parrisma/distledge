@@ -19,7 +19,6 @@ async function main() {
   await exportAbiAndBytecodeFromBuildArtifacts("Deals", "FXDeal", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "EquityPrice", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "FXPrice", webServerAbiLocation);
-  await exportAbiAndBytecodeFromBuildArtifacts("Mint", "EscrowCurrenyAccount", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20CNYStableCoin", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20EURStableCoin", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20USDStableCoin", webServerAbiLocation);
