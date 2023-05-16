@@ -1,6 +1,9 @@
+/*
+** npx hardhat run serverTest.js --network localhost
+*/
 require('module-alias/register'); // npm i --save module-alias
 const { addressConfig } = require("@webserver/constants");
-const { getAllCoins, getAllFX, getAllLevels, loadSharedConfig } = require("@scripts/lib/sharedConfig");
+const { getAllCoins, getAllFX, getAllLevels } = require("@scripts/lib/sharedConfig");
 const { namedAccounts } = require("@scripts/lib/accounts");
 const { getSignedHashOfOptionTerms } = require("@scripts/lib/signedValue");
 const { formatOptionTermsMessage } = require("@scripts/lib/optionTermsUtil");

@@ -16,12 +16,48 @@ const {
 } = require("@webserver/serverResponse");
 const { OK_CREATE_TERMS } = require("@webserver/serverResponseCodes");
 const { ERC20USDStableCoin } = require("@webserver/constants");
+const { getDictionaryOfDeployedContracts } = require("@lib/deployedContracts");
+const { addressConfig } = require("@webserver/constants");
+var deployedContracts = null;
+
+/**
+ * Get deployed contract
+ * 
+ * @param {*} contractAddress - The address of teh deployed contract
+ * @returns The contract
+ */
+async function getDeployedContract(contractAddress) {
+    if (null == deployedContracts) {
+        try {
+            const deployedContracts = await getDictionaryOfDeployedContracts(addressConfig);
+        } catch (err) {
+            throw new Error(`Failed to load set of deployed contracts with error [${err.message}]`);
+        }
+    }
+    if (!(contractAddress in deployedContracts)) {
+        throw new Error(`Requested deployed contract with address [${contractAddress}] not in loaded list`);
+    }
+    return deployedContracts[contractAddress];
+}
 
 /**
  * Deploy option of given terms
+ * 
+ * @param {*} termsAsJson - The terms of the option to be deployed 
+ * @param {*} mgrSig - The manager account, signed hash of the option terms
  */
-async function deployOption(termsAsJson) {
-    const contract = await hre.ethers.getContractAt(ERC20USDStableCoin, contractAddress);
+async function deployOption(
+    termsAsJson,
+    mgrSig) {
+    var optionId = null;
+    erc721OptionContractTypeOne = getDeployedContract(addressConfig.erc721OptionContractTypeOne);
+    if(null != erc721OptionContractTypeOne){
+        try{
+
+        }catch (err){
+            throw new Error(`Failed to mint new NTF for Type One Option Contract - [${err.message}]`);
+        }
+    }
 }
 
 /**
