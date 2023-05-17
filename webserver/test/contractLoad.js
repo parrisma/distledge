@@ -8,6 +8,8 @@ const { namedAccounts } = require("@scripts/lib/accounts");
 const { getSignedHashOfOptionTerms } = require("@scripts/lib/signedValue");
 const { guid } = require("@lib/guid");
 
+var responses = {};
+
 function onMintNTFHandler1(args) {
     console.log(`Args1: [${args}]`);
 }
@@ -15,19 +17,6 @@ function onMintNTFHandler1(args) {
 function onMintNTFHandler2(args) {
     console.log(`Args2: [${args}]`);
 }
-
-function getTransactionReceiptMined(txHash, interval) {
-    const self = this;
-    const transactionReceiptRetry = () => web3.eth.getTransactionReceipt(txHash)
-        .then(receipt => receipt != null
-            ? receipt
-            : Promise.delay(interval ? interval : 500).then(transactionReceiptRetry));
-    if (typeof txHash === "string") {
-        return transactionReceiptRetry();
-    } else {
-        throw new Error("Invalid Type: " + txHash);
-    }
-};
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
