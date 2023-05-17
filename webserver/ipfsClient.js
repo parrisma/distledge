@@ -3,7 +3,7 @@ const fs = require('fs');
 
 async function addTextToIPFS(data) {
   const { create } = await import('ipfs-http-client')
-  const ipfs = create({url: 'olive-solar-monkey-221.mypinata.cloud'});
+  const ipfs = create(new URL(IPFS_URL));
   const result = await ipfs.add(data);
   const ipfsHash = result.cid.toString();
   console.log('IPFS Hash:', ipfsHash);
