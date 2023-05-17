@@ -1,5 +1,5 @@
 {
-  "name": "hardhat-project",
+  "name": "hardhat-project-for-onchain-option-issuance",
   "license": "UNLICENSED",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
@@ -30,7 +30,21 @@
     "hardhat": "^2.12.7",
     "hardhat-contract-sizer": "^2.8.0",
     "hardhat-deploy": "^0.11.23",
+    "module-alias": "^2.2.2",
+    "rimraf": "^5.0.0",
     "solc": "^0.8.17",
     "uuid": "^9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/parrisma/distledge"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@lib": "lib",
+    "@scripts": "scripts",
+    "@deploy": "scripts/deploy",
+    "@webserver": "webserver",
+    "@frontend": "frontend"
   }
 }

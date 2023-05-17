@@ -1,20 +1,24 @@
+require('module-alias/register'); // npm i --save module-alias
 var fs = require('fs');
 
 const {
     handleJsonError,
     getError,
     getErrorWithOptionIdAsMetaData
-} = require("./serverErrors");
-const { ERR_OPTION_ID_NOT_SPECIFIED, ERR_DEFUNCT_DNE } = require("./serverErrorCodes.js");
+} = require("@webserver/serverErrors");
+const { ERR_OPTION_ID_NOT_SPECIFIED, ERR_DEFUNCT_DNE } = require("@webserver/serverErrorCodes.js");
 const {
     handleJsonOK,
     getOKWithOptionId
-} = require("./serverResponse.js");
-const { OK_DEFUNCT } = require("./serverResponseCodes");
-const { optionTermsDirName } = require("./utility");
+} = require("@webserver/serverResponse.js");
+const { OK_DEFUNCT } = require("@webserver/serverResponseCodes");
+const { optionTermsDirName } = require("@webserver/utility");
 
-/* Process a request to defunct an Option NFT
-*/
+/**
+ * Defunct (move to archive location) the option with the given ID
+ * @param {*} uriParts - The separate part of the request URI
+ * @param {*} res - http response
+ */
 function defunctHandler(uriParts, res) {
     console.log(`Handle Defunct Request`);
     var optionId = uriParts[2];

@@ -1,4 +1,4 @@
-const { signedValue } = require("../lib/signedValue.js");
+const { signedValue } = require("@scripts/lib/signedValue.js");
 const { equityPriceDecimals,
     teslaPriceFeb2023,
     teslaTicker,
@@ -6,7 +6,7 @@ const { equityPriceDecimals,
     applePriceFeb2023,
     appleTicker,
     appleDescription
-} = require("./testConstants.js");
+} = require("@deploy/testConstants.js");
 
 /**
  * Deploy a secure off chain price
@@ -53,10 +53,10 @@ async function deployEquityPrices(sharedConfig, hre, price_issuer, secure_source
     console.log("\nCreate Equity Price contracts");
 
     const [teslaEquityPriceContract] = await deployEquityPrice(hre, price_issuer, secure_source, teslaTicker, teslaDescription, equityPriceDecimals, teslaPriceFeb2023);
-    console.log("Equity price feed created with ticker " + await teslaEquityPriceContract.getTicker() + " with initial price " + Number(await teslaEquityPriceContract.getVerifiedValue()) / (10 ** await teslaEquityPriceContract.getDecimals()));
+    console.log(`Equity price feed created with ticker ${await teslaEquityPriceContract.getTicker()} with initial price ${Number(await teslaEquityPriceContract.getVerifiedValue()) / (10 ** await teslaEquityPriceContract.getDecimals())} at address ${teslaEquityPriceContract.address}`);
 
     const [appleEquityPriceContract] = await deployEquityPrice(hre, price_issuer, secure_source, appleTicker, appleDescription, equityPriceDecimals, applePriceFeb2023);
-    console.log("Equity price feed created with ticker " + await appleEquityPriceContract.getTicker() + " with initial price " + Number(await appleEquityPriceContract.getVerifiedValue()) / (10 ** await appleEquityPriceContract.getDecimals()));
+    console.log(`Equity price feed created with ticker ${await appleEquityPriceContract.getTicker()} with initial price ${Number(await appleEquityPriceContract.getVerifiedValue()) / (10 ** await appleEquityPriceContract.getDecimals())} at address ${appleEquityPriceContract.address}`);
 
     sharedConfig.teslaEquityPriceContract = teslaEquityPriceContract.address;
 
@@ -72,7 +72,6 @@ async function deployEquityPrices(sharedConfig, hre, price_issuer, secure_source
  */
 async function loadEquityPricesFromAddresses(sharedConfig) {
     const teslaEquityPriceContract = await hre.ethers.getContractAt("EquityPrice", sharedConfig.teslaEquityPriceContract);
-
     const appleEquityPriceContract = await hre.ethers.getContractAt("EquityPrice", sharedConfig.appleEquityPriceContract);
     return [teslaEquityPriceContract, appleEquityPriceContract]
 }

@@ -15,10 +15,12 @@
         "solidty",
         "TCKR",
         "TSLA",
+        "typechain",
         "USDCNY",
         "USDEUR",
         "USDEURFX",
         "USDUSD",
-        "Verdana"
+        "Verdana",
+        "webserver"
     ]
 }

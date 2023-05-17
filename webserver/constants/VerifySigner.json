@@ -1,0 +1,1 @@
+[{"type":"function","name":"checkVerifiedSender","constant":true,"stateMutability":"pure","payable":false,"inputs":[{"type":"address","name":"expectedSender"},{"type":"bytes32","name":"hashedData"},{"type":"bytes","name":"sig"}],"outputs":[{"type":"bool"}]}]

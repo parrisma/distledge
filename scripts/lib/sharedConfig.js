@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 
 /** 
    * We need to export all of the contract addresses to so other test modules can 
@@ -26,18 +27,59 @@ var sharedConfig = {
     UsdUsdFXRateContract: "",
     EurEurFXRateContract: "",
     CnyCnyFXRateContract: "",
-    erc271OptionContractTypeOne: ""
+    erc721OptionContractTypeOne: ""
 };
 
-const sharedConfigFileName = "./scripts/tmp/sharedConfig.json";
+const configRoot = "./scripts/tmp";
+const sharedConfigFileName = "sharedConfig.json";
+
+function getConfigFileName(root) {
+    var cfgFileName = null;
+    if (null == root || 0 == `${root}`.length) {
+        cfgFileName = path.join(configRoot, sharedConfigFileName);
+    } else {
+        cfgFileName = path.join(root, sharedConfigFileName);
+    }
+    return cfgFileName;
+}
+
+/**
+ * Return a list of all reference levels
+ */
+function getAllLevels(loadedSharedConfig) {
+    return [loadedSharedConfig.teslaEquityPriceContract,
+    loadedSharedConfig.appleEquityPriceContract];
+}
+
+/**
+ * Return a list of all stable coins
+ */
+function getAllCoins(loadedSharedConfig) {
+    return [loadedSharedConfig.usdStableCoin,
+    loadedSharedConfig.eurStableCoin,
+    loadedSharedConfig.cnyStableCoin];
+}
+
+/**
+ * Return a list of all FX Levels.
+ */
+function getAllFX(loadedSharedConfig) {
+    return [loadedSharedConfig.UsdCnyFXRateContract,
+    loadedSharedConfig.UsdUsdFXRateContract,
+    loadedSharedConfig.UsdCnyFXRateContract,
+    loadedSharedConfig.CnyCnyFXRateContract,
+    loadedSharedConfig.UsdEurFXRateContract,
+    loadedSharedConfig.EurEurFXRateContract
+    ];
+}
 
 /**
  * Delete any existing shared config file if it exists
  */
 function cleanUpSharedConfig() {
-    fs.stat(sharedConfigFileName, function (err, stats) {
+    fs.stat(getConfigFileName(), function (err, stats) {
         if (!err) {
-            fs.unlink(sharedConfigFileName, function (err) {
+            fs.unlink(getConfigFileName(), function (err) {
                 if (err) return console.log(err);
                 console.log('old shared config deleted successfully');
             });
@@ -49,7 +91,7 @@ function cleanUpSharedConfig() {
  * Write the current state of the sharedConfig to file.
  */
 function writeSharedConfig() {
-    fs.writeFile(sharedConfigFileName, JSON.stringify(sharedConfig), function (err) {
+    fs.writeFile(getConfigFileName(), JSON.stringify(sharedConfig), function (err) {
         if (err) throw err;
         console.log('Shared config saved OK');
     });
@@ -59,14 +101,14 @@ function writeSharedConfig() {
  * Load the shared config if it exists
  * @returns {json} The configuration that was loaded.
  */
-function loadSharedConfig() {
+function loadSharedConfig(configRoot) {
     var config;
     try {
-        config = JSON.parse(fs.readFileSync(sharedConfigFileName));
+        config = JSON.parse(fs.readFileSync(getConfigFileName(configRoot)));
         console.log('Shared config loaded successfully');
 
     } catch (err) {
-        console.log('Shared config file not found [' + sharedConfigFileName + "]");
+        console.log('Shared config file not found [' + getConfigFileName(configRoot) + "]");
     }
     console.log(`Config: [${config}]`);
     return config;
@@ -76,5 +118,8 @@ module.exports = {
     sharedConfig,
     cleanUpSharedConfig,
     writeSharedConfig,
-    loadSharedConfig
+    loadSharedConfig,
+    getAllCoins,
+    getAllFX,
+    getAllLevels
 }

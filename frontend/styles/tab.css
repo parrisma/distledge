@@ -6,9 +6,9 @@
 }
 
 .button-tab-off {
-    background-color: #459444;
+    background-color: #333333;
     border-radius: 8px;
-    border: 1px solid white;
+    border: 1px solid black;
     color: white;
     padding: 10px 12px;
     text-align: center;
@@ -21,9 +21,8 @@
 }
 
 .button-tab-on {
-    background-color: #6adf68;
+    background-color: #555555;
     border-radius: 8px;
-    border: 1px solid white;
     color: white;
     padding: 10px 12px;
     text-align: center;

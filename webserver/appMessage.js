@@ -3,7 +3,7 @@ const appMessage = '\
 <html>\
 <body style="background-color:#282c34;color:white;font-family:Verdana,sans-serif">\
 \
-<h1 style="font-size: 18px">ECR271 Option NFT Contract Server</h1>\
+<h1 style="font-size: 18px">ECR721 Option NFT Contract Server</h1>\
 \
 <h2 style="font-size: 16px">Available Command Patterns</h2>\
 <ul>\

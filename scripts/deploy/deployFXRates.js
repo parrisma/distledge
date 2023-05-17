@@ -1,4 +1,4 @@
-const { signedValue } = require("../lib/signedValue.js");
+const { signedValue } = require("@scripts/lib/signedValue.js");
 const { fxRateDecimals,
     USD_to_EUR,
     USD_to_CNY,
@@ -14,7 +14,7 @@ const { fxRateDecimals,
     EUREUR_ticker,
     EUREUR_Description,
     CNYCNY_ticker,
-    CNYCNY_Description } = require("./testConstants.js");
+    CNYCNY_Description } = require("@deploy/testConstants.js");
 
 /**
  * Deploy a secure off chain FXRate

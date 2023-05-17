@@ -12,9 +12,11 @@ const networkConfig = {
 const developmentChains = ["hardhat", "localhost"];
 
 const frontEndAbiLocation = "./frontend/constants/";
+const webServerAbiLocation = "./webserver/constants/";
 
 module.exports = {
   networkConfig,
   developmentChains,
   frontEndAbiLocation,
+  webServerAbiLocation
 };
