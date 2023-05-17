@@ -16,6 +16,35 @@ function onMintNTFHandler2(args) {
     console.log(`Args2: [${args}]`);
 }
 
+function getTransactionReceiptMined(txHash, interval) {
+    const self = this;
+    const transactionReceiptRetry = () => web3.eth.getTransactionReceipt(txHash)
+        .then(receipt => receipt != null
+            ? receipt
+            : Promise.delay(interval ? interval : 500).then(transactionReceiptRetry));
+    if (typeof txHash === "string") {
+        return transactionReceiptRetry();
+    } else {
+        throw new Error("Invalid Type: " + txHash);
+    }
+};
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function waitForReceipt(txHash) {
+    let i = 1;
+    while (true) {
+        let receipt = web3.eth.getTransactionReceipt(txHash);
+        if (receipt) {
+            break;
+        }
+        console.log(`Waiting: ${i} [${txHash}]`);
+        i = i + 1;
+        await sleep(250);
+    }
+}
 
 async function main() {
 
@@ -30,17 +59,36 @@ async function main() {
 
     /** Test ERC721 mint.
     */
+    if (false) {
+        try {
+            erc721OptionContractTypeOne = contractDict[addressConfig.erc721OptionContractTypeOne];
+
+            erc721OptionContractTypeOne.on("OptionMinted", onMintNTFHandler1); // Attach multiple emit handlers for same event
+            erc721OptionContractTypeOne.on("OptionMinted", onMintNTFHandler2);
+
+            /* Mint 10 contracts, for which we expect both handlers to be called Async.
+            */
+            for (let i = 0; i < 10; i++) {
+                sig = await getSignedHashOfOptionTerms(guid(), managerAccount);
+                erc721OptionContractTypeOne.connect(managerAccount).mintOption(sig);
+            }
+        } catch (err) {
+            throw new Error(`Failed to test mint an Option Type One NFT - with error :[${err.message}]`);
+        }
+    }
+
     try {
-        erc721OptionContractTypeOne = contractDict[addressConfig.erc721OptionContractTypeOne];
+        erc721OptionContractTypeOne_2 = contractDict[addressConfig.erc721OptionContractTypeOne];
+        // erc721OptionContractTypeOne_2.on("OptionMinted", onMintNTFHandler1); // Attach multiple emit handlers for same event
 
-        erc721OptionContractTypeOne.on("OptionMinted", onMintNTFHandler1); // Attach multiple emit handlers for same event
-        erc721OptionContractTypeOne.on("OptionMinted", onMintNTFHandler2);
-
-        /* Mint 10 contracts, for which we expect both handlers to be called Async.
+        /* Mint 10 contracts, for which we sync wait
         */
         for (let i = 0; i < 10; i++) {
             sig = await getSignedHashOfOptionTerms(guid(), managerAccount);
-            erc721OptionContractTypeOne.connect(managerAccount).mintOption(sig);
+            erc721OptionContractTypeOne_2.connect(managerAccount).mintOption(sig).then((args) => {
+                console.log(`Args3: [${JSON.stringify(args)}]`);
+                console.log(`Receipt: [${JSON.stringify(waitForReceipt(args.hash))}]`);
+            })
         }
     } catch (err) {
         throw new Error(`Failed to test mint an Option Type One NFT - with error :[${err.message}]`);
