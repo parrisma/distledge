@@ -1,23 +1,17 @@
+const { addTextToIPFS, getTextFromIPFS, up, uploadImageToIPFS } = require("../ipfsClient.js");
+
 async function main() {
-    const { create } = await import('ipfs-http-client')
-
-    // connect using a URL
-    const client = create(new URL('http://127.0.0.1:5001'))
-
-    // call Core API methods
-    const { cid } = await client.add('Hello digital gargage team!')
-
-    console.log(cid)
-
-    const chunks = [];
-    for await (const chunk of client.cat(cid)) {
-        chunks.push(chunk);
-    }
-
-    console.log("Retrieved file contents:", chunks.toString());
+    const cid = await addTextToIPFS("Hello Digital Gargage team!");
+    console.log(cid);
+    const text = await getTextFromIPFS(cid);
+    console.log(text);
+    const cid2 = await uploadImageToIPFS("../icon/favicon.png");
+    console.log(cid2);
 }
 
-main().catch(err => {
-    console.error(err)
-    process.exit(1)
-})
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
