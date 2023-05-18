@@ -8,31 +8,47 @@ const { namedAccounts } = require("@scripts/lib/accounts");
 const { getSignedHashOfOptionTerms } = require("@scripts/lib/signedValue");
 const { guid } = require("@lib/guid");
 
-var responses = {};
+var emittedEvents = {};
 
-function onMintNTFHandler1(args) {
-    console.log(`Args1: [${args}]`);
-}
-
-function onMintNTFHandler2(args) {
-    console.log(`Args2: [${args}]`);
+/**
+ * Store the emitted event such that it can be retrieved
+ * 
+ * @param {*} arg1 - The emitted event response data as defined by the individual event
+ * @param {*} arg2 - The full chain response event, that also contains the event response data
+ */
+function onEmittedEventHandler1(arg1, arg2) {
+    console.log(`Emitted Event Received: [${JSON.stringify(arg2)}]`);
+    emittedEvents[arg2.transactionHash] = arg2;
 }
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function waitForReceipt(txHash) {
-    let i = 1;
-    while (true) {
-        let receipt = web3.eth.getTransactionReceipt(txHash);
-        if (receipt) {
-            break;
+/**
+ * Return a promise that will deliver the emitted event for the given transaction id
+ * 
+ * @param {*} txHash - The transaction has to get the emitted event for.
+ * @returns a promise that will deliver the matching emitted event or throw a timeout exception
+ * 
+ */
+async function getEmittedEventFromTransaction(txHash) {
+    return new Promise(async (resolve) => {
+        const waitTime = 250;
+        const maxTry = 10;
+        let i = 1;
+        while (true) {
+            console.log(`Checking for emitted event, try # [${i}] for transaction [${txHash}]`);
+            if (txHash in emittedEvents) {
+                resolve(emittedEvents[txHash]);
+            }
+            i = i + 1;
+            if (i >= maxTry) {
+                throw new Error(`Timed out waiting for receipt for transaction [${txHash}]`);
+            }
+            await sleep(waitTime);
         }
-        console.log(`Waiting: ${i} [${txHash}]`);
-        i = i + 1;
-        await sleep(250);
-    }
+    });
 }
 
 async function main() {
@@ -48,36 +64,22 @@ async function main() {
 
     /** Test ERC721 mint.
     */
-    if (false) {
-        try {
-            erc721OptionContractTypeOne = contractDict[addressConfig.erc721OptionContractTypeOne];
-
-            erc721OptionContractTypeOne.on("OptionMinted", onMintNTFHandler1); // Attach multiple emit handlers for same event
-            erc721OptionContractTypeOne.on("OptionMinted", onMintNTFHandler2);
-
-            /* Mint 10 contracts, for which we expect both handlers to be called Async.
-            */
-            for (let i = 0; i < 10; i++) {
-                sig = await getSignedHashOfOptionTerms(guid(), managerAccount);
-                erc721OptionContractTypeOne.connect(managerAccount).mintOption(sig);
-            }
-        } catch (err) {
-            throw new Error(`Failed to test mint an Option Type One NFT - with error :[${err.message}]`);
-        }
-    }
-
     try {
         erc721OptionContractTypeOne_2 = contractDict[addressConfig.erc721OptionContractTypeOne];
-        // erc721OptionContractTypeOne_2.on("OptionMinted", onMintNTFHandler1); // Attach multiple emit handlers for same event
+        erc721OptionContractTypeOne_2.on("OptionMinted", onEmittedEventHandler1);
 
         /* Mint 10 contracts, for which we sync wait
         */
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 1; i++) {
             sig = await getSignedHashOfOptionTerms(guid(), managerAccount);
             erc721OptionContractTypeOne_2.connect(managerAccount).mintOption(sig).then((args) => {
-                console.log(`Args3: [${JSON.stringify(args)}]`);
-                console.log(`Receipt: [${JSON.stringify(waitForReceipt(args.hash))}]`);
-            })
+                console.log(`Args3-1: [${JSON.stringify(args)}]`);
+                getEmittedEventFromTransaction(args.hash).then((emittedEvent) => {
+                    console.log(`Rx emitted event [${JSON.stringify(emittedEvent)}]`)
+                }).catch((error) => {
+                    console.log(`Failed getting emitted event [${error}]`);
+                });
+            });
         }
     } catch (err) {
         throw new Error(`Failed to test mint an Option Type One NFT - with error :[${err.message}]`);
