@@ -1,4 +1,4 @@
-const { addTextToIPFS, getTextFromIPFS, up, uploadImageToIPFS } = require("../ipfsClient.js");
+const { addTextToIPFS, getTextFromIPFS, up, uploadImageToIPFS } = require("../ipfs/ipfsClient.js");
 
 async function main() {
     const cid = await addTextToIPFS("Hello Digital Gargage team!");
