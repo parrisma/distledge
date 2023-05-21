@@ -14,6 +14,16 @@ const ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST = "587ab271-2366-44d8-a507-adc08b99c
 const ERR_FAILED_LIST = "a7ad3010-efc2-11ed-a05b-0242ac120003";
 const ERR_BAD_TERMS = "22fa6b3a-30bd-4fdc-bd79-b7471065c6dd";
 const ERR_PURGE = "75035a74-ba1b-49b0-8f83-9b47383cb06a";
+const ERR_FAILED_PERSIST = "6971623a-55b7-424c-8f26-78700ca10591";
+const ERR_PERSIST_INIT = "a11187f3-d921-4ca6-b771-f7f4b219a157";
+const ERR_FAIL_CREATE = "4f10a99c-bdb1-4213-9ece-9d9185efce98";
+//const XX = "1b9cf558-19bc-41f2-8155-8ea0971285a6";
+//const XX = "dd55bb81-5a84-4695-9a54-d17f47e68b68";
+//const XX = "919b28c8-6770-4014-aecf-bf67f5464051";
+//const XX = "75b4819c-2d25-4c2b-b468-08a6a4780aba";
+//const XX = "0ee86a3e-a468-4e23-8560-ad5bcfcc1fe5";
+//const XX = "e7c13083-72c4-46b9-b260-323fc65b5815";
+//const XX = "2c16482d-9382-44f7-9184-240ff1326967";
 
 module.exports = {
     ERR_OPTION_ALREADY_EXISTS,
@@ -31,5 +41,8 @@ module.exports = {
     ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST,
     ERR_FAILED_LIST,
     ERR_BAD_TERMS,
-    ERR_PURGE
+    ERR_PURGE,
+    ERR_FAILED_PERSIST,
+    ERR_PERSIST_INIT,
+    ERR_FAIL_CREATE
 };

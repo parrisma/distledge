@@ -23,7 +23,7 @@ async function main() {
     */
     try {
         let erc721OptionContractTypeOne_2 = contractDict[addressConfig.erc721OptionContractTypeOne];
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 1; i++) {
             const [mintedOptionId, hashOfTerms, response] = await mintERC721OptionNFT(erc721OptionContractTypeOne_2, guid(), managerAccount);
             console.log(`URI of newly minted Option Id [${mintedOptionId}] NFT [${response}]`);
         }

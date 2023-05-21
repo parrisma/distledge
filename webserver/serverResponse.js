@@ -1,6 +1,7 @@
 require('module-alias/register'); // npm i --save module-alias
 const { json_content } = require("@webserver/utility");
 const { OK_DEFUNCT, OK_CREATE_TERMS, OK_PULL_TERMS, OK_LIST_TERMS, OK_PURGE } = require("@webserver/serverResponseCodes");
+const { deepCopyJson } = require("@webserver/serverErrors");
 
 const HTTP_GET = "get";
 const HTTP_POST = "post";
@@ -47,21 +48,43 @@ OKDict[OK_LIST_TERMS] =
     "okMessage": `Got List of all Option Terms`
 };
 
+/**
+ * Return OK JSON response message, with option Id
+ * 
+ * @param {*} OKCode - The success code
+ * @param {*} optionId - The Id of the option the success code refers  to
+ * @returns 
+ */
 function getOKWithOptionId(OKCode, optionId) {
-    var OKJson = OKDict[OKCode];
+    var OKJson = deepCopyJson(OKDict[OKCode]);
     OKJson.optionId = `${optionId}`;
     return OKJson;
 }
 
+/**
+ * Return OK JSON response message, with option Id & additional custom message
+ * 
+ * @param {*} OKCode - The success code
+ * @param {*} message - Custom message to add to response.
+ * @param {*} optionId - The Id of the option the success code refers  to
+ * @returns 
+ */
 function getOKWithMessage(OKCode, message, optionId) {
-    var OKJson = OKDict[OKCode];
+    var OKJson = deepCopyJson(OKDict[OKCode]);
     OKJson.message = message;
     OKJson.optionId = `${optionId}`;
     return OKJson;
 }
 
+/**
+ * Return OK JSON response message, with additional custom message
+ * 
+ * @param {*} OKCode - The success code
+ * @param {*} message - Custom message to add to response.
+ * @returns 
+ */
 function getOK(OKCode, message) {
-    var OKJson = OKDict[OKCode];
+    var OKJson = deepCopyJson(OKDict[OKCode]);
     OKJson.message = message;
     return OKJson;
 }

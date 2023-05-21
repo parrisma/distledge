@@ -124,7 +124,7 @@ async function persistOption(
  */
 async function main() {
 
-    const numOptionsToCreate = 2;
+    const numOptionsToCreate = 1;
     console.log(`\nUsing these SharedConfig settings :\n ${JSON.stringify(addressConfig, null, 2)}`);
 
     // Purge any existing contracts
