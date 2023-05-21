@@ -10,7 +10,9 @@ const {
     persistInitializeFileSystem,
     persistOptionTermsFileSystem,
     persistPurgeAllFileSystem,
-    persistListAllFileSystem } = require("@webserver/persistentSourceFileSystem");
+    persistListAllFileSystem,
+    persistOptionIdExistsFileSystem,
+    persistGetOptionTermsFileSystem } = require("@webserver/persistentSourceFileSystem");
 
 /**
  * Mint a new NFT and persist the terms of teh option to match the ERC271 URI associated with the newly minted NFT
@@ -84,9 +86,44 @@ async function persistListAll() {
     return optionsList;
 }
 
+/**
+ * Return true of the given Option Id exists in the persistent source
+ * 
+ * @returns True if given option Id can be found in persistent store.
+ */
+async function persistOptionIdExists(optionId) {
+    var exists = undefined;
+    try {
+        exists = await persistOptionIdExistsFileSystem(optionId);
+    } catch (err) {
+        throw new Error(`Failed while checking if option existed in persistent storage with message [${err.message}]`);
+    }
+    return exists;
+}
+
+/**
+ * Get the option terms that match the given option Id
+ * 
+ * @returns Option terms as JSON object
+ */
+async function persistGetOptionTerms(optionId) {
+    var optionTermsAsJson = undefined;
+    try {
+        if (!await persistOptionIdExists(optionId)) {
+            throw new Error(`Cannot get option from persistence as option id [${optionId}] does not exist`);
+        }
+        optionTermsAsJson = await persistGetOptionTermsFileSystem(optionId);
+    } catch (err) {
+        throw new Error(`Failed while checking if option existed in persistent storage with message [${err.message}]`);
+    }
+    return optionTermsAsJson;
+}
+
 module.exports = {
     persistInitialize,
     persistOptionTerms,
     persistPurgeAll,
-    persistListAll
+    persistListAll,
+    persistOptionIdExists,
+    persistGetOptionTerms
 };

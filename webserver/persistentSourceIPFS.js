@@ -47,9 +47,29 @@ async function persistOptionTermsIPFS(
     throw new Error(`IPFS Persistence not yet implemented`);
 }
 
+/**
+ * Return true of the given Option Id exists in the persistent source
+ * 
+ * @returns True if given option Id can be found in IPFS.
+ */
+async function persistOptionIdExistsIPFS(optionId) {
+    throw new Error(`IPFS Persistence not yet implemented`);
+}
+
+/**
+ * Return the terms of the given option id as JSON object if it exists
+ * @param {*} optionId - The Option Id to get
+ * @returns The option terms as JSON object
+ */
+async function persistGetOptionTermsIPFS(optionId) {
+    throw new Error(`IPFS Persistence not yet implemented`);
+}
+
 module.exports = {
     persistInitializeIPFS,
     persistListAllIPFS,
     persistPurgeAllIPFS,
-    persistOptionTermsIPFS
+    persistOptionTermsIPFS,
+    persistOptionIdExistsIPFS,
+    persistGetOptionTermsIPFS
 };

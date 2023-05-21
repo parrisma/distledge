@@ -25,6 +25,13 @@ function baseTermsDir() {
 }
 
 /**
+ * Get the root path where option terms are stored.
+*/
+function optionTermsDirName(optionId) {
+    return path.join(baseTermsDir(), `${optionId}`);
+}
+
+/**
  * Create the directory where the Option terms are to be stored
  * @param {*} optionId - The Id of the option to be stored.
  * @returns The fill path and name of the file where the option terms are stored.
@@ -32,7 +39,7 @@ function baseTermsDir() {
 function createOptionTermsDir(optionId) {
     var termsDir = undefined;
     try {
-        termsDir = path.join(baseTermsDir(), `${optionId}`);
+        termsDir = optionTermsDirName(optionId);
         /**
          * Must not already exists
          */
@@ -198,9 +205,43 @@ async function persistListAllFileSystem() {
     return optionsList;
 }
 
+/**
+ * Return true of the given Option Id exists in the persistent source
+ * 
+ * @returns True if given option Id can be found in persistent store.
+ */
+async function persistOptionIdExistsFileSystem(optionId) {
+    var exists = undefined;
+    try {
+        exists = fs.existsSync(optionTermsDirName(optionId));
+    } catch (err) {
+        throw new Error(`Failed while checking if option existed on file system with message [${err.message}]`);
+    }
+    return exists;
+}
+
+/**
+ * Return the terms of the given option id as JSON object if it exists
+ * @param {*} optionId - The Option Id to get
+ * @returns The option terms as JSON object
+ */
+async function persistGetOptionTermsFileSystem(optionId) {
+    var optionTermsAsJson = undefined;
+    try {
+        const files = fs.readdirSync(optionTermsDirName(optionId));
+        const optionTermsFileName = path.join(optionTermsDirName(optionId), files[0]);
+        optionTermsAsJson = JSON.parse(fs.readFileSync(optionTermsFileName));
+    } catch (err) {
+        throw new Error(`Failed to read option terms with error [${err.message}]`);
+    }
+    return optionTermsAsJson;
+}
+
 module.exports = {
     persistInitializeFileSystem,
     persistOptionTermsFileSystem,
     persistPurgeAllFileSystem,
-    persistListAllFileSystem
+    persistListAllFileSystem,
+    persistOptionIdExistsFileSystem,
+    persistGetOptionTermsFileSystem
 };

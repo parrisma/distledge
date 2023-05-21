@@ -6,7 +6,7 @@ const { getDictionaryOfDeployedContracts } = require("@lib/deployedContracts");
 const { addressConfig } = require("@webserver/constants");
 const { namedAccounts } = require("@scripts/lib/accounts");
 const { guid } = require("@lib/guid");
-const { mintERC721OptionNFT } = require("@lib/contracts/Options/ERC721OptionContractTypeOne");
+const { mintERC721OptionNFT, erc721OptionNFTExists } = require("@lib/contracts/Options/ERC721OptionContractTypeOne");
 
 async function main() {
 
@@ -25,7 +25,8 @@ async function main() {
         let erc721OptionContractTypeOne_2 = contractDict[addressConfig.erc721OptionContractTypeOne];
         for (let i = 0; i < 1; i++) {
             const [mintedOptionId, hashOfTerms, response] = await mintERC721OptionNFT(erc721OptionContractTypeOne_2, guid(), managerAccount);
-            console.log(`URI of newly minted Option Id [${mintedOptionId}] NFT [${response}]`);
+            const exists = await erc721OptionNFTExists(erc721OptionContractTypeOne_2, mintedOptionId);
+            console.log(`URI of newly minted Option Id [${mintedOptionId}] NFT [${response}] - Exists [${exists}]`);
         }
     } catch (err) {
         throw new Error(`Failed to test mint an Option Type One NFT - with error :[${err.message}]`);

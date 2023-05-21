@@ -133,6 +133,7 @@ describe("ERC721 Option Test Suite", function () {
         expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(0);
         expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(traderOne.address)).to.equal(0);
         expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(traderTwo.address)).to.equal(0);
+        expect(await erc721OptionContractTypeOne.connect(owner).exists(0)).to.equal(false); // No options yet minted
     });
 
     it("ERC721 Option Base URI Checks", async function () {
@@ -182,24 +183,29 @@ describe("ERC721 Option Test Suite", function () {
 
         const optionIdCreatedByMintTest = 1;
         signedHashOfTerms = await getSignedHashOfOptionTerms(optionOneTerms, owner);
+        expect(await erc721OptionContractTypeOne.connect(owner).exists(optionIdCreatedByMintTest)).to.equal(true);
         const expectedOptionURI = `${expectedBaseURI}/${optionIdCreatedByMintTest}/${signedHashOfTerms}`
         await expect(erc721OptionContractTypeOne.connect(owner).burnOption(optionIdCreatedByMintTest))
             .to.emit(erc721OptionContractTypeOne, 'OptionBurned')
             .withArgs(expectedOptionURI);
 
         expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(0);
+        expect(await erc721OptionContractTypeOne.connect(owner).exists(optionIdCreatedByMintTest)).to.equal(false);
     });
 
     it("ERC721 Mint and Transfer", async function () {
 
         // Mint an Option that can be transferred
         const expectedOptionId = 2;
+        expect(await erc721OptionContractTypeOne.connect(owner).exists(expectedOptionId)).to.equal(false);
         signedHashOfTerms = await getSignedHashOfOptionTerms(optionOneTerms, owner);
         const expectedOptionURI = `${expectedBaseURI}/${expectedOptionId}/${signedHashOfTerms}`
         await expect(erc721OptionContractTypeOne.connect(owner).mintOption(signedHashOfTerms))
             .to.emit(erc721OptionContractTypeOne, 'OptionMinted')
             .withArgs(expectedOptionURI);
         expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(owner.address)).to.equal(1);
+        expect(await erc721OptionContractTypeOne.connect(owner).exists(expectedOptionId)).to.equal(true);
+
 
         const paymentAmount = 25;
         // Transfer will fail, if buyer does not have required funds authorized, for current owner to transfer

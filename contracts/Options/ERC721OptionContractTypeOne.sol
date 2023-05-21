@@ -101,6 +101,16 @@ contract ERC721OptionContractTypeOne is ERC721URIStorage, Pausable, Ownable {
     }
 
     /**
+     * @notice Has the given option id already been minted
+     * @param optionId - the ID of the option to check
+     */
+    function exists(
+        uint256 optionId
+    ) public view onlyOwner whenNotPaused returns (bool) {
+        return _exists(optionId);
+    }
+
+    /**
      * @notice transfer Option if [to] address has sufficent balance to pay
      */
     function safeTransferOptionFrom(
