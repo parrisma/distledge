@@ -20,18 +20,23 @@ const { persistOptionIdExists, persistGetOptionTerms } = require("@webserver/ser
  * @param {*} uriParts - The request URI constituents
  * @param {*} res - http response
  */
-function pullHandler(uriParts, res) {
+async function pullHandler(uriParts, res) {
     console.log(`Handle Pull Terms Request`);
-    const optionId = uriParts[2];
-    if (null == optionId || 0 == `${optionId}`.length) {
-        handleJsonError(getError(ERR_OPTION_ID_NOT_SPECIFIED), res);
-    } else {
-        if (persistOptionIdExists(optionId)) {
-            const optionTermsAsJson = persistGetOptionTerms(optionId);
-            handleJsonOK(getOKWithMessage(OK_PULL_TERMS, optionTermsAsJson, optionId), res);
+    try {
+        const optionId = uriParts[2];
+        if (null == optionId || 0 == `${optionId}`.length) {
+            handleJsonError(getError(ERR_OPTION_ID_NOT_SPECIFIED), res);
         } else {
-            handleJsonError(getErrorWithOptionIdAsMetaData(ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, optionId), res);
+            if (true) { //await persistOptionIdExists(optionId)) {
+                const optionTermsAsJson = await persistGetOptionTerms(optionId);
+                handleJsonOK(getOKWithMessage(OK_PULL_TERMS, optionTermsAsJson, optionId), res);
+            } else {
+                handleJsonError(getErrorWithOptionIdAsMetaData(ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, optionId), res);
+            }
         }
+    } catch (err) {
+        // err is a JSON error at this point.
+        handleJsonError(err, res);
     }
 }
 

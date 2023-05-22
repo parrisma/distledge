@@ -17,7 +17,7 @@ const ERR_PURGE = "75035a74-ba1b-49b0-8f83-9b47383cb06a";
 const ERR_FAILED_PERSIST = "6971623a-55b7-424c-8f26-78700ca10591";
 const ERR_PERSIST_INIT = "a11187f3-d921-4ca6-b771-f7f4b219a157";
 const ERR_FAIL_CREATE = "4f10a99c-bdb1-4213-9ece-9d9185efce98";
-//const XX = "1b9cf558-19bc-41f2-8155-8ea0971285a6";
+const ERR_BAD_PULL = "1b9cf558-19bc-41f2-8155-8ea0971285a6";
 //const XX = "dd55bb81-5a84-4695-9a54-d17f47e68b68";
 //const XX = "919b28c8-6770-4014-aecf-bf67f5464051";
 //const XX = "75b4819c-2d25-4c2b-b468-08a6a4780aba";
@@ -44,5 +44,6 @@ module.exports = {
     ERR_PURGE,
     ERR_FAILED_PERSIST,
     ERR_PERSIST_INIT,
-    ERR_FAIL_CREATE
+    ERR_FAIL_CREATE,
+    ERR_BAD_PULL
 };

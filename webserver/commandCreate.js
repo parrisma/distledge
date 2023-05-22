@@ -75,7 +75,7 @@ async function mintAndPersistOptionNFT(
              * Persist the option terms, such that they can be recovered by this WebServer
              */
             await persistOptionTerms(termsAsJson, mintedOptionId, hashOfTerms);
-            if (!persistOptionIdExists(mintedOptionId)) {
+            if (!(await persistOptionIdExists(mintedOptionId))) {
                 throw new Error(`Expected option id [${mintedOptionId}] does not exist in persistent source`);
             }
 

@@ -134,12 +134,13 @@ async function main() {
     }
     console.log(`\nRequest Purge     :\n${resp}\n`);
 
-    // Create the prescribed number of new (random) contracts
+    // Mint & Persist the prescribed number of new (random) contracts
     const [managerAccount, stableCoinIssuer, dataVendor, optionSeller, optionBuyer] = await namedAccounts(addressConfig);
     for (let step = 0; step < numOptionsToCreate; step++) {
-        resp = await persistOption(step, optionBuyer);
-        if (resp.hasOwnProperty("error")) {
-            throw new Error(`Failed to purge terms ${resp.error}`);
+        respJson = await persistOption(step, optionBuyer);
+        if (respJson.hasOwnProperty("errorCode")) {
+            console.log(JSON.stringify(respJson, null, 2));
+            throw new Error(`Failed to persist/mint Option terms as NFT ${resp.error}`);
         }
         console.log(JSON.stringify(resp, null, 2));
     }
@@ -151,28 +152,32 @@ async function main() {
         throw new Error(`Failed to purge terms ${resp.error}`);
     }
     respJson = JSON.parse(resp);
+    var arrayOfExistingOptionNFTs = undefined;
     const numListed = Number(Object.keys(respJson.message.terms).length);
     if (0 != numListed - numOptionsToCreate) {
         throw new Error(`List Options returned ${numListed} expected ${numOptionsToCreate}`);
     } else {
         console.log(`List terms expected matches actual for number of returned options [${numOptionsToCreate}]`);
+        arrayOfExistingOptionNFTs = respJson.message.terms;
     }
     console.log(`\nGet List     :\n${resp}\n`);
     await sleep(1000);
 
-    // Get each contract individually by id
-    for (let step = 0; step < numOptionsToCreate; step++) {
-        resp = await getOptionById(step);
-        if (resp.hasOwnProperty("error")) {
-            throw new Error(`Failed to purge terms ${resp.error}`);
-        }
+    // Iterate the List of returned Options and verify
+    for (let step = 0; step < arrayOfExistingOptionNFTs.length; step++) {
+        const optionIdToCheck = arrayOfExistingOptionNFTs[step].optionId;
+        resp = await getOptionById(optionIdToCheck);
         respJson = JSON.parse(resp);
+        if (respJson.hasOwnProperty("errorCode")) {
+            console.log(JSON.stringify(respJson, null, 2));
+            throw new Error(`Failed to pull option id [${optionIdToCheck}] with error ${respJson.errorMessage}`);
+        }
         if (!await verifyTerms(respJson.message, optionBuyer, managerAccount)) {
             throw new Error("Failed to verify option terms were immutable and signed by both buyer and manager");
         } else {
-            console.log(`Terms Verified for Option Id [${step}]`);
+            console.log(`Terms Verified for Option Id [${optionIdToCheck}]`);
         }
-        console.log(`\nGet Option ${step} :\n${resp}\n`);
+        console.log(`Pulled Option ${optionIdToCheck} : ${respJson.message.terms.optionName}`);
     }
 }
 

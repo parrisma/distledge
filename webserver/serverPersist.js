@@ -4,7 +4,10 @@
  * Initially this is just local files, however we can re implement with IPFS, Elastic or ...
  */
 require('module-alias/register'); // npm i --save module-alias
-const { ERR_FAILED_PERSIST, ERR_PERSIST_INIT, ERR_FAILED_LIST, ERR_PURGE } = require("@webserver/serverErrorCodes.js");
+const {
+    ERR_FAILED_PERSIST, ERR_PERSIST_INIT, ERR_FAILED_LIST, ERR_PURGE,
+    ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, ERR_BAD_PULL
+} = require("@webserver/serverErrorCodes.js");
 const { getFullyQualifiedError } = require("@webserver/serverErrors");
 const {
     persistInitializeFileSystem,
@@ -33,7 +36,7 @@ async function persistOptionTerms(
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_FAILED_PERSIST,
-            `Failed to persist option terms with error [${err.message}]`,
+            `Failed to persist option terms`,
             err);
     }
 }
@@ -47,7 +50,7 @@ async function persistInitialize() {
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_PERSIST_INIT,
-            `Failed to initialize persistence with error [${err.message}]`,
+            `Failed to initialize persistence`,
             err);
     }
 }
@@ -96,7 +99,10 @@ async function persistOptionIdExists(optionId) {
     try {
         exists = await persistOptionIdExistsFileSystem(optionId);
     } catch (err) {
-        throw new Error(`Failed while checking if option existed in persistent storage with message [${err.message}]`);
+        throw getFullyQualifiedError(
+            ERR_FAILED_PERSIST,
+            `Failed while checking if option existed in persistent storage`,
+            err);
     }
     return exists;
 }
@@ -110,11 +116,16 @@ async function persistGetOptionTerms(optionId) {
     var optionTermsAsJson = undefined;
     try {
         if (!await persistOptionIdExists(optionId)) {
-            throw new Error(`Cannot get option from persistence as option id [${optionId}] does not exist`);
+            throw getFullyQualifiedError(
+                ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST,
+                `Cannot get option from persistence as option id [${optionId}] does not exist`);
         }
         optionTermsAsJson = await persistGetOptionTermsFileSystem(optionId);
     } catch (err) {
-        throw new Error(`Failed while checking if option existed in persistent storage with message [${err.message}]`);
+        throw getFullyQualifiedError(
+            ERR_BAD_PULL,
+            `Failed while pulling option terms`,
+            err);
     }
     return optionTermsAsJson;
 }
