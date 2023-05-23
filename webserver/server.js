@@ -36,14 +36,19 @@ const { namedAccounts } = require("@scripts/lib/accounts");
 const { addressConfig } = require("./constants");
 var managerAccount;
 
-const { text_content, isNumeric, currentDateTime } = require("./utility");
+const { isNumeric, currentDateTime } = require("@lib/generalUtil");
+const { text_content } = require("./utility");
 const { valuationHandler } = require("./commandValue");
 const { handlePOSTCreateTermsRequest } = require("./commandCreate");
 const { pullHandler } = require("./commandPull");
 const { listHandler } = require("./commandList");
 const { defunctHandler } = require("./commandDefunct");
 const { purgeHandler } = require("@webserver/commandPurge");
-
+const { getDictionaryOfDeployedContracts } = require("@lib/deployedContracts");
+/**
+ * The dictionary of all deployed operational contracts.
+ */
+var contractDict = undefined;
 
 /**
  * Return the site icon
@@ -72,11 +77,13 @@ function mainPage(res) {
  * Handle HTTP GET Requests
  * 
  * @param {*} mgrAccount - the manager account used to handle the requests on chain and in storage
+ * @param {*} contractDict - teh dictionary of all required and deployed utility contracts
  * @param {*} req - http request
  * @param {*} res - http response
  */
 function handleMethodGET(
     mgrAccount,
+    contractDict,
     req, res) {
     console.log(`${currentDateTime()} : Handle GET`);
     try {
@@ -127,20 +134,21 @@ function handleMethodGET(
  * Process JSON document when posted to server
  * 
  * @param {*} mgrAccount - the manager account used to handle the requests on chain and in storage
+ * @param {*} contractDict - teh dictionary of all required and deployed utility contracts 
  * @param {*} bodyAsJson - the Json body to process as Json object
  * @param {*} req - http request
  * @param {*} res - http response
  */
 async function handlePOSTedJson(
     mgrAccount,
+    contractDict,
     bodyAsJson,
     req, res) {
     console.log(`Post Message received : \n ${JSON.stringify(bodyAsJson, null, 2)}`);
-    console.log(`Manager Account: ${mgrAccount}`);
     if (bodyAsJson.hasOwnProperty(COMMAND)) { // Json must include a command type.
         switch (bodyAsJson.command) {
             case COMMAND_CREATE:
-                handlePOSTCreateTermsRequest(bodyAsJson, managerAccount, req, res);
+                handlePOSTCreateTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
                 break;
             default:
                 handleJsonError(getErrorWithMessage(ERR_BAD_POST, bodyAsJson.command), res);
@@ -154,11 +162,13 @@ async function handlePOSTedJson(
 /**
  * Handle and delegate http Post requests 
  * @param {*} mgrAccount - the manager account used to handle the requests on chain and in storage
+ * @param {*} contractDict - teh dictionary of all required and deployed utility contracts 
  * @param {*} req - http request
  * @param {*} res - http response
  */
 async function handleMethodPOST(
     mgrAccount,
+    contractDict,
     req, res) {
     try {
         console.log(`Handle POST`);
@@ -173,7 +183,7 @@ async function handleMethodPOST(
             let jsonPayload;
             try {
                 jsonPayload = JSON.parse(body);
-                handlePOSTedJson(mgrAccount, jsonPayload, req, res);
+                handlePOSTedJson(mgrAccount, contractDict, jsonPayload, req, res);
             } catch (err) {
                 handleJsonError(getErrorWithMessage(ERR_BAD_POST, err.message), res);
             }
@@ -193,10 +203,10 @@ const requestListener = function (req, res) {
     try {
         switch (req.method.toLowerCase()) {
             case HTTP_GET:
-                handleMethodGET(managerAccount, req, res);
+                handleMethodGET(managerAccount, contractDict, req, res);
                 break;
             case HTTP_POST:
-                handleMethodPOST(managerAccount, req, res);
+                handleMethodPOST(managerAccount, contractDict, req, res);
                 break;
             default:
                 handleJsonError(getErrorWithMessage(ERR_BAD_HTTP, req.method), res);
@@ -214,6 +224,7 @@ async function main() {
     /* Start Web Server on port as defined in serverConfig.js
     */
     [managerAccount] = await namedAccounts(addressConfig); // This is the dApp account we use to perform management functions.
+    contractDict = await getDictionaryOfDeployedContracts(addressConfig);
     console.log(`Server Listening on [http://localhost:${serverConfig.port}]`);
     http.createServer(requestListener).listen(serverConfig.port);
 }

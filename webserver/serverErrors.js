@@ -3,8 +3,10 @@ const { json_content } = require("@webserver/utility.js");
 const {
     ERR_OPTION_ALREADY_EXISTS, ERR_DEFUNCT_DNE, ERR_OPTION_ID_NOT_SPECIFIED, ERR_NOT_IMPLEMENTED, ERR_PURGE,
     ERR_VALUE_OPTION_ID_NONEXISTENT, ERR_FAILED_TO_LOAD_TERMS, ERR_BAD_GET, ERR_UNKNOWN_COMMAND, ERR_OPTION_ID_NON_NUMERIC,
-    ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL, ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, ERR_FAILED_LIST, ERR_BAD_TERMS
+    ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL, ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, ERR_FAILED_LIST, ERR_BAD_TERMS,
+    ERR_FAILED_PERSIST, ERR_PERSIST_INIT, ERR_FAIL_CREATE, ERR_BAD_PULL
 } = require("@webserver/serverErrorCodes.js");
+const { guid } = require("@lib/guid");
 
 var errorsDict = {};
 
@@ -104,25 +106,108 @@ errorsDict[ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST] =
     "errorMessage": `Cannot pull option terms, given option id does not exist`
 };
 
-function getErrorWithOptionIdAsMetaData(errorCode, optionId) {
-    var errorJson = errorsDict[errorCode];
+errorsDict[ERR_FAILED_PERSIST] =
+{
+    "errorCode": `${ERR_FAILED_PERSIST}`,
+    "errorMessage": `Failed to persist option terms`
+};
+
+errorsDict[ERR_PERSIST_INIT] =
+{
+    "errorCode": `${ERR_PERSIST_INIT}`,
+    "errorMessage": `Failed to initialize persistence`
+};
+
+errorsDict[ERR_FAIL_CREATE] =
+{
+    "errorCode": `${ERR_FAIL_CREATE}`,
+    "errorMessage": `Failed to mint and/or persist option terms`
+};
+
+errorsDict[ERR_BAD_PULL] =
+{
+    "errorCode": `${ERR_BAD_PULL}`,
+    "errorMessage": `System error while pulling option terms`
+};
+
+
+/**
+ * Deep copy a JSON object
+ * 
+ * @param {*} jsonToDeepCopy - The JSON object to deep copy.
+ * @returns err as a JSON copy of Error
+ */
+function deepCopyJson(jsonToDeepCopy) {
+    if (null !== jsonToDeepCopy & undefined != jsonToDeepCopy) {
+        if (jsonToDeepCopy instanceof Error) {
+            return JSON.parse(JSON.stringify(jsonToDeepCopy, Object.getOwnPropertyNames(jsonToDeepCopy)));
+        } else {
+            return JSON.parse(JSON.stringify(jsonToDeepCopy));
+        }
+    }
+    return {};
+}
+
+/**
+ * Return a Json error object with a specific OptionId field
+ * @param {*} errorCode - The error code to return
+ * @param {*} optionId - The option Id to include
+ * @param {*} err - Optional Error message as Json object that triggered this high level message
+ * @returns Error as Json object
+ */
+function getErrorWithOptionIdAsMetaData(errorCode, optionId, err) {
+    var errorJson = deepCopyJson(errorsDict[errorCode]);
     errorJson.optionId = `${optionId}`;
+    errorJson.subError = deepCopyJson(err);
     return errorJson;
 }
 
-function getError(errorCode) {
-    var errorJson = errorsDict[errorCode];
+/**
+ * Return a Json error object with an additional fully qualified error message
+ * @param {*} errorCode - The error code to return
+ * @param {*} fullyQualifiedError - The detailed report error as string
+ * @param {*} err - Optional Error message as Json object that triggered this high level message
+ * @returns Error as Json object
+ */
+function getFullyQualifiedError(errorCode, fullyQualifiedError, err) {
+    var errorJson = deepCopyJson(errorsDict[errorCode]);
+    errorJson.fullyQualifiedError = `${fullyQualifiedError}`;
+    let errCpy = deepCopyJson(err);
+    errorJson.subError = errCpy;
     return errorJson;
 }
 
-function getErrorWithMessage(errorCode, message) {
-    var errorJson = errorsDict[errorCode];
-    errorJson.message = message;
+/**
+ * Return a Json error matching error code.
+ * @param {*} errorCode - The error code to return
+ * @param {*} err - Optional Error message as Json object that triggered this high level message
+ * @returns Error as Json object
+ */
+function getError(errorCode, err) {
+    var errorJson = deepCopyJson(errorsDict[errorCode]);
+    errorJson.subError = deepCopyJson(err);
     return errorJson;
 }
 
-/* Return a Json error response.
-*/
+/**
+ * Return a Json error matching error code.
+ * @param {*} errorCode - The error code to return
+ * @param {*} message - Message to override standard error message associated with error code.
+ * @param {*} err - Optional Error message as Json object that triggered this high level message
+ * @returns Error as Json object
+ */
+function getErrorWithMessage(errorCode, message, err) {
+    var errorJson = deepCopyJson(errorsDict[errorCode]);
+    errorJson.message = `${message}`;
+    errorJson.subError = deepCopyJson(err);
+    return errorJson;
+}
+
+/**
+ * Return a Json error response.
+ * @param {*} JsonErrorMessage - The error message as Json
+ * @param {*} res - http response
+ */
 function handleJsonError(JsonErrorMessage, res) {
     const errorMessage = JSON.stringify(JsonErrorMessage);
     console.log(`Handle error [${errorMessage}]`);
@@ -134,5 +219,7 @@ module.exports = {
     getErrorWithOptionIdAsMetaData,
     getErrorWithMessage,
     getError,
-    handleJsonError
+    handleJsonError,
+    getFullyQualifiedError,
+    deepCopyJson
 };
