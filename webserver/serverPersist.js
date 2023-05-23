@@ -110,24 +110,25 @@ async function persistOptionIdExists(optionId) {
 /**
  * Get the option terms that match the given option Id
  * 
- * @returns Option terms as JSON object
+ * @returns Option terms as JSON object & manager signed hash of terms.
  */
 async function persistGetOptionTerms(optionId) {
     var optionTermsAsJson = undefined;
+    var signedHash = undefined;
     try {
         if (!await persistOptionIdExists(optionId)) {
             throw getFullyQualifiedError(
                 ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST,
                 `Cannot get option from persistence as option id [${optionId}] does not exist`);
         }
-        optionTermsAsJson = await persistGetOptionTermsFileSystem(optionId);
+        [optionTermsAsJson, signedHash] = await persistGetOptionTermsFileSystem(optionId);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_BAD_PULL,
             `Failed while pulling option terms`,
             err);
     }
-    return optionTermsAsJson;
+    return [optionTermsAsJson, signedHash];
 }
 
 module.exports = {

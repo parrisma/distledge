@@ -221,9 +221,18 @@ async function persistOptionIdExistsFileSystem(optionId) {
 }
 
 /**
+ * Get the signed hash which is the filename of teh stored terms
+ */
+function getSignedHashFromOptionTermsFileName(fileName) {
+    const fileNameBits = fileName.split(path.sep);
+    var hash = `${fileNameBits.slice(-1)}`.replace(RegExp('\.json', `i`), '');
+    return hash
+}
+
+/**
  * Return the terms of the given option id as JSON object if it exists
  * @param {*} optionId - The Option Id to get
- * @returns The option terms as JSON object & intial manager signed hash of terms
+ * @returns The option terms as JSON object & initial manager signed hash of terms
  */
 async function persistGetOptionTermsFileSystem(optionId) {
     var optionTermsAsJson = undefined;
@@ -232,12 +241,11 @@ async function persistGetOptionTermsFileSystem(optionId) {
         const files = fs.readdirSync(optionTermsDirName(optionId));
         const optionTermsFileName = path.join(optionTermsDirName(optionId), files[0]);
         optionTermsAsJson = JSON.parse(fs.readFileSync(optionTermsFileName));
-        originalMangerSignedHash = optionTermsFileName.split("/");
-        console.log(`BITS: [${originalMangerSignedHash}]`)
+        originalMangerSignedHash = getSignedHashFromOptionTermsFileName(optionTermsFileName);
     } catch (err) {
         throw new Error(`Failed to read option terms with error [${err.message}]`);
     }
-    return optionTermsAsJson;
+    return [optionTermsAsJson, originalMangerSignedHash];
 }
 
 module.exports = {

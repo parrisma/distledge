@@ -59,7 +59,7 @@ async function persistOptionIdExistsIPFS(optionId) {
 /**
  * Return the terms of the given option id as JSON object if it exists
  * @param {*} optionId - The Option Id to get
- * @returns The option terms as JSON object
+ * @returns The option terms as JSON object & initial manager signed hash of terms
  */
 async function persistGetOptionTermsIPFS(optionId) {
     throw new Error(`IPFS Persistence not yet implemented`);

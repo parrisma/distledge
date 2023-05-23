@@ -66,7 +66,8 @@ async function mintAndPersistOptionNFT(
             /**
              * Mint the ERC721 contract NFT, which will allocate the new optionId
              */
-            const [mintedOptionId, hashOfTerms, response] = await mintNFTOption(termsAsJson, managerAccount, contractDict, req, res);
+            const optionTerms = termsAsJson.terms;
+            const [mintedOptionId, hashOfTerms, response] = await mintNFTOption(optionTerms, managerAccount, contractDict, req, res);
             if (!await erc721OptionNFTExists(contractDict[addressConfig.erc721OptionContractTypeOne], mintedOptionId)) {
                 throw new Error(`Expected option id [${mintedOptionId}] does not exist according to ERC721 Option NFT Contract [${addressConfig.erc721OptionContractTypeOne}]`);
             }
@@ -74,7 +75,7 @@ async function mintAndPersistOptionNFT(
             /**
              * Persist the option terms, such that they can be recovered by this WebServer
              */
-            await persistOptionTerms(termsAsJson, mintedOptionId, hashOfTerms);
+            await persistOptionTerms(optionTerms, mintedOptionId, hashOfTerms);
             if (!(await persistOptionIdExists(mintedOptionId))) {
                 throw new Error(`Expected option id [${mintedOptionId}] does not exist in persistent source`);
             }

@@ -28,8 +28,12 @@ async function pullHandler(uriParts, res) {
             handleJsonError(getError(ERR_OPTION_ID_NOT_SPECIFIED), res);
         } else {
             if (await persistOptionIdExists(optionId)) {
-                const optionTermsAsJson = await persistGetOptionTerms(optionId);
-                handleJsonOK(getOKWithMessage(OK_PULL_TERMS, optionTermsAsJson, optionId), res);
+                const [optionTermsAsJson, hashOfTerms] = await persistGetOptionTerms(optionId);
+                const responseMessage = {
+                    "hash": `${hashOfTerms}`,
+                    "terms": optionTermsAsJson
+                };
+                handleJsonOK(getOKWithMessage(OK_PULL_TERMS, responseMessage, optionId), res);
             } else {
                 handleJsonError(getErrorWithOptionIdAsMetaData(ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, optionId), res);
             }

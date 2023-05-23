@@ -112,7 +112,7 @@ async function persistOption() {
  */
 async function main() {
 
-    const numOptionsToCreate = 1;
+    const numOptionsToCreate = 100;
     console.log(`\nUsing these SharedConfig settings :\n ${JSON.stringify(addressConfig, null, 2)}`);
 
     // Purge any existing contracts
@@ -160,7 +160,7 @@ async function main() {
             console.log(JSON.stringify(respJson, null, 2));
             throw new Error(`Failed to pull option id [${optionIdToCheck}] with error ${respJson.errorMessage}`);
         }
-        if (!await verifyTerms(respJson.message, managerAccount)) {
+        if (!await verifyTerms(respJson.message.terms, respJson.message.hash, managerAccount)) {
             throw new Error("Failed to verify option terms were immutable and signed by both buyer and manager");
         } else {
             console.log(`Terms Verified for Option Id [${optionIdToCheck}]`);
