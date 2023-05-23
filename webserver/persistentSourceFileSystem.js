@@ -223,14 +223,17 @@ async function persistOptionIdExistsFileSystem(optionId) {
 /**
  * Return the terms of the given option id as JSON object if it exists
  * @param {*} optionId - The Option Id to get
- * @returns The option terms as JSON object
+ * @returns The option terms as JSON object & intial manager signed hash of terms
  */
 async function persistGetOptionTermsFileSystem(optionId) {
     var optionTermsAsJson = undefined;
+    var originalMangerSignedHash = undefined;
     try {
         const files = fs.readdirSync(optionTermsDirName(optionId));
         const optionTermsFileName = path.join(optionTermsDirName(optionId), files[0]);
         optionTermsAsJson = JSON.parse(fs.readFileSync(optionTermsFileName));
+        originalMangerSignedHash = optionTermsFileName.split("/");
+        console.log(`BITS: [${originalMangerSignedHash}]`)
     } catch (err) {
         throw new Error(`Failed to read option terms with error [${err.message}]`);
     }

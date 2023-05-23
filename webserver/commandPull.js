@@ -27,7 +27,7 @@ async function pullHandler(uriParts, res) {
         if (null == optionId || 0 == `${optionId}`.length) {
             handleJsonError(getError(ERR_OPTION_ID_NOT_SPECIFIED), res);
         } else {
-            if (true) { //await persistOptionIdExists(optionId)) {
+            if (await persistOptionIdExists(optionId)) {
                 const optionTermsAsJson = await persistGetOptionTerms(optionId);
                 handleJsonOK(getOKWithMessage(OK_PULL_TERMS, optionTermsAsJson, optionId), res);
             } else {

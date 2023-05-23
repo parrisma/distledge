@@ -5,7 +5,6 @@ require('module-alias/register'); // npm i --save module-alias
 const { addressConfig } = require("@webserver/constants");
 const { getAllCoins, getAllFX, getAllLevels } = require("@scripts/lib/sharedConfig");
 const { namedAccounts } = require("@scripts/lib/accounts");
-const { getSignedHashOfOptionTerms } = require("@scripts/lib/signedValue");
 const { formatOptionTermsMessage } = require("@scripts/lib/optionTermsUtil");
 const { guid } = require("@lib/guid");
 const { sleep } = require("@lib/generalUtil");
@@ -67,24 +66,18 @@ async function getOptionById(optionId) {
  * Persist the given option terms
  * (Note: nopt option details are passed as the option terms are generated randomly)
  * 
- * @param {*} optionId - The Option Id 
- * @param {*} signedByAccount - The manager account to process the terms.
- * @returns 
+ * @returns optionId 
  */
-async function persistOption(
-    optionId,
-    signedByAccount) {
+async function persistOption() {
 
     const stableCoins = getAllCoins(addressConfig);
     const fxRates = getAllFX(addressConfig);
     const levels = getAllLevels(addressConfig);
 
-
     var optionAsJson = formatOptionTypeOneTerms(
         guid(),
         `Option name - ${randomWords()}`,
         `${randomSentence()}`,
-        signedByAccount.address,
         Math.floor(Math.random() * 100),
         stableCoins[Math.floor(Math.random() * stableCoins.length)],
         stableCoins[Math.floor(Math.random() * stableCoins.length)],
@@ -93,13 +86,8 @@ async function persistOption(
         levels[Math.floor(Math.random() * levels.length)],
         fxRates[Math.floor(Math.random() * fxRates.length)],
     );
-    const signature = await getSignedHashOfOptionTerms(JSON.stringify(optionAsJson), signedByAccount);
 
-    var optionToPersistAsJson = formatOptionTermsMessage(
-        optionId,
-        optionAsJson,
-        signature,
-        signedByAccount.address);
+    var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson);
 
     const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
         method: 'POST',
@@ -172,7 +160,7 @@ async function main() {
             console.log(JSON.stringify(respJson, null, 2));
             throw new Error(`Failed to pull option id [${optionIdToCheck}] with error ${respJson.errorMessage}`);
         }
-        if (!await verifyTerms(respJson.message, optionBuyer, managerAccount)) {
+        if (!await verifyTerms(respJson.message, managerAccount)) {
             throw new Error("Failed to verify option terms were immutable and signed by both buyer and manager");
         } else {
             console.log(`Terms Verified for Option Id [${optionIdToCheck}]`);
