@@ -27,7 +27,6 @@ const {
 const {
     ERR_BAD_GET, ERR_UNKNOWN_COMMAND, ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL
 } = require("./serverErrorCodes.js");
-
 const {
     HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
     COMMAND_VALUE, COMMAND_LIST, COMMAND_PURGE, COMMAND
@@ -38,7 +37,7 @@ var managerAccount;
 
 const { isNumeric, currentDateTime } = require("@lib/generalUtil");
 const { text_content } = require("./utility");
-const { valuationHandler } = require("./commandValue");
+const { valuationHandler, handlePOSTValueTermsRequest } = require("./commandValue");
 const { handlePOSTCreateTermsRequest } = require("./commandCreate");
 const { pullHandler } = require("./commandPull");
 const { listHandler } = require("./commandList");
@@ -101,7 +100,7 @@ function handleMethodGET(
                         pullHandler(uriParts, res);
                         break;
                     case COMMAND_VALUE:
-                        valuationHandler(uriParts, res);
+                        valuationHandler(uriParts, contractDict, res);
                         break;
                     case COMMAND_DEFUNCT:
                         defunctHandler(uriParts, res);
@@ -148,7 +147,10 @@ async function handlePOSTedJson(
     if (bodyAsJson.hasOwnProperty(COMMAND)) { // Json must include a command type.
         switch (bodyAsJson.command) {
             case COMMAND_CREATE:
-                handlePOSTCreateTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
+                await handlePOSTCreateTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
+                break;
+            case COMMAND_VALUE:
+                await handlePOSTValueTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
                 break;
             default:
                 handleJsonError(getErrorWithMessage(ERR_BAD_POST, bodyAsJson.command), res);
@@ -183,7 +185,7 @@ async function handleMethodPOST(
             let jsonPayload;
             try {
                 jsonPayload = JSON.parse(body);
-                handlePOSTedJson(mgrAccount, contractDict, jsonPayload, req, res);
+                await handlePOSTedJson(mgrAccount, contractDict, jsonPayload, req, res);
             } catch (err) {
                 handleJsonError(getErrorWithMessage(ERR_BAD_POST, err.message), res);
             }

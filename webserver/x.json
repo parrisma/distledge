@@ -1,0 +1,24 @@
+{
+    "message": {
+        "value": "53646.25",
+        "parameters": {
+            "notional": "875",
+            "strike": "147",
+            "referenceLevel": "208.31"
+        },
+        "terms": {
+            "type": "TypeOneOption",
+            "uniqueId": "a4c98f8c-8a7b-4ff4-896d-1789cf1d7cbf",
+            "optionName": "Option name - zany-Jean",
+            "description": "Adipiscing commodo elit at imperdiet dui. ",
+            "premium": "29",
+            "premiumToken": "0x948B3c65b89DF0B4894ABE91E6D02FE579834F8F",
+            "settlementToken": "0x8464135c8F25Da09e49BC8782676a84730C318bC",
+            "notional": "875",
+            "strike": "147",
+            "referenceLevel": "0x663F3ad617193148711d28f5334eE4Ed07016602",
+            "fxReferenceLevel": "0x8cDbD76bB6Cf0293e07deEEEd460cf579873aF44"
+        }
+    },
+    "optionId": "426"
+}

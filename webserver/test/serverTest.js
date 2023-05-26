@@ -2,6 +2,7 @@
 ** npx hardhat run serverTest.js --network localhost
 */
 require('module-alias/register'); // npm i --save module-alias
+const { serverConfig } = require("@webserver/serverConfig.js");
 const { addressConfig } = require("@webserver/constants");
 const { getAllCoins, getAllFX, getAllLevels } = require("@scripts/lib/sharedConfig");
 const { namedAccounts } = require("@scripts/lib/accounts");
@@ -11,6 +12,10 @@ const { sleep } = require("@lib/generalUtil");
 const { randomWords, randomSentence } = require("@lib/randomWord");
 const { formatOptionTypeOneTerms } = require("@lib/SimpleOptionTypeOne");
 const { verifyTerms } = require("@webserver/utility");
+const {
+    COMMAND_CREATE, COMMAND_VALUE
+} = require("@webserver/serverResponse");
+const { getDictionaryOfDeployedContracts } = require("@lib/deployedContracts");
 
 async function fetchAsync(uri) {
     let response = await fetch(uri);
@@ -19,7 +24,7 @@ async function fetchAsync(uri) {
 }
 
 function NFTServerBaseURI() {
-    return "http://localhost:8191";
+    return `http://localhost:${serverConfig.port}`;
 }
 
 /* Request a list of existing options from the option NFT Server
@@ -63,12 +68,27 @@ async function getOptionById(optionId) {
 }
 
 /**
+ * Value an existing minted/persisted option by Id
+ * @param {*} optionId - Recover the given option id from storage
+ * @returns Option terms as Json object
+ */
+async function valueOptionById(optionId) {
+    var resAsJson;
+    try {
+        resAsJson = await fetchAsync(`${NFTServerBaseURI()}/value/${optionId}`);
+    } catch (err) {
+        resAsJson = { "error": `${err.message}` }
+    }
+    return resAsJson;
+}
+
+/**
  * Persist the given option terms
  * (Note: nopt option details are passed as the option terms are generated randomly)
  * 
  * @returns optionId 
  */
-async function persistOption() {
+async function persistOptionByPOSTRequest() {
 
     const stableCoins = getAllCoins(addressConfig);
     const fxRates = getAllFX(addressConfig);
@@ -87,7 +107,7 @@ async function persistOption() {
         fxRates[Math.floor(Math.random() * fxRates.length)],
     );
 
-    var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson);
+    var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_CREATE);
 
     const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
         method: 'POST',
@@ -96,6 +116,28 @@ async function persistOption() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(optionToPersistAsJson)
+    });
+    const res = await rawResponse.json();
+    return res;
+}
+
+/**
+ * Value option by post request, this does not require the option to have been minted & persisted
+ * as we pass the full option terms. This allows us to do option valuation as primary pricing
+ * rather than secondary pricing.
+ * 
+ * @returns valuation 
+ */
+async function valueOptionByPOSTRequest(optionTermsAsJson) {
+
+    var optionToValueAsJson = formatOptionTermsMessage(optionTermsAsJson, COMMAND_VALUE);
+    const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(optionToValueAsJson)
     });
     const res = await rawResponse.json();
     return res;
@@ -112,7 +154,12 @@ async function persistOption() {
  */
 async function main() {
 
-    const numOptionsToCreate = 100;
+    /**
+     * Get dictionary of all deployed utility contracts.
+     */
+    const contractDict = await getDictionaryOfDeployedContracts(addressConfig);
+
+    const numOptionsToCreate = 10;
     console.log(`\nUsing these SharedConfig settings :\n ${JSON.stringify(addressConfig, null, 2)}`);
 
     // Purge any existing contracts
@@ -125,7 +172,7 @@ async function main() {
     // Mint & Persist the prescribed number of new (random) contracts
     const [managerAccount, stableCoinIssuer, dataVendor, optionSeller, optionBuyer] = await namedAccounts(addressConfig);
     for (let step = 0; step < numOptionsToCreate; step++) {
-        respJson = await persistOption(step, optionBuyer);
+        respJson = await persistOptionByPOSTRequest(step, optionBuyer);
         if (respJson.hasOwnProperty("errorCode")) {
             console.log(JSON.stringify(respJson, null, 2));
             throw new Error(`Failed to persist/mint Option terms as NFT ${resp.error}`);
@@ -153,6 +200,7 @@ async function main() {
 
     // Iterate the List of returned Options and verify
     for (let step = 0; step < arrayOfExistingOptionNFTs.length; step++) {
+
         const optionIdToCheck = arrayOfExistingOptionNFTs[step].optionId;
         resp = await getOptionById(optionIdToCheck);
         respJson = JSON.parse(resp);
@@ -160,12 +208,28 @@ async function main() {
             console.log(JSON.stringify(respJson, null, 2));
             throw new Error(`Failed to pull option id [${optionIdToCheck}] with error ${respJson.errorMessage}`);
         }
+
         if (!await verifyTerms(respJson.message.terms, respJson.message.hash, managerAccount)) {
             throw new Error("Failed to verify option terms were immutable and signed by both buyer and manager");
         } else {
             console.log(`Terms Verified for Option Id [${optionIdToCheck}]`);
         }
-        console.log(`Pulled Option ${optionIdToCheck} : ${respJson.message.terms.optionName}`);
+
+        valuation = await valueOptionByPOSTRequest(respJson.message.terms, contractDict);
+        if (valuation.message.hasOwnProperty("value")) {
+            console.log(`Value by POST: ${JSON.stringify(valuation.message.value, null, 2)} with parameters ${JSON.stringify(valuation.message.parameters, null, 2)}`);
+        } else {
+            throw new Error(`Failed to value option id [${optionIdToCheck}] with error ${valuation.message.errorMessage}`);
+        }
+
+        valuation = await valueOptionById(optionIdToCheck);
+        if (valuation.message.hasOwnProperty("value")) {
+            console.log(`Value by Id: ${JSON.stringify(valuation.message.value, null, 2)} with parameters ${JSON.stringify(valuation.message.parameters, null, 2)}`);
+        } else {
+            throw new Error(`Failed to value option id [${optionIdToCheck}] with error ${valuation.message.errorMessage}`);
+        }
+
+        console.log(`Pulled, verified and valued Option ${optionIdToCheck} : ${respJson.message.terms.optionName}`);
     }
 }
 
