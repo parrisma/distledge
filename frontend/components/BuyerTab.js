@@ -1,24 +1,35 @@
-import { addressConfig } from "../constants";
-import { getWeb3Accounts } from "@/lib/AccountUtil";
 import { useState, useEffect } from "react";
+import { useMoralis } from "react-moralis";
+import AccountDropDown from "../components/dropdown/AccountsDropDown";
+import OptionList from "../components/OptionList";
 
 const Contract = (props) => {
 
-    [acct, setAcct] = useState("?");
+    const { isWeb3Enabled } = useMoralis();
+    var [buyerAccount, setBuyerAccount] = useState("?");
 
-    const web3Acct = getWeb3Accounts();
+    async function update(newAccountId) {
+        if (isWeb3Enabled) {
+            setBuyerAccount(newAccountId)
+            console.log(`New Buyer Account: [${buyerAccount}]`);
+        } else {
+            console.log(`Buyer Tab: Not Web3 Connected`);
+        }
+    }
 
     useEffect(() => {
-        
-        return () => {
-            console.log(`Unmount`)
-        };
-    }, [web3Acct]);
-
+    }, [isWeb3Enabled, buyerAccount]);
 
     return (
         <div>
-            <p>Buyer</p>
+            <div>
+                <AccountDropDown
+                    handleChange={(value) => { update(value) }}
+                    placeholder={`Buyer Account`} />
+            </div>
+            <div>
+                <OptionList buyerAccount={buyerAccount} />
+            </div>
         </div>
     );
 };

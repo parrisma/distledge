@@ -99,6 +99,7 @@ function getOK(OKCode, message) {
 function handleJsonOK(JsonOKMessage, res) {
     console.log(`Handled OK`);
     const okMessage = JSON.stringify(JsonOKMessage);
+    res.setHeader("Access-Control-Allow-Origin", "*"); // This would be a risk ina a full production setup
     res.writeHead(200, json_content);
     res.end(okMessage);
 }

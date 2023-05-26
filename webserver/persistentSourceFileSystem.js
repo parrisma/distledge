@@ -192,7 +192,7 @@ async function persistListAllFileSystem() {
                 terms.forEach((value1, index1, array1) => {
                     const optionId = value;
                     const contractHash = value1.substring(0, value1.length - 5);
-                    optionsList.terms.push({ "optionId": `${optionId}`, "contract": `${contractHash}` });
+                    optionsList.terms.push({ "optionId": `${optionId}`, "hash": `${contractHash}` });
                 });
             }
         });
