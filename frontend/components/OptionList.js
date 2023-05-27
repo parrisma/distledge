@@ -12,7 +12,7 @@ const Contract = (props) => {
         if (isWeb3Enabled) {
             const res = JSON.parse(await getERC721MintedOptionList());
             if (res.hasOwnProperty('okCode')) {
-                setOptionList(res.message.terms); // check for error B4 doing this
+                setOptionList(res.message.terms);
                 console.log(JSON.stringify(optionList, null, 2));
             } else {
                 console.log(`Failed to get OptionList from WebServer [${res.errorCode}]`);
@@ -27,12 +27,10 @@ const Contract = (props) => {
     }, [isWeb3Enabled, props.buyerAccount]);
 
     return (
-        <div>
-            <div className="option-list">
-                {optionList !== undefined && optionList.length > 0 ? (
-                    <ul>{optionList.map((item) => <li><MintedOption optionId={item.optionId} /></li>)}</ul>
-                ) : ``}
-            </div>
+        <div className="option-list">
+            {optionList !== undefined && optionList.length > 0 ? (
+                <ul>{optionList.map((item, index) => <li><MintedOption optionId={item.optionId} rowNum={index} /></li>)}</ul>
+            ) : ``}
         </div>
     );
 };

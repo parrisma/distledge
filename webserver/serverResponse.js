@@ -1,6 +1,6 @@
 require('module-alias/register'); // npm i --save module-alias
 const { json_content } = require("@webserver/utility");
-const { OK_DEFUNCT, OK_CREATE_TERMS, OK_PULL_TERMS, OK_LIST_TERMS, OK_PURGE } = require("@webserver/serverResponseCodes");
+const { OK_DEFUNCT, OK_CREATE_TERMS, OK_PULL_TERMS, OK_LIST_TERMS, OK_PURGE, OK_VALUE } = require("@webserver/serverResponseCodes");
 const { deepCopyJson } = require("@webserver/serverErrors");
 
 const HTTP_GET = "get";
@@ -46,6 +46,12 @@ OKDict[OK_LIST_TERMS] =
 {
     "okCode": `${OK_LIST_TERMS}`,
     "okMessage": `Got List of all Option Terms`
+};
+
+OKDict[OK_VALUE] =
+{
+    "okCode": `${OK_VALUE}`,
+    "okMessage": `Valued Option OK`
 };
 
 /**

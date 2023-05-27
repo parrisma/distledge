@@ -21,7 +21,7 @@ const Contract = (props) => {
     }, [isWeb3Enabled, buyerAccount]);
 
     return (
-        <div>
+        <div className="resizable">
             <div>
                 <AccountDropDown
                     handleChange={(value) => { update(value) }}
