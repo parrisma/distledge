@@ -1,0 +1,7 @@
+.pane-standard {
+    height: 500px;
+    width: 920px;
+    overflow: auto;
+    border: 1px solid white;
+    resize: horizontal;
+}

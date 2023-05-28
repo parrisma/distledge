@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { getERC721MintedOptionList } from "../lib/ERC721Util";
 import MintedOption from "./MintedOption";
+import OfferedOption from "./OfferedOption";
 
 const Contract = (props) => {
 
@@ -23,14 +24,23 @@ const Contract = (props) => {
     }
 
     useEffect(() => {
-        update(props.buyerAccount);
-    }, [isWeb3Enabled, props.buyerAccount]);
+        if (props.minted) {
+            console.log(`Get Minted list from server`);
+            update(props.buyerAccount);
+        } else {
+            console.log(`Use offered List [${props.offeredOptionList.length}]`);
+            setOptionList(props.offeredOptionList);
+        }
+    }, [isWeb3Enabled, props.buyerAccount, props.offeredOptionList]);
 
     return (
         <div className="option-list">
-            {optionList !== undefined && optionList.length > 0 ? (
-                <ul>{optionList.map((item, index) => <li><MintedOption optionId={item.optionId} rowNum={index} /></li>)}</ul>
-            ) : ``}
+            {optionList !== undefined && optionList.length > 0 && props.minted === true ? (
+                <ul>{optionList.map((item, index) => <li key={index}><MintedOption optionId={item.optionId} rowNum={index} /></li>)}</ul>
+            ) : (``)}
+            {optionList !== undefined && optionList.length > 0 && props.offered === true ? (
+                <ul>{optionList.map((item, index) => <li key={index}><OfferedOption optionDetail={item} rowNum={index} /></li>)}</ul>
+            ) : (``)}
         </div>
     );
 };

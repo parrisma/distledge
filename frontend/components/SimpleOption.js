@@ -4,8 +4,8 @@ import FXRateDropDown from "../components/dropdown/FXRateDropDown";
 import ReferenceLevelDropDown from "../components/dropdown/ReferenceLevelDropDown";
 import AccountDropDown from "../components/dropdown/AccountsDropDown";
 import InputField from "../components/InputField";
-import { deployOptionContract } from "../lib/SimpleOptionWrapper";
 import { GloballyUniqueId } from "../lib/GloballyUniqueId";
+import { formatOptionTypeOneTerms } from "../../lib/SimpleOptionTypeOne";
 
 const Contract = (props) => {
 
@@ -149,27 +149,28 @@ const Contract = (props) => {
                 </div>
                 <div className="div-table-row">
                     <div className="div-table-col-fix-wide">
-                        <button
-                            className="button"
-                            onClick={() => {
-                                deployOptionContract(
-                                    contractDetails.buyerAddress,
-                                    contractDetails.uniqueId,
-                                    contractDetails.name,
-                                    contractDetails.description,
-                                    contractDetails.buyerAddress,
-                                    contractDetails.premium,
-                                    contractDetails.premiumTokenAddress,
-                                    contractDetails.settlementTokenAddress,
-                                    contractDetails.notional,
-                                    contractDetails.strike,
-                                    contractDetails.referenceLevelAddress,
-                                    contractDetails.fxReferenceLevelAddress
-                                );
-                            }}
-                        >
-                            <div>Print Contract</div>
-                        </button>
+                        {props.handleOfferOption !== undefined ? (
+                            <button
+                                className="button"
+                                onClick={() => {
+                                    props.handleOfferOption(
+                                        formatOptionTypeOneTerms(
+                                            contractDetails.uniqueId,
+                                            contractDetails.name,
+                                            contractDetails.description,
+                                            contractDetails.premium,
+                                            contractDetails.premiumTokenAddress,
+                                            contractDetails.settlementTokenAddress,
+                                            contractDetails.notional,
+                                            contractDetails.strike,
+                                            contractDetails.referenceLevelAddress,
+                                            contractDetails.fxReferenceLevelAddress)
+                                    );
+                                }}
+                            >
+                                <div>Offer Option</div>
+                            </button>
+                        ) : ``}
                     </div>
                 </div>
             </div>

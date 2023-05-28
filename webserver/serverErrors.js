@@ -222,7 +222,8 @@ function getErrorWithMessage(errorCode, message, err) {
 function handleJsonError(JsonErrorMessage, res) {
     const errorMessage = JSON.stringify(JsonErrorMessage);
     console.log(`Handle error [${errorMessage}]`);
-    res.setHeader("Access-Control-Allow-Origin", "*"); // This would be a risk ina a full production setup
+    res.setHeader("Access-Control-Allow-Origin", "*"); // This would be a risk in a full production setup
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET");
     res.writeHead(400, json_content);
     res.end(errorMessage);
 }

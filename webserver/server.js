@@ -28,8 +28,9 @@ const {
     ERR_BAD_GET, ERR_UNKNOWN_COMMAND, ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL
 } = require("./serverErrorCodes.js");
 const {
-    HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
-    COMMAND_VALUE, COMMAND_LIST, COMMAND_PURGE, COMMAND
+    HTTP_OPTIONS, HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
+    COMMAND_VALUE, COMMAND_LIST, COMMAND_PURGE, COMMAND,
+    handleJsonOK
 } = require("./serverResponse");
 const { namedAccounts } = require("@scripts/lib/accounts");
 const { addressConfig } = require("./constants");
@@ -70,7 +71,6 @@ function mainPage(res) {
     res.writeHead(200, text_content);
     res.end(appMessage);
 }
-
 
 /**
  * Handle HTTP GET Requests
@@ -201,17 +201,21 @@ async function handleMethodPOST(
  * @param {*} res - http response
  */
 const requestListener = function (req, res) {
-    console.log(`Processing request [${req.method}]`);
+    const method = req.method.toLowerCase();
+    console.log(`Processing request [${method}]`);
     try {
-        switch (req.method.toLowerCase()) {
+        switch (method) {
             case HTTP_GET:
                 handleMethodGET(managerAccount, contractDict, req, res);
                 break;
             case HTTP_POST:
                 handleMethodPOST(managerAccount, contractDict, req, res);
                 break;
+            case HTTP_OPTIONS:
+                handleJsonOK({}, res);
+                break
             default:
-                handleJsonError(getErrorWithMessage(ERR_BAD_HTTP, req.method), res);
+                handleJsonError(getErrorWithMessage(ERR_BAD_HTTP, method), res);
                 break;
         }
     } catch (err) {

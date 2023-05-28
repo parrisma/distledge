@@ -22,13 +22,32 @@ const Contract = (props) => {
 
     return (
         <div className="resizable">
-            <div>
-                <AccountDropDown
-                    handleChange={(value) => { update(value) }}
-                    placeholder={`Buyer Account`} />
-            </div>
-            <div>
-                <OptionList buyerAccount={buyerAccount} />
+            <div className="div-table">
+                <div className="div-table-row">
+                    <div className="div-table-col">
+                        <AccountDropDown
+                            handleChange={(value) => { update(value) }}
+                            placeholder={`Buyer Account`} />
+                    </div>
+                </div>
+                <div className="div-table-row">
+                    <div className="div-table-col">
+                        <div className="div-table">
+                            <div className="div-table-row">
+                                <div className="div-table-col">
+                                    <div className="pane-standard">
+                                        <OptionList buyerAccount={buyerAccount} minted={true} />
+                                    </div>
+                                </div>
+                                <div className="div-table-col">
+                                    <div className="pane-standard">
+                                        <OptionList offered={true} offeredOptionList={props.optionListForOffer} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

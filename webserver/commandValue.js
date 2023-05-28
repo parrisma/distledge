@@ -98,6 +98,7 @@ async function valueOptionNFT(
         if (termsAsJson.hasOwnProperty("terms") && termsAsJson.terms.hasOwnProperty("uniqueId")) {
             const optionTerms = termsAsJson.terms;
             const responseMessage = await valueOptionTerms(optionTerms, contractDict);
+            console.log(`Post Val resp [${JSON.stringify(responseMessage, null, 2)}]`);
             handleJsonOK(getOK(OK_VALUE, responseMessage), res);
         } else {
             handleJsonError(getError(ERR_BAD_TERMS), res);
@@ -126,6 +127,7 @@ async function handlePOSTValueTermsRequest(
     req, res) {
     console.log(`Handle POST Value Terms Request for Id [${termsAsJson.id}]`);
     await valueOptionNFT(termsAsJson, signingAccount, contractDict, req, res);
+    console.log(`Post Val Done`);
 }
 
 module.exports = {

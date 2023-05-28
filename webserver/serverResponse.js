@@ -5,6 +5,7 @@ const { deepCopyJson } = require("@webserver/serverErrors");
 
 const HTTP_GET = "get";
 const HTTP_POST = "post";
+const HTTP_OPTIONS = "options";
 
 const COMMAND = "command";
 
@@ -105,7 +106,8 @@ function getOK(OKCode, message) {
 function handleJsonOK(JsonOKMessage, res) {
     console.log(`Handled OK`);
     const okMessage = JSON.stringify(JsonOKMessage);
-    res.setHeader("Access-Control-Allow-Origin", "*"); // This would be a risk ina a full production setup
+    res.setHeader("Access-Control-Allow-Origin", "*"); // This would be a risk in a full production setup
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET");
     res.writeHead(200, json_content);
     res.end(okMessage);
 }
@@ -113,6 +115,7 @@ function handleJsonOK(JsonOKMessage, res) {
 module.exports = {
     HTTP_GET,
     HTTP_POST,
+    HTTP_OPTIONS,
     COMMAND,
     COMMAND_CREATE,
     COMMAND_DEFUNCT,

@@ -25,6 +25,8 @@ const Contract = (props) => {
         handleTabChange(newTab);
     };
 
+    const [optionListForOffer, setOptionListForOffer] = useState([]);
+
     return (
         <div>
             {isWeb3Enabled ? (
@@ -47,17 +49,17 @@ const Contract = (props) => {
                             <EscrowTab handleLogChange={props.handleLogChange} />
                         ) : null}
                         {activeTab === tabs[3] ? (
-                            <SellerTab handleLogChange={props.handleLogChange} />
+                            <SellerTab handleLogChange={props.handleLogChange} optionListForOffer={optionListForOffer} setOptionListForOffer={setOptionListForOffer} />
                         ) : null}
                         {activeTab === tabs[4] ? (
-                            <BuyerTab handleLogChange={props.handleLogChange} />
+                            <BuyerTab handleLogChange={props.handleLogChange} optionListForOffer={optionListForOffer} />
                         ) : null}
                     </div>
                 </div>)
                 :
                 (
                     <div>
-                        <Info message = "Press the Connect Wallet button to start"/><br/>
+                        <Info message="Press the Connect Wallet button to start" /><br />
                     </div>)}
         </div>
     );
