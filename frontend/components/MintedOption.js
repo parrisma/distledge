@@ -36,7 +36,7 @@ const Contract = (props) => {
     return (
         <div className="div-table">
             {props.rowNum === 0 ? (
-                <div className="div-table-row">
+                <div className="div-table-row-header">
                     <div className="div-table-col-fix-number">
                         Option Id
                     </div>
@@ -51,6 +51,9 @@ const Contract = (props) => {
                     </div>
                     <div className="div-table-col-fix-number-right">
                         Value
+                    </div>
+                    <div className="div-table-col">
+                        Action
                     </div>
                 </div>
             ) :
@@ -70,8 +73,19 @@ const Contract = (props) => {
                     <div className="div-table-col-fix-number">
                         {optionDetail.strike}
                     </div>
-                    <div className="div-table-col-fix-number-right">
-                        {Number(optionValuation.value).toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                    <div className="div-table-col-fix-number">
+                        <div className="item-right">
+                            {Number(optionValuation.value).toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                        </div>
+                    </div>
+                    <div className="div-table-col">
+                        <button
+                            className="button"
+                            onClick={() => {
+                                props.handleExercise(props.optionId);
+                            }}>
+                            <div>Exercise</div>
+                        </button>
                     </div>
                 </div>
             ) :

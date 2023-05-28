@@ -20,6 +20,14 @@ const Contract = (props) => {
         setUpd(upd + 1);
     }
 
+    /**
+     * Remove the option from the list of those for sale.
+     * @param {*} optionId - The Option Id to delete from sale list
+     */
+    function handleDel(uniqueId) {
+        console.log(`Delete [${uniqueId}] from list`);
+    }
+
     useEffect(() => {
         console.log(`Re Render [${props.optionListForOffer.length}]`);
     }, [isWeb3Enabled, props.optionListForOffer]);
@@ -38,12 +46,14 @@ const Contract = (props) => {
                             <div className="div-table-row">
                                 <div className="div-table-col">
                                     <div className="pane-standard">
+                                        <h2 className="header-2">Print Option for Sale</h2>
                                         <SimpleOption handleOfferOption={offerOption} />
                                     </div>
                                 </div>
                                 <div className="div-table-col">
                                     <div className="pane-standard">
-                                        <OptionList offered={true} offeredOptionList={props.optionListForOffer} />
+                                        <h2 className="header-2">Options Offered for Sale</h2>
+                                        <OptionList offered={true} offeredOptionList={props.optionListForOffer} asSeller={true} handleDel={handleDel} />
                                     </div>
                                 </div>
                             </div>

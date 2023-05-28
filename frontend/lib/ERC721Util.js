@@ -67,30 +67,33 @@ export async function valueOptionById(optionId) {
  */
 export async function valueOptionByPOSTRequest(optionTermsAsJson) {
 
-    console.log(`Opt: [${JSON.stringify(optionTermsAsJson, null, 2)}]`);
     var optionToValueAsJson = formatOptionTermsMessage(optionTermsAsJson, `value`);
     const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
-        mode: 'no-cors',
         method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'OPTIONS, POST, GET'
-        },
         body: JSON.stringify(optionToValueAsJson)
     });
-    console.log(`RAW RESP 1`);
     var res = undefined;
     try {
-        console.log(`RAW RESP 2`);
-        const resTxt = await rawResponse.text();
-        console.log(`Res Txt : [${resTxt}]`);
-        res = JSON.parse(resTxt);
+        res = await rawResponse.json();
     } catch (err) {
-        console.log(`RAW RESP 3`);
-        console.log(`Get JSON Err [${err.message}`);
+        const errMsg = `valueOptionByPOSTRequest failed with Err [${err.message}`;
+        console.log(errMsg);
+        res = { "errorMessage": errMsg };
     }
-    console.log(`RAW RESP 4`);
     return res;
+}
+
+/**
+ * An empty/zero valuation response structure
+ * @returns A JSON object for an zero/empty POST valuation response.
+ */
+export function emptyValuationResponse() {
+    return {
+        "value": "0",
+        "parameters": {
+            "notional": "0",
+            "strike": "0",
+            "referenceLevel": "0"
+        }
+    };
 }

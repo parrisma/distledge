@@ -25,10 +25,10 @@ const Contract = (props) => {
 
     useEffect(() => {
         if (props.minted) {
-            console.log(`Get Minted list from server`);
+            // Get the minted option details from server
             update(props.buyerAccount);
         } else {
-            console.log(`Use offered List [${props.offeredOptionList.length}]`);
+            // Get the offered option details as passed by properties
             setOptionList(props.offeredOptionList);
         }
     }, [isWeb3Enabled, props.buyerAccount, props.offeredOptionList]);
@@ -36,10 +36,13 @@ const Contract = (props) => {
     return (
         <div className="option-list">
             {optionList !== undefined && optionList.length > 0 && props.minted === true ? (
-                <ul>{optionList.map((item, index) => <li key={index}><MintedOption optionId={item.optionId} rowNum={index} /></li>)}</ul>
+                <ul>{optionList.map((item, index) => <li key={index}><MintedOption optionId={item.optionId} rowNum={index} handleExercise={props.handleExercise} /></li>)}</ul>
             ) : (``)}
-            {optionList !== undefined && optionList.length > 0 && props.offered === true ? (
-                <ul>{optionList.map((item, index) => <li key={index}><OfferedOption optionDetail={item} rowNum={index} /></li>)}</ul>
+            {optionList !== undefined && optionList.length > 0 && props.offered === true && props.asSeller === true ? (
+                <ul>{optionList.map((item, index) => <li key={index}><OfferedOption optionDetail={item} rowNum={index} handleAction={props.handleDel} action={`Delete`} /></li>)}</ul>
+            ) : (``)}
+            {optionList !== undefined && optionList.length > 0 && props.offered === true && props.asSeller === false ? (
+                <ul>{optionList.map((item, index) => <li key={index}><OfferedOption optionDetail={item} rowNum={index} handleAction={props.handleBuy} action={`Buy`} /></li>)}</ul>
             ) : (``)}
         </div>
     );

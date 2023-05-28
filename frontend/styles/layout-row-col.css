@@ -10,6 +10,14 @@
   clear: both;
 }
 
+.div-table-row-header {
+  display: table-row;
+  width: auto;
+  clear: both;
+  color: #1098FC;
+  font-weight: bold;
+}
+
 .div-table-row-basic {
   display: table-row;
 }
@@ -63,6 +71,12 @@
   float: left;
   display: table-column;
   width: 330px;
+}
+
+.div-table-col-fix-mid {
+  float: left;
+  display: table-column;
+  width: 200px;
 }
 
 .div-table-col {
