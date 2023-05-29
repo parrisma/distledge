@@ -73,7 +73,7 @@ It keeps copies of the option teams in a local folder ```webserver/terms``` and 
 
 A simpler way of doing this is running [server tests](create-test-contracts) script, which will clean away all old contracts and create some test options for you to use.
 
-The port number is defined in the ```serverConfig.js``` file in the Web Server project root. 
+The port number is defined in the ```serverConfig.js``` file in the Web Server project root.
 
 By default the Web Server will start on [http://localhost:8191](http:://localhost:8191). You can navigate to this and run the Web Server calls directly, e.g. ```http:/localhost:8191/list```, which will return a JSON list of all option contracts currently held on the Web Server.
 
@@ -101,3 +101,6 @@ See [Meta Mask](start-ui.md#install-metamask) for how to connect Meta Mask to th
 ### 10. Go to Front End
 
 After all of this you can go to a browser and interact with our demo [http:/localhost:3000](http:/localhost:3000)
+
+1. right click ```inspect``` to open up the developer window so you can see the console output and other in browser debugging support while developing the UI
+1. Hit the connect wallet button and login to your Metamask or other wallet service
