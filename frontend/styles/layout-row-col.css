@@ -54,7 +54,7 @@
 .div-table-col-fix-number {
   float: left;
   display: table-column;
-  width: 100px;
+  width: 80px;
   padding-right: 3px;
   padding-left: 3px;
 }
@@ -71,6 +71,12 @@
   float: left;
   display: table-column;
   width: 330px;
+}
+
+.div-table-col-fix-mid {
+  float: left;
+  display: table-column;
+  width: 200px;
 }
 
 .div-table-col-fix-mid {

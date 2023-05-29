@@ -37,8 +37,11 @@ const Contract = (props) => {
                     <div className="div-table-col-fix-mid">
                         Unique Id
                     </div>
-                    <div className="div-table-col-fix-wide">
+                    <div className="div-table-col-fix-mid">
                         Option Name
+                    </div>
+                    <div className="div-table-col-fix-number">
+                        Premium
                     </div>
                     <div className="div-table-col-fix-number">
                         Notional
@@ -46,7 +49,7 @@ const Contract = (props) => {
                     <div className="div-table-col-fix-number">
                         Strike
                     </div>
-                    <div className="div-table-col-fix-number-right">
+                    <div className="div-table-col-fix-number">
                         Value
                     </div>
                     <div className="div-table-col">
@@ -61,8 +64,11 @@ const Contract = (props) => {
                     <div className="div-table-col-fix-mid">
                         {props.optionDetail.uniqueId}
                     </div>
-                    <div className="div-table-col-fix-wide">
+                    <div className="div-table-col-fix-mid">
                         {props.optionDetail.optionName}
+                    </div>
+                    <div className="div-table-col-fix-number">
+                        {props.optionDetail.premium}
                     </div>
                     <div className="div-table-col-fix-number">
                         {props.optionDetail.notional}

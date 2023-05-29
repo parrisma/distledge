@@ -22,7 +22,12 @@ const Contract = (props) => {
      * @param {*} optionId - The Option Id to Exercise
      */
     function handleExercise(optionId) {
-        console.log(`Exercise [${optionId}]`);
+        /**
+         *  TODO - Implement the exercise logic on the Web Server and call it from here
+         *       - This means assigning the option NFT back to the seller & burning it
+         *       - move the option value (if > 0) from seller to buyer
+         */
+        props.handleLogChange(`Exercise [${optionId}] <not implemented yet>`);
     }
 
     /**
@@ -30,7 +35,12 @@ const Contract = (props) => {
      * @param {*} optionId - The Option Id to Exercise
      */
     function handleBuy(uniqueId) {
-        console.log(`Buy [${uniqueId}] for account [${buyerAccount}]`);
+        /**
+         *  TODO - Implement exercise buy logic in Web Server & call it from here.
+         *       - This means extending the create logic to assign the option NFT
+         *       - to the buyer and move the option premium from buyer to seller.
+         */
+        props.handleLogChange(`Buy [${uniqueId}] for account [${buyerAccount}] <not implemented yet>`);
     }
 
     useEffect(() => {
@@ -53,13 +63,22 @@ const Contract = (props) => {
                                 <div className="div-table-col">
                                     <div className="pane-standard">
                                         <h2 className="header-2">Options Purchased</h2>
-                                        <OptionList buyerAccount={buyerAccount} minted={true} handleExercise={handleExercise} />
+                                        <OptionList
+                                            buyerAccount={buyerAccount}
+                                            minted={true}
+                                            handleExercise={handleExercise}
+                                            handleLogChange={props.handleLogChange} />
                                     </div>
                                 </div>
                                 <div className="div-table-col">
                                     <div className="pane-standard">
                                         <h2 className="header-2">Options Offered for Sale</h2>
-                                        <OptionList offered={true} offeredOptionList={props.optionListForOffer} handleBuy={handleBuy} asSeller={false} />
+                                        <OptionList
+                                            offered={true}
+                                            offeredOptionList={props.optionListForOffer}
+                                            handleBuy={handleBuy}
+                                            asSeller={false}
+                                            handleLogChange={props.handleLogChange} />
                                     </div>
                                 </div>
                             </div>
