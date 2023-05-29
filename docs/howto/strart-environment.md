@@ -5,17 +5,17 @@
 The explains how to fully start the environment from scratch. Some of these take a while to run, so be sure to check they have finished before moving to next step.
 
 | Step | Command | Folder |
-| ------- | ------- | ------ |
-| [Start test network](start-network)| ```npx hardhat node```| ```project root``` |
-| [Run tests](run-tests) | ```npx hardhat test``` | ```project root``` |
-| [Deploy contracts](deploy-contracts) | ```npx hardhat run --network localhost scripts/deploy/deploy.js``` | ```project root``` |
-| [Export to front end](export-to-front-end) | ```yarn hardhat run ./scripts/exportToFrontEnd/updateFrontEnd.js --network localhost``` | ```project root``` |
-| [Start Web Server](start-web-server)| | ```project root/webserver```|
-| [Export to web server](export-to-web-server) | ```yarn hardhat run ./scripts/exportToWebService/updateWebService.js --network localhost``` | ```project root``` |
-| [Create test contracts](create-test-contracts) optional | ```npx hardhat run --network localhost serverTest.js``` | ```project root/webserver/tests```|
-| [Start Front End](start-front-end) | ```yarn dev``` | ```project root/frontend``` |
-| [Setup Meta Mask](set-up-meta-mask) | [Meta Mask](start-ui.md#install-metamask) | |
-| [Run Front end](go-to-front-end) | [http://localhost:3000](http://localhost:3000) | |
+| ---------------------- | ------------------------------------------- | ------ |
+| [Start test network](#1-start-network)| ```npx hardhat node```| ```project root``` |
+| [Run tests](#2-run-tests) | ```npx hardhat test``` | ```project root``` |
+| [Deploy contracts](#3-deploy-contracts) | ```npx hardhat run --network localhost scripts/deploy/deploy.js``` | ```project root``` |
+| [Export to front end](#4-export-to-front-end) | ```yarn hardhat run ./scripts/exportToFrontEnd/updateFrontEnd.js --network localhost``` | ```project root``` |
+| [Export to web server](#5-export-to-web-server) | ```yarn hardhat run ./scripts/exportToWebService/updateWebService.js --network localhost``` | ```project root``` |
+| [Start Web Server](#6-start-web-server)| ```npx hardhat run --network localhost server.js``` | ```project root/webserver```|
+| [Create test contracts](#7-create-test-contracts) optional | ```npx hardhat run --network localhost serverTest.js``` | ```project root/webserver/tests```|
+| [Start Front End](#8-start-front-end) | ```yarn dev``` | ```project root/frontend``` |
+| [Setup Meta Mask](#9-set-up-meta-mask) | [Meta Mask](start-ui.md#install-metamask) | |
+| [Run Front end](#10-go-to-front-end) | [http://localhost:3000](http://localhost:3000) | |
 
 ## Steps
 
@@ -94,7 +94,7 @@ This takes a while to get going, even on a fast machine, so be patient.
 ```cd frontend```
 ```yarn dev```
 
-### 9.Set-up Meta Mask
+### 9. Set-up Meta Mask
 
 See [Meta Mask](start-ui.md#install-metamask) for how to connect Meta Mask to this local test environment.
 
