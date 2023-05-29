@@ -18,11 +18,11 @@ const Contract = (props) => {
                 });
                 console.log(`Option Val [${JSON.stringify(optionValuation, null, 4)}]`);
             } else {
-                console.log(`Failed to get OptionList from WebServer [${res.errorCode}]`);
+                props.handleLogChange(`Failed to get OptionList from WebServer [${res.errorCode}]`);
                 setOptionValuation(emptyValuationResponse());
             }
         } catch (err) {
-            console.log(`Failed to value offered option by POST with [${err.message}]`);
+            props.handleLogChange(`Failed to value offered option by POST with [${err.message}]`);
         }
     }
 

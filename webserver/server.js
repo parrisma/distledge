@@ -29,7 +29,7 @@ const {
 } = require("./serverErrorCodes.js");
 const {
     HTTP_OPTIONS, HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
-    COMMAND_VALUE, COMMAND_LIST, COMMAND_PURGE, COMMAND,
+    COMMAND_VALUE, COMMAND_LIST, COMMAND_PURGE, COMMAND_EXERCISE, COMMAND,
     handleJsonOK
 } = require("./serverResponse");
 const { namedAccounts } = require("@scripts/lib/accounts");
@@ -40,6 +40,7 @@ const { isNumeric, currentDateTime } = require("@lib/generalUtil");
 const { text_content } = require("./utility");
 const { valuationHandler, handlePOSTValueTermsRequest } = require("./commandValue");
 const { handlePOSTCreateTermsRequest } = require("./commandCreate");
+const { handlePOSTExerciseTermsRequest } = require("./commandExercise");
 const { pullHandler } = require("./commandPull");
 const { listHandler } = require("./commandList");
 const { defunctHandler } = require("./commandDefunct");
@@ -114,6 +115,12 @@ function handleMethodGET(
                     case COMMAND_ICON:
                         handleIcon(res);
                         break;
+                    case COMMAND_EXERCISE:
+                        handleJsonError(`Exercise command only supported via POST`, res);
+                        break;
+                    case COMMAND_CRATE:
+                        handleJsonError(`Create command only supported via POST`, res);
+                        break;
                     default:
                         handleJsonError(getErrorWithMessage(ERR_UNKNOWN_COMMAND, command), res);
                         break;
@@ -151,6 +158,9 @@ async function handlePOSTedJson(
                 break;
             case COMMAND_VALUE:
                 await handlePOSTValueTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
+                break;
+            case COMMAND_EXERCISE:
+                await handlePOSTExerciseTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
                 break;
             default:
                 handleJsonError(getErrorWithMessage(ERR_BAD_POST, bodyAsJson.command), res);

@@ -1,6 +1,5 @@
 require('module-alias/register'); // npm i --save module-alias
 var fs = require('fs');
-const hre = require("hardhat");
 const {
     getError,
     getFullyQualifiedError,
@@ -16,7 +15,6 @@ const { addressConfig } = require("@webserver/constants");
 const { mintERC721OptionNFT, erc721OptionNFTExists } = require("@lib/contracts/Options/ERC721OptionContractTypeOne");
 const { persistOptionTerms, persistOptionIdExists } = require("@webserver/serverPersist");
 const { ERR_FAIL_CREATE } = require("@webserver/serverErrorCodes");
-
 
 /**
  * Deploy option of given terms
@@ -78,6 +76,11 @@ async function mintAndPersistOptionNFT(
             if (!(await persistOptionIdExists(mintedOptionId))) {
                 throw new Error(`Expected option id [${mintedOptionId}] does not exist in persistent source`);
             }
+
+            /**
+             * TODO - The code needs adding that will transfer the Option NFT from the manager account to the buyer account
+             *      - As well as the logic to transfer the premium from the buyer to the seller.
+             */
 
             /**
              * All, done OK
