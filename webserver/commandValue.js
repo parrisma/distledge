@@ -18,7 +18,7 @@ const {
 } = require("@webserver/serverResponseCodes");
 const { OPTION_TYPE_ONE } = require("@lib/SimpleOptionTypeOne");
 const { persistOptionIdExists, persistGetOptionTerms } = require("@webserver/serverPersist");
-const { valueSimpleOptionTypeOne } = require("@lib/simpleOptionTypeOne");
+const { valueSimpleOptionTypeOne } = require("@lib/SimpleOptionTypeOne");
 
 /**
  * Value the option terms as given
