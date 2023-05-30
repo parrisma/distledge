@@ -1,6 +1,15 @@
 {
   "name": "hardhat-project-for-onchain-option-issuance",
   "license": "UNLICENSED",
+  "scripts": {
+    "node": "npx hardhat node",
+    "deploy": "npx hardhat run --network localhost ./scripts/deploy/deploy.js",
+    "export-fe": "npx hardhat run --network localhost ./scripts/exportToFrontEnd/updateFrontEnd.js",
+    "export-be": "npx hardhat run --network localhost ./scripts/exportToWebService/updateWebService.js",
+    "backend": "npx hardhat run --network localhost ./webserver/server.js",
+    "ftb": "npm run deploy && npm run export-fe && npm run export-be && npm run backend",
+    "frontend": "cd frontend && yarn dev"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
