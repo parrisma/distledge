@@ -27,10 +27,10 @@ const {
 const {
     ERR_BAD_GET, ERR_UNKNOWN_COMMAND, ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL
 } = require("./serverErrorCodes.js");
-
 const {
-    HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
-    COMMAND_VALUE, COMMAND_LIST, COMMAND_PURGE, COMMAND
+    HTTP_OPTIONS, HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
+    COMMAND_VALUE, COMMAND_LIST, COMMAND_PURGE, COMMAND_EXERCISE, COMMAND,
+    handleJsonOK
 } = require("./serverResponse");
 const { namedAccounts } = require("@scripts/lib/accounts");
 const { addressConfig } = require("./constants");
@@ -38,8 +38,9 @@ var managerAccount;
 
 const { isNumeric, currentDateTime } = require("@lib/generalUtil");
 const { text_content } = require("./utility");
-const { valuationHandler } = require("./commandValue");
+const { valuationHandler, handlePOSTValueTermsRequest } = require("./commandValue");
 const { handlePOSTCreateTermsRequest } = require("./commandCreate");
+const { handlePOSTExerciseTermsRequest } = require("./commandExercise");
 const { pullHandler } = require("./commandPull");
 const { listHandler } = require("./commandList");
 const { defunctHandler } = require("./commandDefunct");
@@ -72,7 +73,6 @@ function mainPage(res) {
     res.end(appMessage);
 }
 
-
 /**
  * Handle HTTP GET Requests
  * 
@@ -101,7 +101,7 @@ function handleMethodGET(
                         pullHandler(uriParts, res);
                         break;
                     case COMMAND_VALUE:
-                        valuationHandler(uriParts, res);
+                        valuationHandler(uriParts, contractDict, res);
                         break;
                     case COMMAND_DEFUNCT:
                         defunctHandler(uriParts, res);
@@ -114,6 +114,12 @@ function handleMethodGET(
                         break;
                     case COMMAND_ICON:
                         handleIcon(res);
+                        break;
+                    case COMMAND_EXERCISE:
+                        handleJsonError(`Exercise command only supported via POST`, res);
+                        break;
+                    case COMMAND_CRATE:
+                        handleJsonError(`Create command only supported via POST`, res);
                         break;
                     default:
                         handleJsonError(getErrorWithMessage(ERR_UNKNOWN_COMMAND, command), res);
@@ -148,7 +154,13 @@ async function handlePOSTedJson(
     if (bodyAsJson.hasOwnProperty(COMMAND)) { // Json must include a command type.
         switch (bodyAsJson.command) {
             case COMMAND_CREATE:
-                handlePOSTCreateTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
+                await handlePOSTCreateTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
+                break;
+            case COMMAND_VALUE:
+                await handlePOSTValueTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
+                break;
+            case COMMAND_EXERCISE:
+                await handlePOSTExerciseTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
                 break;
             default:
                 handleJsonError(getErrorWithMessage(ERR_BAD_POST, bodyAsJson.command), res);
@@ -183,7 +195,7 @@ async function handleMethodPOST(
             let jsonPayload;
             try {
                 jsonPayload = JSON.parse(body);
-                handlePOSTedJson(mgrAccount, contractDict, jsonPayload, req, res);
+                await handlePOSTedJson(mgrAccount, contractDict, jsonPayload, req, res);
             } catch (err) {
                 handleJsonError(getErrorWithMessage(ERR_BAD_POST, err.message), res);
             }
@@ -199,17 +211,21 @@ async function handleMethodPOST(
  * @param {*} res - http response
  */
 const requestListener = function (req, res) {
-    console.log(`Processing request [${req.method}]`);
+    const method = req.method.toLowerCase();
+    console.log(`Processing request [${method}]`);
     try {
-        switch (req.method.toLowerCase()) {
+        switch (method) {
             case HTTP_GET:
                 handleMethodGET(managerAccount, contractDict, req, res);
                 break;
             case HTTP_POST:
                 handleMethodPOST(managerAccount, contractDict, req, res);
                 break;
+            case HTTP_OPTIONS:
+                handleJsonOK({}, res);
+                break
             default:
-                handleJsonError(getErrorWithMessage(ERR_BAD_HTTP, req.method), res);
+                handleJsonError(getErrorWithMessage(ERR_BAD_HTTP, method), res);
                 break;
         }
     } catch (err) {

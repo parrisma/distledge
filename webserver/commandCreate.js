@@ -1,6 +1,5 @@
 require('module-alias/register'); // npm i --save module-alias
 var fs = require('fs');
-const hre = require("hardhat");
 const {
     getError,
     getFullyQualifiedError,
@@ -13,11 +12,9 @@ const {
 } = require("@webserver/serverResponse");
 const { OK_CREATE_TERMS } = require("@webserver/serverResponseCodes");
 const { addressConfig } = require("@webserver/constants");
-const { currentDateTime } = require("@lib/generalUtil");
 const { mintERC721OptionNFT, erc721OptionNFTExists } = require("@lib/contracts/Options/ERC721OptionContractTypeOne");
 const { persistOptionTerms, persistOptionIdExists } = require("@webserver/serverPersist");
 const { ERR_FAIL_CREATE } = require("@webserver/serverErrorCodes");
-
 
 /**
  * Deploy option of given terms
@@ -66,7 +63,8 @@ async function mintAndPersistOptionNFT(
             /**
              * Mint the ERC721 contract NFT, which will allocate the new optionId
              */
-            const [mintedOptionId, hashOfTerms, response] = await mintNFTOption(termsAsJson, managerAccount, contractDict, req, res);
+            const optionTerms = termsAsJson.terms;
+            const [mintedOptionId, hashOfTerms, response] = await mintNFTOption(optionTerms, managerAccount, contractDict, req, res);
             if (!await erc721OptionNFTExists(contractDict[addressConfig.erc721OptionContractTypeOne], mintedOptionId)) {
                 throw new Error(`Expected option id [${mintedOptionId}] does not exist according to ERC721 Option NFT Contract [${addressConfig.erc721OptionContractTypeOne}]`);
             }
@@ -74,10 +72,15 @@ async function mintAndPersistOptionNFT(
             /**
              * Persist the option terms, such that they can be recovered by this WebServer
              */
-            await persistOptionTerms(termsAsJson, mintedOptionId, hashOfTerms);
+            await persistOptionTerms(optionTerms, mintedOptionId, hashOfTerms);
             if (!(await persistOptionIdExists(mintedOptionId))) {
                 throw new Error(`Expected option id [${mintedOptionId}] does not exist in persistent source`);
             }
+
+            /**
+             * TODO - The code needs adding that will transfer the Option NFT from the manager account to the buyer account
+             *      - As well as the logic to transfer the premium from the buyer to the seller.
+             */
 
             /**
              * All, done OK

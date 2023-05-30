@@ -17,25 +17,14 @@ const json_content = { "Content-Type": "application/json" };
  * @param {*} signingAccount - The signing account that generated the original signature, passed as signatureToVerify to this function.
  */
 async function verifyTerms(
-    optionTermsAsJson,
-    signingAccount,
+    optionTermsToVerify,
+    serverGivenSignedHash,
     managerAccount) {
-
-    // Hash & sign and ensure new signature matches buyer account
-    const optionTermsToVerify = optionTermsAsJson.terms;
-
-    const sig = `${await getSignedHashOfOptionTerms(JSON.stringify(optionTermsToVerify), signingAccount)}`;
-    const signatureToVerify = optionTermsAsJson.signature;
-    if (sig != signatureToVerify) {
-        const errMsg = `The new signature buyer [${sig}] does not match the expected signature [${signatureToVerify}]`;
-        throw new Error(errMsg);
-    }
 
     // Hash & sign and ensure new signature matches manager account
     const sigMgr = `${await getSignedHashOfOptionTerms(JSON.stringify(optionTermsToVerify), managerAccount)}`;
-    const mgrSignatureToVerify = optionTermsAsJson.managerSignature;
-    if (sigMgr != mgrSignatureToVerify) {
-        const errMsg = `The new signature manager [${sigMgr}] does not match the expected signature [${mgrSignatureToVerify}]`;
+    if (sigMgr != serverGivenSignedHash) {
+        const errMsg = `The new signature manager [${sigMgr}] does not match the expected signature [${serverGivenSignedHash}]`;
         throw new Error(errMsg);
     }
 

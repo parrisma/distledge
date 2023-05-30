@@ -11,13 +11,10 @@ const { expect } = require("chai");
 const crypto = require("crypto");
 const { TASK_NODE } = require("hardhat/builtin-tasks/task-names");
 const { ethers } = require("hardhat");
-//   const { MockAggregatorV3Interface } = require("@chainlink/contracts");
 
 /**
  * This suite tests the SimpleOption
  *
- * TODO: Fix MockAggregatorV3Interface dependency error
- * TODO: Complete test's use Integration.js for inspiration
  */
 describe("Simple Put Option Test Suite", function () {
   // Define accounts
@@ -73,7 +70,7 @@ describe("Simple Put Option Test Suite", function () {
     );
   });
 
-  this.beforeEach(async function () {});
+  this.beforeEach(async function () { });
 
   // Setup a contract based on premium in USD, settile in CNY
   beforeEach(async function () {
@@ -171,9 +168,9 @@ describe("Simple Put Option Test Suite", function () {
     const actualFXValue = await fxPrice.connect(data_vendor).getVerifiedValue();
     console.log(
       "FX price feed created with ticker " +
-        (await fxPrice.getTicker()) +
-        " with initial rate " +
-        actualFXValue / 10 ** genericDecimals
+      (await fxPrice.getTicker()) +
+      " with initial rate " +
+      actualFXValue / 10 ** genericDecimals
     );
 
     equityPrice = await EquityPrice.connect(data_vendor).deploy(
@@ -191,9 +188,9 @@ describe("Simple Put Option Test Suite", function () {
       .getVerifiedValue();
     console.log(
       "Underlying price feed created with ticker " +
-        (await equityPrice.getTicker()) +
-        " with initial price " +
-        actualValue / 10 ** genericDecimals
+      (await equityPrice.getTicker()) +
+      " with initial price " +
+      actualValue / 10 ** genericDecimals
     );
     SimplePutOption = await ethers.getContractFactory("SimplePutOption");
   });
@@ -243,9 +240,9 @@ describe("Simple Put Option Test Suite", function () {
       .getVerifiedValue();
     console.log(
       "Underlying price with ticker " +
-        (await equityPrice.getTicker()) +
-        " updated to " +
-        actualValue / 10 ** genericDecimals
+      (await equityPrice.getTicker()) +
+      " updated to " +
+      actualValue / 10 ** genericDecimals
     );
   }
 
@@ -260,9 +257,9 @@ describe("Simple Put Option Test Suite", function () {
     const actualFXValue = await fxPrice.connect(data_vendor).getVerifiedValue();
     console.log(
       "Forex rate with ticker " +
-        (await fxPrice.getTicker()) +
-        " updated to " +
-        actualFXValue / 10 ** genericDecimals
+      (await fxPrice.getTicker()) +
+      " updated to " +
+      actualFXValue / 10 ** genericDecimals
     );
   }
 

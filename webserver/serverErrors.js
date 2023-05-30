@@ -4,7 +4,8 @@ const {
     ERR_OPTION_ALREADY_EXISTS, ERR_DEFUNCT_DNE, ERR_OPTION_ID_NOT_SPECIFIED, ERR_NOT_IMPLEMENTED, ERR_PURGE,
     ERR_VALUE_OPTION_ID_NONEXISTENT, ERR_FAILED_TO_LOAD_TERMS, ERR_BAD_GET, ERR_UNKNOWN_COMMAND, ERR_OPTION_ID_NON_NUMERIC,
     ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL, ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, ERR_FAILED_LIST, ERR_BAD_TERMS,
-    ERR_FAILED_PERSIST, ERR_PERSIST_INIT, ERR_FAIL_CREATE, ERR_BAD_PULL
+    ERR_FAILED_PERSIST, ERR_PERSIST_INIT, ERR_FAIL_CREATE, ERR_BAD_PULL, ERR_UNKNOWN_OPTION_TYPE, ERR_BAD_VALUATION,
+    ERR_FAIL_EXERCISE
 } = require("@webserver/serverErrorCodes.js");
 const { guid } = require("@lib/guid");
 
@@ -130,6 +131,23 @@ errorsDict[ERR_BAD_PULL] =
     "errorMessage": `System error while pulling option terms`
 };
 
+errorsDict[ERR_BAD_VALUATION] =
+{
+    "errorCode": `${ERR_BAD_VALUATION}`,
+    "errorMessage": `System error while valuing option terms`
+};
+
+errorsDict[ERR_UNKNOWN_OPTION_TYPE] =
+{
+    "errorCode": `${ERR_UNKNOWN_OPTION_TYPE}`,
+    "errorMessage": `Cannot value, unknown option type`
+};
+
+errorsDict[ERR_FAIL_EXERCISE] =
+{
+    "errorCode": `${ERR_FAIL_EXERCISE}`,
+    "errorMessage": `Failed to exercise option`
+};
 
 /**
  * Deep copy a JSON object
@@ -211,6 +229,8 @@ function getErrorWithMessage(errorCode, message, err) {
 function handleJsonError(JsonErrorMessage, res) {
     const errorMessage = JSON.stringify(JsonErrorMessage);
     console.log(`Handle error [${errorMessage}]`);
+    res.setHeader("Access-Control-Allow-Origin", "*"); // This would be a risk in a full production setup
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET");
     res.writeHead(400, json_content);
     res.end(errorMessage);
 }

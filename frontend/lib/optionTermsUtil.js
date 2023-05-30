@@ -4,7 +4,7 @@
  * @param {*} command - The POST command to perform as defined in require("@webserver/serverResponse")
  * @returns optionTerms create request JSON 
  */
-function formatOptionTermsMessage(
+export function formatOptionTermsMessage(
     optionTermsAsJson,
     command
 ) {
@@ -16,7 +16,3 @@ function formatOptionTermsMessage(
     optionTermsMessage.terms = optionTermsAsJson
     return optionTermsMessage
 };
-
-module.exports = {
-    formatOptionTermsMessage,
-}

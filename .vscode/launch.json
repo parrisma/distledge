@@ -1,15 +1,26 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
+            "name": "FrontEnd",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}\\frontend"
+        },
+        {
+            "type": "node-terminal",
+            "name": "WebServer",
+            "request": "launch",
+            "command": "npx hardhat run --network localhost server.js",
+            "cwd": "${workspaceFolder}\\webserver"
+        },
+        {
+            "type": "node-terminal",
+            "name": "WebServerTest",
+            "request": "launch",
+            "command": "npx hardhat run --network localhost serverTest.js",
+            "cwd": "${workspaceFolder}\\webserver\\test"
         }
     ]
 }

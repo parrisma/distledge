@@ -1,10 +1,11 @@
 require('module-alias/register'); // npm i --save module-alias
 const { json_content } = require("@webserver/utility");
-const { OK_DEFUNCT, OK_CREATE_TERMS, OK_PULL_TERMS, OK_LIST_TERMS, OK_PURGE } = require("@webserver/serverResponseCodes");
+const { OK_DEFUNCT, OK_CREATE_TERMS, OK_PULL_TERMS, OK_LIST_TERMS, OK_PURGE, OK_VALUE, OK_EXERCISE } = require("@webserver/serverResponseCodes");
 const { deepCopyJson } = require("@webserver/serverErrors");
 
 const HTTP_GET = "get";
 const HTTP_POST = "post";
+const HTTP_OPTIONS = "options";
 
 const COMMAND = "command";
 
@@ -14,6 +15,7 @@ const COMMAND_VALUE = "value";
 const COMMAND_DEFUNCT = "defunct";
 const COMMAND_LIST = "list";
 const COMMAND_PURGE = "purge";
+const COMMAND_EXERCISE = "exercise";
 const COMMAND_ICON = "favicon.ico";
 
 var OKDict = {};
@@ -46,6 +48,18 @@ OKDict[OK_LIST_TERMS] =
 {
     "okCode": `${OK_LIST_TERMS}`,
     "okMessage": `Got List of all Option Terms`
+};
+
+OKDict[OK_VALUE] =
+{
+    "okCode": `${OK_VALUE}`,
+    "okMessage": `Valued Option OK`
+};
+
+OKDict[OK_EXERCISE] =
+{
+    "okCode": `${OK_EXERCISE}`,
+    "okMessage": `Valued Exercised OK`
 };
 
 /**
@@ -99,6 +113,8 @@ function getOK(OKCode, message) {
 function handleJsonOK(JsonOKMessage, res) {
     console.log(`Handled OK`);
     const okMessage = JSON.stringify(JsonOKMessage);
+    res.setHeader("Access-Control-Allow-Origin", "*"); // This would be a risk in a full production setup
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET");
     res.writeHead(200, json_content);
     res.end(okMessage);
 }
@@ -106,6 +122,7 @@ function handleJsonOK(JsonOKMessage, res) {
 module.exports = {
     HTTP_GET,
     HTTP_POST,
+    HTTP_OPTIONS,
     COMMAND,
     COMMAND_CREATE,
     COMMAND_DEFUNCT,
@@ -114,6 +131,7 @@ module.exports = {
     COMMAND_VALUE,
     COMMAND_LIST,
     COMMAND_PURGE,
+    COMMAND_EXERCISE,
     getOKWithOptionId,
     getOKWithMessage,
     getOK,

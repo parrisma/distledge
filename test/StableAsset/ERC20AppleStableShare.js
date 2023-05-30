@@ -2,7 +2,6 @@ const {
     time,
     loadFixture,
 } = require("@nomicfoundation/hardhat-network-helpers");
-const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
 
 describe("ERC20AppleStableShare", function () {
@@ -24,7 +23,7 @@ describe("ERC20AppleStableShare", function () {
             const { appleSS } = await loadFixture(deployERC20AppleStableShare);
             expect(await appleSS.unitsPerToken()).to.equal(100);
         });
-        it("Should have the isincode as US0378331005", async function () {
+        it("Should have the isin code as US0378331005", async function () {
             const { appleSS } = await loadFixture(deployERC20AppleStableShare);
             expect(await appleSS.assetCode()).to.equal("US0378331005");
         });

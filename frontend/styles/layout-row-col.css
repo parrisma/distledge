@@ -10,6 +10,18 @@
   clear: both;
 }
 
+.div-table-row-header {
+  display: table-row;
+  width: auto;
+  clear: both;
+  color: #1098FC;
+  font-weight: bold;
+}
+
+.div-table-row-basic {
+  display: table-row;
+}
+
 .div-table-col-fix {
   float: left;
   display: table-column;
@@ -42,6 +54,14 @@
 .div-table-col-fix-number {
   float: left;
   display: table-column;
+  width: 80px;
+  padding-right: 3px;
+  padding-left: 3px;
+}
+
+.div-table-col-fix-number-right {
+  float: right;
+  display: table-column;
   width: 100px;
   padding-right: 3px;
   padding-left: 3px;
@@ -53,8 +73,25 @@
   width: 330px;
 }
 
+.div-table-col-fix-mid {
+  float: left;
+  display: table-column;
+  width: 200px;
+}
+
+.div-table-col-fix-mid {
+  float: left;
+  display: table-column;
+  width: 200px;
+}
+
 .div-table-col {
   float: left;
+  display: table-column;
+  padding-right: 5px;
+}
+
+.div-table-col-basic {
   display: table-column;
 }
 
