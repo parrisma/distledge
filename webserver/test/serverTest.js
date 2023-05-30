@@ -247,6 +247,19 @@ async function main() {
         }
 
         /**
+         * Call ERC721 to get the NFT URI
+         */
+        var erc721Contract = contractDict[addressConfig.erc721OptionContractTypeOne];
+        optionURI = await erc721Contract.tokenURI(Number(optionIdToCheck));
+        console.log(`Option URI [${optionIdToCheck}] = [${optionURI}]`);
+
+        var ownerAddress = await erc721Contract.ownerOf(Number(optionIdToCheck));
+        console.log(`Option URI [${optionIdToCheck}] Owner Address [${ownerAddress}]`);
+
+        var balanceOfOwner = await erc721Contract.balanceOf(ownerAddress);
+        console.log(`Option URI [${optionIdToCheck}] Owner [${ownerAddress}] has balance [${balanceOfOwner}]`);
+
+        /**
          * TODO - Implement the exercise logic in the Web Server to exercise options, then call it from here are verify the options are exercised.
          *      - ERC721 should report no exists for option ID as it will have been burned
          *      - Web Server will report option does not exists for a get as it will have been deleted.
