@@ -3,7 +3,11 @@ const fs = require('fs');
 
 async function addTextToIPFS(data) {
   const { create } = await import('ipfs-http-client')
-  const ipfs = create(new URL(IPFS_URL));
+  const ipfs = create('/ip4/127.0.0.1/tcp/5001');
+  // const ipfs = create({
+  //   grpc: '/ip4/127.0.0.1/tcp/5003/ws',
+  //   http: '/ip4/127.0.0.1/tcp/5002/http'
+  // })
   const result = await ipfs.add(data);
   const ipfsHash = result.cid.toString();
   console.log('IPFS Hash:', ipfsHash);
@@ -12,7 +16,11 @@ async function addTextToIPFS(data) {
 
 async function getTextFromIPFS(ipfsHash) {
   const { create } = await import('ipfs-http-client')
-  const ipfs = create(new URL(IPFS_URL));
+  const ipfs = create('/ip4/127.0.0.1/tcp/5001');
+  // const ipfs = create({
+  //   grpc: '/ip4/127.0.0.1/tcp/5003/ws',
+  //   http: '/ip4/127.0.0.1/tcp/5002/http'
+  // })
   let text = ''
   const decoder = new TextDecoder()
   for await (const chunk of ipfs.cat(ipfsHash)) {
@@ -21,12 +29,16 @@ async function getTextFromIPFS(ipfsHash) {
     })
   }
   console.log("Retrieved file contents:", text);
-  return text;
+  return JSON.parse(text);
 }
 
 async function uploadImageToIPFS(imagePath) {
   const { create } = await import('ipfs-http-client')
-  const ipfs = create(new URL(IPFS_URL));
+  const ipfs = create('/ip4/127.0.0.1/tcp/5001');
+  // const ipfs = create({
+  //   grpc: '/ip4/127.0.0.1/tcp/5003/ws',
+  //   http: '/ip4/127.0.0.1/tcp/5002/http'
+  // })
 
   // Read the image file as a buffer
   const imageBuffer = fs.readFileSync(imagePath);

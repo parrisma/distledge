@@ -215,6 +215,7 @@ async function main() {
         /**
          * Check the saved terms match the signatire
          */
+
         if (!await verifyTerms(respJson.message.terms, respJson.message.hash, managerAccount)) {
             throw new Error("Failed to verify option terms were immutable and signed by both buyer and manager");
         } else {

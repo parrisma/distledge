@@ -1,5 +1,11 @@
 const fs = require('fs');
 
+async function startIpfs() {
+  const { create } = await import('ipfs-core')
+  const ipfs = await create()
+  console.log('IPFS node is ready');
+}
+
 async function addTextToIPFS(data) {
   const { create } = await import('ipfs-core')
   const ipfs = await create()
@@ -41,5 +47,6 @@ async function uploadImageToIPFS(imagePath) {
 module.exports = {
   addTextToIPFS,
   getTextFromIPFS,
-  uploadImageToIPFS
+  uploadImageToIPFS,
+  startIpfs
 };

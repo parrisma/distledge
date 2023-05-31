@@ -46,6 +46,7 @@ const { listHandler } = require("./commandList");
 const { defunctHandler } = require("./commandDefunct");
 const { purgeHandler } = require("@webserver/commandPurge");
 const { getDictionaryOfDeployedContracts } = require("@lib/deployedContracts");
+const { persistInitialize } = require("./serverPersist");
 /**
  * The dictionary of all deployed operational contracts.
  */
@@ -242,6 +243,7 @@ async function main() {
     [managerAccount] = await namedAccounts(addressConfig); // This is the dApp account we use to perform management functions.
     contractDict = await getDictionaryOfDeployedContracts(addressConfig);
     console.log(`Server Listening on [http://localhost:${serverConfig.port}]`);
+    // await persistInitialize();
     http.createServer(requestListener).listen(serverConfig.port);
 }
 
