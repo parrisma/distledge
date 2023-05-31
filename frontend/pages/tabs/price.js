@@ -1,7 +1,7 @@
-import Price from "../components/Price";
-import { addressConfig } from "../constants";
+import Price from "../../components/Price";
+import { addressConfig } from "../../constants";
 
-const Contract = (props) => {
+const PricePage = (props) => {    
 
     return (
         <div>
@@ -59,4 +59,4 @@ const Contract = (props) => {
     );
 };
 
-export default Contract;
+export default PricePage;

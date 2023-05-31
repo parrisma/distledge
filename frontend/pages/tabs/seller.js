@@ -1,26 +1,34 @@
-import SimpleOption from "../components/SimpleOption";
+import SimpleOption from "../../components/SimpleOption";
 import { useMoralis } from "react-moralis";
 import { useState, useEffect } from "react";
-import { addressConfig } from "../constants";
-import { OptionTypeOneTermsAreValid } from "../lib/ERC721Util";
-import OptionList from "../components/OptionList";
+import { addressConfig } from "../../constants";
+import OptionList from "../../components/OptionList";
+import { OptionTypeOneTermsAreValid } from "../../lib/ERC721Util";
+
+import { useMintedOptionContext } from "../../context/mintedOption";
+import { useConsoleLogContext } from "../../context/consoleLog";
 
 const Contract = (props) => {
 
+    const [logs,setLogs] = useConsoleLogContext()
+    function appendLogs(textLine){
+        logs.push(textLine);
+        setLogs(logs.slice(-10))
+    }
+
     const { isWeb3Enabled } = useMoralis();
     const sellerAccount = addressConfig.sellerAccount.accountAddress.toString().toUpperCase();
-    const [upd, setUpd] = useState(1);// Trigger re-render
-
-
+    const [upd, setUpd] = useState(1);
+    const [mintedOpt,setMintedOpt] = useMintedOptionContext();
 
     function offerOption(optionTermsAsJson) {
         const [valid, msg] = OptionTypeOneTermsAreValid(optionTermsAsJson);
         if (valid) {
-            props.handleLogChange(`Terms valid [${valid}] Offering option`);
-            props.optionListForOffer.push(optionTermsAsJson);
-            props.setOptionListForOffer(props.optionListForOffer);
+            appendLogs(`Terms valid [${valid}] Offering option`);
+            mintedOpt.push(optionTermsAsJson);
+            setMintedOpt(mintedOpt);
         } else {
-            props.handleLogChange(`Terms in-valid [${valid}] with message [${msg}]`);
+            appendLogs(`Terms in-valid [${valid}] with message [${msg}]`);
         }
         setUpd(upd + 1);
     }
@@ -31,12 +39,12 @@ const Contract = (props) => {
      */
     function handleDel(uniqueId) {
         // TODO - Implement Delete from Offered Options List - by callback into parent where list is kept
-        props.handleLogChange(`Delete [${uniqueId}] from list`);
+        appendLogs(`Delete [${uniqueId}] from list`);
     }
 
     useEffect(() => {
-        console.log(`Re Render [${props.optionListForOffer.length}]`);
-    }, [isWeb3Enabled, props.optionListForOffer]);
+        appendLogs(`Re Render [${mintedOpt.length}]`);
+    }, [isWeb3Enabled, mintedOpt]);
 
     return (
         <div className="resizable">
@@ -55,18 +63,18 @@ const Contract = (props) => {
                                         <h2 className="header-2">Print Option for Sale</h2>
                                         <SimpleOption
                                             handleOfferOption={offerOption}
-                                            handleLogChange={props.handleLogChange} />
+                                            handleLogChange={appendLogs}/>
                                     </div>
                                 </div>
                                 <div className="div-table-col">
                                     <div className="pane-standard">
-                                        <h2 className="header-2">Options Offered for Sale</h2>
+                                        <h2 className="header-2">Options Offered for Sale</h2>                                        
                                         <OptionList
                                             offered={true}
-                                            offeredOptionList={props.optionListForOffer}
+                                            offeredOptionList={mintedOpt}
                                             asSeller={true}
                                             handleDel={handleDel}
-                                            handleLogChange={props.handleLogChange} />
+                                            handleLogChange={appendLogs}/>
                                     </div>
                                 </div>
                             </div>

@@ -1,19 +1,28 @@
 import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
-import AccountDropDown from "../components/dropdown/AccountsDropDown";
-import OptionList from "../components/OptionList";
+import AccountDropDown from "../../components/dropdown/AccountsDropDown";
+import OptionList from "../../components/OptionList";
+import { useMintedOptionContext } from "../../context/mintedOption";
+import { useConsoleLogContext } from "../../context/consoleLog";
 
-const Contract = (props) => {
+const Contract = (props) => {    
 
+    const [logs,setLogs] = useConsoleLogContext()
+    function appendLogs(textLine){
+        logs.push(textLine);
+        setLogs(logs.slice(-10))
+    }
+
+    const [mintedOpt] = useMintedOptionContext();    
     const { isWeb3Enabled } = useMoralis();
     var [buyerAccount, setBuyerAccount] = useState("?");
 
     async function update(newAccountId) {
         if (isWeb3Enabled) {
             setBuyerAccount(newAccountId)
-            console.log(`New Buyer Account: [${buyerAccount}]`);
+            appendLogs([`New Buyer Account: [${buyerAccount}]`])            
         } else {
-            console.log(`Buyer Tab: Not Web3 Connected`);
+            appendLogs([`Buyer Tab: Not Web3 Connected`])            
         }
     }
 
@@ -21,13 +30,13 @@ const Contract = (props) => {
      * Exercise the option of the given Id
      * @param {*} optionId - The Option Id to Exercise
      */
-    function handleExercise(optionId) {
+    function handleExercise(optionId) {    
         /**
          *  TODO - Implement the exercise logic on the Web Server and call it from here
          *       - This means assigning the option NFT back to the seller & burning it
          *       - move the option value (if > 0) from seller to buyer
          */
-        props.handleLogChange(`Exercise [${optionId}] <not implemented yet>`);
+        appendLogs(`Exercise [${optionId}] <not implemented yet>`);
     }
 
     /**
@@ -40,7 +49,7 @@ const Contract = (props) => {
          *       - This means extending the create logic to assign the option NFT
          *       - to the buyer and move the option premium from buyer to seller.
          */
-        props.handleLogChange(`Buy [${uniqueId}] for account [${buyerAccount}] <not implemented yet>`);
+        appendLogs(`Buy [${uniqueId}] for account [${buyerAccount}] <not implemented yet>`);        
     }
 
     useEffect(() => {
@@ -67,18 +76,18 @@ const Contract = (props) => {
                                             buyerAccount={buyerAccount}
                                             minted={true}
                                             handleExercise={handleExercise}
-                                            handleLogChange={props.handleLogChange} />
+                                            handleLogChange={appendLogs} />
                                     </div>
                                 </div>
                                 <div className="div-table-col">
                                     <div className="pane-standard">
-                                        <h2 className="header-2">Options Offered for Sale</h2>
+                                        <h2 className="header-2">Options Offered for Sale</h2>                                    
                                         <OptionList
                                             offered={true}
-                                            offeredOptionList={props.optionListForOffer}
+                                            offeredOptionList={mintedOpt}
                                             handleBuy={handleBuy}
                                             asSeller={false}
-                                            handleLogChange={props.handleLogChange} />
+                                            handleLogChange={appendLogs}/>
                                     </div>
                                 </div>
                             </div>
