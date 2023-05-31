@@ -14,12 +14,11 @@ const Contract = (props) => {
             const res = JSON.parse(await getERC721MintedOptionList());
             if (res.hasOwnProperty('okCode')) {
                 setOptionList(res.message.terms);
-                console.log(JSON.stringify(optionList, null, 2));
             } else {
-                console.log(`Failed to get OptionList from WebServer [${res.errorCode}]`);
+                props.handleLogChange(`Failed to get OptionList from WebServer [${res.errorCode}]`);
             }
         } else {
-            console.log(`OptionList: Not Web3 Connected`);
+            props.handleLogChange(`OptionList: Not Web3 Connected`);
         }
     }
 
@@ -36,13 +35,30 @@ const Contract = (props) => {
     return (
         <div className="option-list">
             {optionList !== undefined && optionList.length > 0 && props.minted === true ? (
-                <ul>{optionList.map((item, index) => <li key={index}><MintedOption optionId={item.optionId} rowNum={index} handleExercise={props.handleExercise} /></li>)}</ul>
+                <ul>{optionList.map((item, index) => <li key={index}><MintedOption
+                    optionId={item.optionId}
+                    rowNum={index}
+                    handleExercise={props.handleExercise}
+                    handleLogChange={props.handleLogChange} /></li>)}
+                </ul>
             ) : (``)}
             {optionList !== undefined && optionList.length > 0 && props.offered === true && props.asSeller === true ? (
-                <ul>{optionList.map((item, index) => <li key={index}><OfferedOption optionDetail={item} rowNum={index} handleAction={props.handleDel} action={`Delete`} /></li>)}</ul>
+                <ul>{optionList.map((item, index) => <li key={index}><OfferedOption
+                    optionDetail={item}
+                    rowNum={index}
+                    handleAction={props.handleDel}
+                    action={`Delete`}
+                    handleLogChange={props.handleLogChange} /></li>)}
+                </ul>
             ) : (``)}
             {optionList !== undefined && optionList.length > 0 && props.offered === true && props.asSeller === false ? (
-                <ul>{optionList.map((item, index) => <li key={index}><OfferedOption optionDetail={item} rowNum={index} handleAction={props.handleBuy} action={`Buy`} /></li>)}</ul>
+                <ul>{optionList.map((item, index) => <li key={index}><OfferedOption
+                    optionDetail={item}
+                    rowNum={index}
+                    handleAction={props.handleBuy}
+                    action={`Buy`}
+                    handleLogChange={props.handleLogChange} /></li>)}
+                </ul>
             ) : (``)}
         </div>
     );

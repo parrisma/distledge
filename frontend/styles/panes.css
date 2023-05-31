@@ -1,6 +1,14 @@
 .pane-standard {
-    height: 550px;
-    width: 950px;
+    height: 600px;
+    width: 850px;
+    overflow: auto;
+    border: 1px solid white;
+    resize: horizontal;
+}
+
+.pane-narrow {
+    height: 600px;
+    width: 600x;
     overflow: auto;
     border: 1px solid white;
     resize: horizontal;

@@ -201,6 +201,9 @@ async function main() {
     // Iterate the List of returned Options and verify
     for (let step = 0; step < arrayOfExistingOptionNFTs.length; step++) {
 
+        /**
+         * Create a new option, here and persist and mint it.
+         */
         const optionIdToCheck = arrayOfExistingOptionNFTs[step].optionId;
         resp = await getOptionById(optionIdToCheck);
         respJson = JSON.parse(resp);
@@ -209,12 +212,23 @@ async function main() {
             throw new Error(`Failed to pull option id [${optionIdToCheck}] with error ${respJson.errorMessage}`);
         }
 
+        /**
+         * Check the saved terms match the signatire
+         */
         if (!await verifyTerms(respJson.message.terms, respJson.message.hash, managerAccount)) {
             throw new Error("Failed to verify option terms were immutable and signed by both buyer and manager");
         } else {
             console.log(`Terms Verified for Option Id [${optionIdToCheck}]`);
         }
 
+        /**
+         * TODO - Implement the web server logic that transfer the NFT from seller to buyer & check here that all NFT's are
+         *      - owned by the buyer account.
+         */
+
+        /**
+         * Valuation By Post (offered options)
+         */
         valuation = await valueOptionByPOSTRequest(respJson.message.terms, contractDict);
         if (valuation.message.hasOwnProperty("value")) {
             console.log(`Value by POST: ${JSON.stringify(valuation.message.value, null, 2)} with parameters ${JSON.stringify(valuation.message.parameters, null, 2)}`);
@@ -222,12 +236,34 @@ async function main() {
             throw new Error(`Failed to value option id [${optionIdToCheck}] with error ${valuation.message.errorMessage}`);
         }
 
+        /**
+         * Valuation by Get (existing, minted options)
+         */
         valuation = await valueOptionById(optionIdToCheck);
         if (valuation.message.hasOwnProperty("value")) {
             console.log(`Value by Id: ${JSON.stringify(valuation.message.value, null, 2)} with parameters ${JSON.stringify(valuation.message.parameters, null, 2)}`);
         } else {
             throw new Error(`Failed to value option id [${optionIdToCheck}] with error ${valuation.message.errorMessage}`);
         }
+
+        /**
+         * Call ERC721 to get the NFT URI
+         */
+        var erc721Contract = contractDict[addressConfig.erc721OptionContractTypeOne];
+        optionURI = await erc721Contract.tokenURI(Number(optionIdToCheck));
+        console.log(`Option URI [${optionIdToCheck}] = [${optionURI}]`);
+
+        var ownerAddress = await erc721Contract.ownerOf(Number(optionIdToCheck));
+        console.log(`Option URI [${optionIdToCheck}] Owner Address [${ownerAddress}]`);
+
+        var balanceOfOwner = await erc721Contract.balanceOf(ownerAddress);
+        console.log(`Option URI [${optionIdToCheck}] Owner [${ownerAddress}] has balance [${balanceOfOwner}]`);
+
+        /**
+         * TODO - Implement the exercise logic in the Web Server to exercise options, then call it from here are verify the options are exercised.
+         *      - ERC721 should report no exists for option ID as it will have been burned
+         *      - Web Server will report option does not exists for a get as it will have been deleted.
+         */
 
         console.log(`Pulled, verified and valued Option ${optionIdToCheck} : ${respJson.message.terms.optionName}`);
     }

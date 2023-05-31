@@ -3,9 +3,18 @@ import { useMoralis } from "react-moralis";
 import { useState, useEffect } from "react";
 import { addressConfig } from "../../constants";
 import OptionList from "../../components/OptionList";
+import { OptionTypeOneTermsAreValid } from "../../lib/ERC721Util";
+
 import { useMintedOptionContext } from "../../context/mintedOption";
+import { useConsoleLogContext } from "../../context/consoleLog";
 
 const Contract = (props) => {
+
+    const [logs,setLogs] = useConsoleLogContext()
+    function appendLogs(textLine){
+        logs.push(textLine);
+        setLogs(logs.slice(-10))
+    }
 
     const { isWeb3Enabled } = useMoralis();
     const sellerAccount = addressConfig.sellerAccount.accountAddress.toString().toUpperCase();
@@ -13,10 +22,14 @@ const Contract = (props) => {
     const [mintedOpt,setMintedOpt] = useMintedOptionContext();
 
     function offerOption(optionTermsAsJson) {
-        console.log(`Option Offered: [${optionTermsAsJson.optionName}]`);
-        mintedOpt.push(optionTermsAsJson);
-        console.log(`Len :[${mintedOpt.length}]`);
-        setMintedOpt(mintedOpt);
+        const [valid, msg] = OptionTypeOneTermsAreValid(optionTermsAsJson);
+        if (valid) {
+            appendLogs(`Terms valid [${valid}] Offering option`);
+            mintedOpt.push(optionTermsAsJson);
+            setMintedOpt(mintedOpt);
+        } else {
+            appendLogs(`Terms in-valid [${valid}] with message [${msg}]`);
+        }
         setUpd(upd + 1);
     }
 
@@ -25,11 +38,12 @@ const Contract = (props) => {
      * @param {*} optionId - The Option Id to delete from sale list
      */
     function handleDel(uniqueId) {
-        console.log(`Delete [${uniqueId}] from list`);
+        // TODO - Implement Delete from Offered Options List - by callback into parent where list is kept
+        appendLogs(`Delete [${uniqueId}] from list`);
     }
 
     useEffect(() => {
-        console.log(`Re Render [${mintedOpt.length}]`);
+        appendLogs(`Re Render [${mintedOpt.length}]`);
     }, [isWeb3Enabled, mintedOpt]);
 
     return (
@@ -45,15 +59,22 @@ const Contract = (props) => {
                         <div className="div-table">
                             <div className="div-table-row">
                                 <div className="div-table-col">
-                                    <div className="pane-standard">
+                                    <div className="pane-narrow">
                                         <h2 className="header-2">Print Option for Sale</h2>
-                                        <SimpleOption handleOfferOption={offerOption} />
+                                        <SimpleOption
+                                            handleOfferOption={offerOption}
+                                            handleLogChange={appendLogs}/>
                                     </div>
                                 </div>
                                 <div className="div-table-col">
                                     <div className="pane-standard">
-                                        <h2 className="header-2">Options Offered for Sale</h2>
-                                        <OptionList offered={true} offeredOptionList={mintedOpt} asSeller={true} handleDel={handleDel} />
+                                        <h2 className="header-2">Options Offered for Sale</h2>                                        
+                                        <OptionList
+                                            offered={true}
+                                            offeredOptionList={mintedOpt}
+                                            asSeller={true}
+                                            handleDel={handleDel}
+                                            handleLogChange={appendLogs}/>
                                     </div>
                                 </div>
                             </div>

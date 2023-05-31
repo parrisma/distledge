@@ -1,3 +1,4 @@
+// Generate UUID codes if needed at this link [https://www.uuidgenerator.net/version4]
 const ERR_OPTION_ALREADY_EXISTS = "442ff1f3-e59c-4290-acbc-01acbcaba3c0";
 const ERR_DEFUNCT_DNE = "94d9d3b9-3eff-488a-afae-cf23954185f1";
 const ERR_OPTION_ID_NOT_SPECIFIED = "c47a1a75-c767-4c5b-952f-4531bb119e5d";
@@ -20,9 +21,7 @@ const ERR_FAIL_CREATE = "4f10a99c-bdb1-4213-9ece-9d9185efce98";
 const ERR_BAD_PULL = "1b9cf558-19bc-41f2-8155-8ea0971285a6";
 const ERR_UNKNOWN_OPTION_TYPE = "919b28c8-6770-4014-aecf-bf67f5464051";
 const ERR_BAD_VALUATION = "75b4819c-2d25-4c2b-b468-08a6a4780aba";
-//const XX = "0ee86a3e-a468-4e23-8560-ad5bcfcc1fe5";
-//const XX = "e7c13083-72c4-46b9-b260-323fc65b5815";
-
+const ERR_FAIL_EXERCISE = "0ee86a3e-a468-4e23-8560-ad5bcfcc1fe5";
 
 module.exports = {
     ERR_OPTION_ALREADY_EXISTS,
@@ -46,5 +45,6 @@ module.exports = {
     ERR_FAIL_CREATE,
     ERR_BAD_PULL,
     ERR_UNKNOWN_OPTION_TYPE,
-    ERR_BAD_VALUATION
+    ERR_BAD_VALUATION,
+    ERR_FAIL_EXERCISE
 };

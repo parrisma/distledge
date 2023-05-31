@@ -13,5 +13,10 @@ export function consoleTimeStamp() {
 */
 
 export function handleLogChange(logSetter, newLogMessage) {
-    logSetter(prevLog => `${prevLog}\n${consoleTimeStamp()} - ${newLogMessage}`);
+    try {
+        console.log(newLogMessage);
+        logSetter(prevLog => `${prevLog}\n${consoleTimeStamp()} - ${newLogMessage}`);
+    } catch (err) {
+        console.error(`Failed to write console message with error [${err.mesaage}]`);
+    }
 };

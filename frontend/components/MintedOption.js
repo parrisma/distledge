@@ -17,15 +17,15 @@ const Contract = (props) => {
                 if (valRes.hasOwnProperty('okCode')) {
                     setOptionValuation(valRes.message);
                 } else {
-                    console.log(`Failed to get OptionList from WebServer [${res.errorCode}]`);
+                    props.handleLogChange(`Failed to get OptionList from WebServer [${res.errorCode}]`);
                     setOptionValuation({});
                 }
             } else {
-                console.log(`Failed to get OptionList from WebServer [${res.errorCode}]`);
+                props.handleLogChange(`Failed to get OptionList from WebServer [${res.errorCode}]`);
                 setOptionDetail({});
             }
         } else {
-            console.log(`OptionList: Not Web3 Connected`);
+            props.handleLogChange(`OptionList: Not Web3 Connected`);
         }
     }
 
@@ -49,7 +49,7 @@ const Contract = (props) => {
                     <div className="div-table-col-fix-number">
                         Strike
                     </div>
-                    <div className="div-table-col-fix-number-right">
+                    <div className="div-table-col-fix-number">
                         Value
                     </div>
                     <div className="div-table-col">

@@ -18,11 +18,11 @@ const Contract = (props) => {
                 });
                 console.log(`Option Val [${JSON.stringify(optionValuation, null, 4)}]`);
             } else {
-                console.log(`Failed to get OptionList from WebServer [${res.errorCode}]`);
+                props.handleLogChange(`Failed to get OptionList from WebServer [${res.errorCode}]`);
                 setOptionValuation(emptyValuationResponse());
             }
         } catch (err) {
-            console.log(`Failed to value offered option by POST with [${err.message}]`);
+            props.handleLogChange(`Failed to value offered option by POST with [${err.message}]`);
         }
     }
 
@@ -37,8 +37,11 @@ const Contract = (props) => {
                     <div className="div-table-col-fix-mid">
                         Unique Id
                     </div>
-                    <div className="div-table-col-fix-wide">
+                    <div className="div-table-col-fix-mid">
                         Option Name
+                    </div>
+                    <div className="div-table-col-fix-number">
+                        Premium
                     </div>
                     <div className="div-table-col-fix-number">
                         Notional
@@ -46,7 +49,7 @@ const Contract = (props) => {
                     <div className="div-table-col-fix-number">
                         Strike
                     </div>
-                    <div className="div-table-col-fix-number-right">
+                    <div className="div-table-col-fix-number">
                         Value
                     </div>
                     <div className="div-table-col">
@@ -61,8 +64,11 @@ const Contract = (props) => {
                     <div className="div-table-col-fix-mid">
                         {props.optionDetail.uniqueId}
                     </div>
-                    <div className="div-table-col-fix-wide">
+                    <div className="div-table-col-fix-mid">
                         {props.optionDetail.optionName}
+                    </div>
+                    <div className="div-table-col-fix-number">
+                        {props.optionDetail.premium}
                     </div>
                     <div className="div-table-col-fix-number">
                         {props.optionDetail.notional}
