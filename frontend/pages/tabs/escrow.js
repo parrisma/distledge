@@ -1,8 +1,8 @@
-import StableToken from "../components/StableToken";
-import EscrowAccount from "../components/Escrow";
-import { addressConfig } from "../constants";
+import StableToken from "../../components/StableToken";
+import EscrowAccount from "../../components/Escrow";
+import { addressConfig } from "../../constants";
 
-const Contract = (props) => {
+const EscrowPage = (props) => {
 
     return (
         <div>
@@ -84,4 +84,4 @@ const Contract = (props) => {
     );
 };
 
-export default Contract;
+export default EscrowPage;

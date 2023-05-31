@@ -1,22 +1,22 @@
-import SimpleOption from "../components/SimpleOption";
+import SimpleOption from "../../components/SimpleOption";
 import { useMoralis } from "react-moralis";
 import { useState, useEffect } from "react";
-import { addressConfig } from "../constants";
-import OptionList from "../components/OptionList";
+import { addressConfig } from "../../constants";
+import OptionList from "../../components/OptionList";
+import { useMintedOptionContext } from "../../context/mintedOption";
 
 const Contract = (props) => {
 
     const { isWeb3Enabled } = useMoralis();
     const sellerAccount = addressConfig.sellerAccount.accountAddress.toString().toUpperCase();
     const [upd, setUpd] = useState(1);
-
-
+    const [mintedOpt,setMintedOpt] = useMintedOptionContext();
 
     function offerOption(optionTermsAsJson) {
         console.log(`Option Offered: [${optionTermsAsJson.optionName}]`);
-        props.optionListForOffer.push(optionTermsAsJson);
-        console.log(`Len :[${props.optionListForOffer.length}]`);
-        props.setOptionListForOffer(props.optionListForOffer);
+        mintedOpt.push(optionTermsAsJson);
+        console.log(`Len :[${mintedOpt.length}]`);
+        setMintedOpt(mintedOpt);
         setUpd(upd + 1);
     }
 
@@ -29,8 +29,8 @@ const Contract = (props) => {
     }
 
     useEffect(() => {
-        console.log(`Re Render [${props.optionListForOffer.length}]`);
-    }, [isWeb3Enabled, props.optionListForOffer]);
+        console.log(`Re Render [${mintedOpt.length}]`);
+    }, [isWeb3Enabled, mintedOpt]);
 
     return (
         <div className="resizable">
@@ -53,7 +53,7 @@ const Contract = (props) => {
                                 <div className="div-table-col">
                                     <div className="pane-standard">
                                         <h2 className="header-2">Options Offered for Sale</h2>
-                                        <OptionList offered={true} offeredOptionList={props.optionListForOffer} asSeller={true} handleDel={handleDel} />
+                                        <OptionList offered={true} offeredOptionList={mintedOpt} asSeller={true} handleDel={handleDel} />
                                     </div>
                                 </div>
                             </div>

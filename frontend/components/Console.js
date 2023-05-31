@@ -9,8 +9,13 @@ export default function Console(params) {
   return (
     <div className="console">
       <div ref={outputRef}      >
-        <pre>{params.outputContent}</pre>
+        <pre>{convConsoleLog(params.outputContent)}</pre>
       </div>
     </div>
   );
+}
+
+
+function convConsoleLog(logs){
+  return logs.join('\n')
 }

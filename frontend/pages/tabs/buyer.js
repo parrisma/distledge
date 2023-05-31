@@ -1,19 +1,32 @@
 import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
-import AccountDropDown from "../components/dropdown/AccountsDropDown";
-import OptionList from "../components/OptionList";
+import AccountDropDown from "../../components/dropdown/AccountsDropDown";
+import OptionList from "../../components/OptionList";
+import { useMintedOptionContext } from "../../context/mintedOption";
+import { useConsoleLogContext } from "../../context/consoleLog";
 
-const Contract = (props) => {
 
+
+
+
+const Contract = (props) => {    
+
+    const [logs,setLogs] = useConsoleLogContext()
+    function appendLogs(textLine){
+        logs.push(textLine);
+        setLogs(logs.slice(-10))
+    }
+        
+    const [mintedOpt] = useMintedOptionContext();    
     const { isWeb3Enabled } = useMoralis();
     var [buyerAccount, setBuyerAccount] = useState("?");
 
     async function update(newAccountId) {
         if (isWeb3Enabled) {
             setBuyerAccount(newAccountId)
-            console.log(`New Buyer Account: [${buyerAccount}]`);
+            appendLogs([`New Buyer Account: [${buyerAccount}]`])            
         } else {
-            console.log(`Buyer Tab: Not Web3 Connected`);
+            appendLogs([`Buyer Tab: Not Web3 Connected`])            
         }
     }
 
@@ -22,16 +35,16 @@ const Contract = (props) => {
      * @param {*} optionId - The Option Id to Exercise
      */
     function handleExercise(optionId) {
-        console.log(`Exercise [${optionId}]`);
+        appendLogs(`Exercise [${optionId}]`);
     }
 
     /**
      * Buy the option of the given Id
      * @param {*} optionId - The Option Id to Exercise
      */
-    function handleBuy(uniqueId) {
-        console.log(`Buy [${uniqueId}] for account [${buyerAccount}]`);
-    }
+    function handleBuy(uniqueId) {        
+        appendLogs(`Buy [${uniqueId}] for account [${buyerAccount}]`);
+    }    
 
     useEffect(() => {
     }, [isWeb3Enabled, buyerAccount]);
@@ -59,7 +72,7 @@ const Contract = (props) => {
                                 <div className="div-table-col">
                                     <div className="pane-standard">
                                         <h2 className="header-2">Options Offered for Sale</h2>
-                                        <OptionList offered={true} offeredOptionList={props.optionListForOffer} handleBuy={handleBuy} asSeller={false} />
+                                        <OptionList offered={true} offeredOptionList={mintedOpt} handleBuy={handleBuy} asSeller={false} />
                                     </div>
                                 </div>
                             </div>
