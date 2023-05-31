@@ -20,6 +20,7 @@ The project goal is to explore creating an on-chain market for financial contrac
 #### Market Participants
 
 In the example we have the following participants, all of who identify themselves with a secure on chain wallet. The wallet is both their identity on chain and also the place where ownership of digital assets are registered.
+
 | Participant | Role |
 | ----------| -----|
 | Seller | The seller of options |
