@@ -100,7 +100,7 @@ See [Meta Mask](start-ui.md#install-metamask) for how to connect Meta Mask to th
 
 ### 10. Go to Front End
 
-After all of this you can go to a browser and interact with our demo [http:/localhost:3000](http:/localhost:3000)
+After all of this you can go to a browser and interact with our demo [http://localhost:3000](http://localhost:3000)
 
 1. right click ```inspect``` to open up the developer window so you can see the console output and other in browser debugging support while developing the UI
-1. Hit the connect wallet button and login to your Metamask or other wallet service
+1. Hit the connect wallet button and login to your Metamask or other wallet service.
