@@ -19,18 +19,23 @@ const Contract = (props) => {
     const { isWeb3Enabled } = useMoralis();
     const sellerAccount = addressConfig.sellerAccount.accountAddress.toString().toUpperCase();
     const [upd, setUpd] = useState(1);
-    const [mintedOpt,setMintedOpt] = useMintedOptionContext();
+    const [mintedOptDict,setMintedOptDict] = useMintedOptionContext();
 
     function offerOption(optionTermsAsJson) {
         const [valid, msg] = OptionTypeOneTermsAreValid(optionTermsAsJson);
         if (valid) {
             appendLogs(`Terms valid [${valid}] Offering option`);
-            mintedOpt.push(optionTermsAsJson);
-            setMintedOpt(mintedOpt);
+            if(!(optionTermsAsJson.uniqueId in mintedOptDict))
+            {
+                mintedOptDict[optionTermsAsJson.uniqueId]=optionTermsAsJson            
+                setMintedOptDict(mintedOptDict);
+                appendLogs(`Add option [${optionTermsAsJson.uniqueId}]`);
+                setUpd(upd + 1);
+            }else
+                appendLogs(`option [${optionTermsAsJson.uniqueId}] exits already.`);
         } else {
             appendLogs(`Terms in-valid [${valid}] with message [${msg}]`);
-        }
-        setUpd(upd + 1);
+        }        
     }
 
     /**
@@ -39,12 +44,19 @@ const Contract = (props) => {
      */
     function handleDel(uniqueId) {
         // TODO - Implement Delete from Offered Options List - by callback into parent where list is kept
-        appendLogs(`Delete [${uniqueId}] from list`);
+        if((uniqueId in mintedOptDict))
+        {
+            delete mintedOptDict[uniqueId]
+            setMintedOptDict(mintedOptDict);
+            appendLogs(`Delete [${uniqueId}] from list`);
+            setUpd(upd - 1);
+        }        
+        
     }
 
     useEffect(() => {
-        appendLogs(`Re Render [${mintedOpt.length}]`);
-    }, [isWeb3Enabled, mintedOpt]);
+        appendLogs(`Re Render [${Object.keys(mintedOptDict).length}]`);
+    }, [isWeb3Enabled, mintedOptDict]);
 
     return (
         <div className="resizable">
@@ -71,7 +83,7 @@ const Contract = (props) => {
                                         <h2 className="header-2">Options Offered for Sale</h2>                                        
                                         <OptionList
                                             offered={true}
-                                            offeredOptionList={mintedOpt}
+                                            offeredOptionList={Object.values(mintedOptDict)}
                                             asSeller={true}
                                             handleDel={handleDel}
                                             handleLogChange={appendLogs}/>
