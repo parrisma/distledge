@@ -13,7 +13,7 @@ const Contract = (props) => {
         setLogs(logs.slice(-10))
     }
 
-    const [mintedOpt] = useMintedOptionContext();    
+    const [mintedOptDict] = useMintedOptionContext();    
     const { isWeb3Enabled } = useMoralis();
     var [buyerAccount, setBuyerAccount] = useState("?");
 
@@ -84,7 +84,7 @@ const Contract = (props) => {
                                         <h2 className="header-2">Options Offered for Sale</h2>                                    
                                         <OptionList
                                             offered={true}
-                                            offeredOptionList={mintedOpt}
+                                            offeredOptionList={Object.values(mintedOptDict)}
                                             handleBuy={handleBuy}
                                             asSeller={false}
                                             handleLogChange={appendLogs}/>
