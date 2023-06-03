@@ -5,4 +5,4 @@
 1. Using Web3, interface & bytecode to [deploy contracts](./web3-deploy.md)
 1. Find sizes of [complied contracts](./contract-size.md)
 1. Estimate [Gas costs](./gas-report.md) of contracts
-1. Install ipfs destop [Website](./ipfs-install.md)
+1. [IPFS access](./ipfs.md)
