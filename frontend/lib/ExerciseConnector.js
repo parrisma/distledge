@@ -1,10 +1,9 @@
-import { formatOptionTermsMessage } from "./optionTermsUtil";
 import { NFTServerBaseURI } from "./ERC721Util";
 
 function formatExerciseMessage(optionId, command) {
   var exerciseMessage = {
     command: `${command}`,
-    optionId: optionId,
+    id: optionId,
   };
 
   return exerciseMessage;

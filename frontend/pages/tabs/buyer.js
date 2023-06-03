@@ -9,16 +9,17 @@ import { sendExerciseRequest } from "../../lib/ExerciseConnector";
 import { getERC721MintedOptionList } from "../../lib/ERC721Util";
 
 const Contract = (props) => {
-  const [logs, setLogs] = useConsoleLogContext();
-  function appendLogs(textLine) {
+
+    const [logs,setLogs] = useConsoleLogContext()
+    function appendLogs(textLine){
     logs.push(textLine);
-    setLogs(logs.slice(-10));
+        setLogs(logs.slice(-10))
   }
 
   //State [Dictionary] for options offered by seller
-  const [offeredOptDict, setOfferedOptDict] = useOfferedOptionContext();
+    const [offeredOptDict,setOfferedOptDict] = useOfferedOptionContext();    
   //State [List] for minted options retrieved from block chain.
-  const [mintedOptList, setMintedOptList] = useState([]);
+    const [mintedOptList,setMintedOptList] = useState([]);
 
   const { isWeb3Enabled } = useMoralis();
   const NOT_SELECTED = "?";
@@ -26,14 +27,12 @@ const Contract = (props) => {
 
   async function getMinedOptionListAndUpt(buyerAccount) {
     if (isWeb3Enabled) {
-      appendLogs(`Calling WebServer to update list of minted Options`);
+            appendLogs(`Calling WebServer to update list of minted Options`)
       const res = JSON.parse(await getERC721MintedOptionList());
-      if (res.hasOwnProperty("okCode")) {
+            if (res.hasOwnProperty('okCode')) {                
         setMintedOptList(res.message.terms);
       } else {
-        appendLogs(
-          `Failed to get OptionList from WebServer [${res.errorCode}]`
-        );
+                appendLogs(`Failed to get OptionList from WebServer [${res.errorCode}]`);
       }
     } else {
       appendLogs(`OptionList: Not Web3 Connected`);
@@ -42,10 +41,10 @@ const Contract = (props) => {
 
   async function update(newAccountId) {
     if (isWeb3Enabled) {
-      setBuyerAccount(newAccountId);
-      appendLogs([`New Buyer Account: [${newAccountId}]`]);
+            setBuyerAccount(newAccountId)
+            appendLogs([`New Buyer Account: [${newAccountId}]`])            
     } else {
-      appendLogs([`Buyer Tab: Not Web3 Connected`]);
+            appendLogs([`Buyer Tab: Not Web3 Connected`])            
     }
   }
 
@@ -60,9 +59,6 @@ const Contract = (props) => {
      *       - move the option value (if > 0) from seller to buyer
      */
     alert("this is optionId:" + optionId);
-
-    console.log("hello");
-    appendLogs(`Exercise [${optionId}] <not implemented yet>`);
 
     sendExerciseRequest(optionId)
       .then((res) => {
@@ -83,46 +79,40 @@ const Contract = (props) => {
      *       - This means extending the create logic to assign the option NFT
      *       - to the buyer and move the option premium from buyer to seller.
      */
-    if (!(uniqueId in offeredOptDict)) {
+        if(!(uniqueId in offeredOptDict))
+        {
       appendLogs(`Option [${uniqueId}] is not found!`);
       return;
     }
 
-    if (NOT_SELECTED === buyerAccount) {
+        if(NOT_SELECTED === buyerAccount){
       appendLogs(`Please select a buyer account`);
       return;
     }
 
-    appendLogs(
-      `Request Mint & Transfer of Option [${uniqueId}] for account [${buyerAccount}]`
-    );
+        appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${buyerAccount}]`);
 
-    sendCreateOptionRequest(offeredOptDict[uniqueId])
-      .then((res) => {
-        appendLogs(
-          `[${uniqueId}] minted with NFT Id ${JSON.stringify(res.optionId)}!`
-        );
-        if (uniqueId in offeredOptDict) {
-          delete offeredOptDict[uniqueId];
+        sendCreateOptionRequest(offeredOptDict[uniqueId]).then((res)=>{
+            appendLogs(`[${uniqueId}] minted with NFT Id ${JSON.stringify(res.optionId)}!`);
+            if(uniqueId in offeredOptDict){
+                delete offeredOptDict[uniqueId]
           setOfferedOptDict(offeredOptDict);
-          appendLogs(
-            `[${uniqueId}] Deleted from offer list as it has been sold`
-          );
+                appendLogs(`[${uniqueId}] Deleted from offer list as it has been sold`);
         }
         getMinedOptionListAndUpt(buyerAccount);
-      })
-      .catch((err) => {
+        }            
+        ).catch((err)=>{
         appendLogs(`Failed to create option due to ${err}!`);
-      });
+        })
   }
 
   /**
    * component life cyble hook for construction
    */
   useEffect(() => {
-    appendLogs("Initialization to get minted options");
+        appendLogs('Initialization to get minted options');
     getMinedOptionListAndUpt(buyerAccount);
-  }, []);
+    },[])
 
   return (
     <div className="resizable">
@@ -130,11 +120,8 @@ const Contract = (props) => {
         <div className="div-table-row">
           <div className="div-table-col">
             <AccountDropDown
-              handleChange={(value) => {
-                update(value);
-              }}
-              placeholder={`Buyer Account`}
-            />
+                            handleChange={(value) => { update(value) }}
+                            placeholder={`Buyer Account`} />
           </div>
         </div>
         <div className="div-table-row">
@@ -149,8 +136,7 @@ const Contract = (props) => {
                       minted={true}
                       minedOptions={mintedOptList}
                       handleExercise={handleExercise}
-                      handleLogChange={appendLogs}
-                    />
+                                            handleLogChange={appendLogs} />
                   </div>
                 </div>
                 <div className="div-table-col">
@@ -161,8 +147,7 @@ const Contract = (props) => {
                       offeredOptionList={Object.values(offeredOptDict)}
                       handleBuy={handleBuy}
                       asSeller={false}
-                      handleLogChange={appendLogs}
-                    />
+                                            handleLogChange={appendLogs}/>
                   </div>
                 </div>
               </div>
