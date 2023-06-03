@@ -236,7 +236,6 @@ function handleJsonError(JsonErrorMessage, res) {
     res.setHeader("Access-Control-Allow-Origin", "*"); // This would be a risk in a full production setup
     res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization");
-    res.writeHead(200, json_content);
     res.writeHead(400, json_content);
     res.end(errorMessage);
 }
