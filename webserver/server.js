@@ -243,7 +243,7 @@ async function main() {
     [managerAccount] = await namedAccounts(addressConfig); // This is the dApp account we use to perform management functions.
     contractDict = await getDictionaryOfDeployedContracts(addressConfig);
     console.log(`Server Listening on [http://localhost:${serverConfig.port}]`);
-    // await persistInitialize();
+    await persistInitialize();
     http.createServer(requestListener).listen(serverConfig.port);
 }
 

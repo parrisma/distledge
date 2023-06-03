@@ -1,9 +1,11 @@
 const { addTextToIPFS, getTextFromIPFS, up, uploadImageToIPFS } = require("../ipfs/ipfsClient.js");
+const { startIpfs } = require("../ipfs/ipfsCore.js");
 
 async function main() {
-    const cid = await addTextToIPFS("Hello Digital Gargage team!");
+    await startIpfs();
+    const cid = await addTextToIPFS(JSON.stringify({"greeting": "Hello Digital Gargage team!"}));
     console.log(cid);
-    const text = await getTextFromIPFS(cid);
+    const text = await getTextFromIPFS(cid.toString());
     console.log(text);
     const cid2 = await uploadImageToIPFS("../icon/favicon.png");
     console.log(cid2);

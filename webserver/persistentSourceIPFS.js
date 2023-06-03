@@ -3,7 +3,7 @@
  */
 require('module-alias/register'); // npm i --save module-alias
 var fs = require('fs');
-const { addTextToIPFS, getTextFromIPFS } = require('./ipfs/ipfsClient.js'); 
+const { addTextToIPFS, getTextFromIPFS } = require('./ipfs/ipfsCore.js'); 
 const { startIpfs } = require('./ipfs/ipfsCore.js'); 
 var path = require('path');
 const { serverConfig } = require("@webserver/serverConfig");
@@ -183,6 +183,7 @@ async function persistOptionTermsIPFS(
     signedHash) {
     try {
         cid = await addTextToIPFS(JSON.stringify(termsAsJson));
+        console.log(cid)
         const optionTermsDirName = createOptionTermsDir(optionId);
         const optionTermsFileName = await fullPathAndNameOfOptionTermsJson(optionTermsDirName, signedHash);
         fs.writeFileSync(optionTermsFileName, cid)
@@ -231,7 +232,7 @@ async function persistGetOptionTermsIPFS(optionId) {
         const files = fs.readdirSync(optionTermsDirName(optionId));
         const optionTermsFileName = path.join(optionTermsDirName(optionId), files[0]);
         cid = fs.readFileSync(optionTermsFileName);
-        optionTermsAsJson = await getTextFromIPFS(cid);
+        optionTermsAsJson = await getTextFromIPFS(cid.toString());
         originalMangerSignedHash = getSignedHashFromOptionTermsFileName(optionTermsFileName);
     } catch (err) {
         throw new Error(`Failed to read option terms with error [${err.message}]`);

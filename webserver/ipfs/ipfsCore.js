@@ -2,37 +2,32 @@ const fs = require('fs');
 
 async function startIpfs() {
   const { create } = await import('ipfs-core')
-  const ipfs = await create()
+  ipfs = await create()
+  const config = await ipfs.config.getAll();
+  console.log(config) 
   console.log('IPFS node is ready');
 }
 
 async function addTextToIPFS(data) {
-  const { create } = await import('ipfs-core')
-  const ipfs = await create()
-  const result = await ipfs.add(data);
+  const result = await global.ipfs.add(data);
   const ipfsHash = result.cid.toString();
   console.log('IPFS Hash:', ipfsHash);
   return ipfsHash;
 }
 
 async function getTextFromIPFS(ipfsHash) {
-  const { create } = await import('ipfs-core')
-  const ipfs = await create()
   let text = ''
   const decoder = new TextDecoder()
-  for await (const chunk of ipfs.cat(ipfsHash)) {
+  for await (const chunk of global.ipfs.cat(ipfsHash)) {
     text += decoder.decode(chunk, {
       stream: true
     })
   }
   console.log("Retrieved file contents:", text);
-  return text;
+  return JSON.parse(text);
 }
 
 async function uploadImageToIPFS(imagePath) {
-  const { create } = await import('ipfs-core')
-  const ipfs = await create()
-
   // Read the image file as a buffer
   const imageBuffer = fs.readFileSync(imagePath);
 
