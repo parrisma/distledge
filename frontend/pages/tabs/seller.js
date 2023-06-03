@@ -5,7 +5,7 @@ import { addressConfig } from "../../constants";
 import OptionList from "../../components/OptionList";
 import { OptionTypeOneTermsAreValid } from "../../lib/ERC721Util";
 
-import { useMintedOptionContext } from "../../context/mintedOption";
+import { useOfferedOptionContext } from "../../context/offeredOption";
 import { useConsoleLogContext } from "../../context/consoleLog";
 
 const Contract = (props) => {
@@ -19,18 +19,23 @@ const Contract = (props) => {
     const { isWeb3Enabled } = useMoralis();
     const sellerAccount = addressConfig.sellerAccount.accountAddress.toString().toUpperCase();
     const [upd, setUpd] = useState(1);
-    const [mintedOpt,setMintedOpt] = useMintedOptionContext();
+    const [offeredOptDict,setOfferedOptDict] = useOfferedOptionContext();
 
     function offerOption(optionTermsAsJson) {
         const [valid, msg] = OptionTypeOneTermsAreValid(optionTermsAsJson);
         if (valid) {
             appendLogs(`Terms valid [${valid}] Offering option`);
-            mintedOpt.push(optionTermsAsJson);
-            setMintedOpt(mintedOpt);
+            if(!(optionTermsAsJson.uniqueId in offeredOptDict))
+            {
+                offeredOptDict[optionTermsAsJson.uniqueId]=optionTermsAsJson            
+                setOfferedOptDict(offeredOptDict);
+                appendLogs(`Add option [${optionTermsAsJson.uniqueId}]`);
+                setUpd(upd + 1);
+            }else
+                appendLogs(`option [${optionTermsAsJson.uniqueId}] exits already.`);
         } else {
             appendLogs(`Terms in-valid [${valid}] with message [${msg}]`);
-        }
-        setUpd(upd + 1);
+        }        
     }
 
     /**
@@ -39,12 +44,18 @@ const Contract = (props) => {
      */
     function handleDel(uniqueId) {
         // TODO - Implement Delete from Offered Options List - by callback into parent where list is kept
-        appendLogs(`Delete [${uniqueId}] from list`);
+        if((uniqueId in offeredOptDict))
+        {
+            delete offeredOptDict[uniqueId]
+            setOfferedOptDict(offeredOptDict);
+            appendLogs(`Delete [${uniqueId}] from list`);
+            setUpd(upd - 1);
+        }        
+        
     }
 
     useEffect(() => {
-        appendLogs(`Re Render [${mintedOpt.length}]`);
-    }, [isWeb3Enabled, mintedOpt]);
+    }, [isWeb3Enabled, offeredOptDict]);
 
     return (
         <div className="resizable">
@@ -71,7 +82,7 @@ const Contract = (props) => {
                                         <h2 className="header-2">Options Offered for Sale</h2>                                        
                                         <OptionList
                                             offered={true}
-                                            offeredOptionList={mintedOpt}
+                                            offeredOptionList={Object.values(offeredOptDict)}
                                             asSeller={true}
                                             handleDel={handleDel}
                                             handleLogChange={appendLogs}/>

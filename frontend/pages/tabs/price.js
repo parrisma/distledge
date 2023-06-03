@@ -1,7 +1,14 @@
 import Price from "../../components/Price";
 import { addressConfig } from "../../constants";
+import { useConsoleLogContext } from "../../context/consoleLog";
 
-const PricePage = (props) => {    
+const PricePage = (props) => {            
+
+    const [logs,setLogs] = useConsoleLogContext()
+    function appendLogs(textLine){  
+        logs.push(textLine);
+        setLogs(logs.slice(-50))
+    }
 
     return (
         <div>
@@ -15,7 +22,7 @@ const PricePage = (props) => {
                                     : null,
                                 type: "equity",
                             }}
-                            onAddInfo={props.handleLogChange}
+                            onAddInfo={appendLogs}
                         />
                     </div>
                     <div className="div-table-col-fix-wide">
@@ -26,7 +33,7 @@ const PricePage = (props) => {
                                     : null,
                                 type: "fx",
                             }}
-                            onAddInfo={props.handleLogChange}
+                            onAddInfo={appendLogs}
                         />
                     </div>
                 </div>
@@ -39,7 +46,7 @@ const PricePage = (props) => {
                                     : null,
                                 type: "equity",
                             }}
-                            onAddInfo={props.handleLogChange}
+                            onAddInfo={appendLogs}
                         />
                     </div>
                     <div className="div-table-col-fix-wide">
@@ -50,7 +57,7 @@ const PricePage = (props) => {
                                     : null,
                                 type: "fx",
                             }}
-                            onAddInfo={props.handleLogChange}
+                            onAddInfo={appendLogs}
                         />
                     </div>
                 </div>

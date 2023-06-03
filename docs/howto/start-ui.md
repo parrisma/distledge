@@ -13,7 +13,7 @@ cd ..
 
 ## Start the Hardhat node
 
-We first need to run up a stand alone Hardhat test network, as below. To do this we must start a new command console and change directory into the project root. 
+We first need to run up a stand alone Hardhat test network, as below. To do this we must start a new command console and change directory into the project root.
 
 This Hardhat network is set-up according to the details in ```hardhat.config.js```
 
@@ -57,7 +57,7 @@ The network name ```Hardhat```, is free text as a name for these settings, howev
 
 ![Metamask Network](../resources/meta-mask-add-hardhat.png)
 
-## Import the Test accounts from the Hardhat Test network.
+## Import the Test accounts from the Hardhat Test network
 
 You will need to import the test accounts from the hardhat test network started above. You will need the private keys of the accounts shown in the console when the network was started.
 
@@ -130,5 +130,5 @@ yarn dev
 2. Open VSCode with ./frontend/ as root directory.
 3. Choose debug configuration "attach debugger in front end" and Press F5
 4. Set your breakpoint in the frontend component.
-5. Access weg page http://localhost:3000 in chrome
+5. Access weg page [http://localhost:3000](http://localhost:3000) in chrome
 6. Your breakpoints are hit and execution is paused.

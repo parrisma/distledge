@@ -1,36 +1,22 @@
 import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
-import { getERC721MintedOptionList } from "../lib/ERC721Util";
 import MintedOption from "./MintedOption";
 import OfferedOption from "./OfferedOption";
 
 const Contract = (props) => {
 
     const { isWeb3Enabled } = useMoralis();
-    var [optionList, setOptionList] = useState([]);
-
-    async function update(buyerAccount) {
-        if (isWeb3Enabled) {
-            const res = JSON.parse(await getERC721MintedOptionList());
-            if (res.hasOwnProperty('okCode')) {
-                setOptionList(res.message.terms);
-            } else {
-                props.handleLogChange(`Failed to get OptionList from WebServer [${res.errorCode}]`);
-            }
-        } else {
-            props.handleLogChange(`OptionList: Not Web3 Connected`);
-        }
-    }
+    var [optionList, setOptionList] = useState([]);    
 
     useEffect(() => {
         if (props.minted) {
-            // Get the minted option details from server
-            update(props.buyerAccount);
+            // Get the offered option details as passed by properties
+            setOptionList(props.minedOptions);
         } else {
             // Get the offered option details as passed by properties
             setOptionList(props.offeredOptionList);
         }
-    }, [isWeb3Enabled, props.buyerAccount, props.offeredOptionList]);
+    }, [isWeb3Enabled, props.buyerAccount, props.offeredOptionList,props.minedOptions]);
 
     return (
         <div className="option-list">
