@@ -3,6 +3,14 @@ const fs = require('fs');
 async function startIpfs() {
   const { create } = await import('ipfs-core')
   ipfs = await create()
+  await ipfs.config.set('Addresses.API', '/ip4/127.0.0.1/tcp/5002');
+  await ipfs.config.set('Addresses.Gateway', '/ip4/127.0.0.1/tcp/9091');
+  const { HttpApi } = await import('ipfs-http-server')
+  const httpApi = new HttpApi(ipfs)
+  const { HttpGateway } = await import('ipfs-http-gateway')
+  const httpGateway = new HttpGateway(ipfs)
+  await httpApi.start()
+  await httpGateway.start()
   const config = await ipfs.config.getAll();
   console.log(config) 
   console.log('IPFS node is ready');

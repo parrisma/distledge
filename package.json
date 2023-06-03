@@ -26,6 +26,8 @@
     "hardhat-gas-reporter": "^1.0.9",
     "ipfs-core": "^0.17.0",
     "ipfs-http-client": "^60.0.0",
+    "ipfs-http-server": "^0.15.1",
+    "ipfs-http-gateway": "^0.13.1",
     "solidity-coverage": "^0.7.22",
     "ts-node": "^10.9.1",
     "typechain": "^8.1.1",
