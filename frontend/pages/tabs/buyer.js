@@ -21,11 +21,12 @@ const Contract = (props) => {
     const [mintedOptList,setMintedOptList] = useState([]);
 
     const { isWeb3Enabled } = useMoralis();
-    var [buyerAccount, setBuyerAccount] = useState("?");
+    const NOT_SELECTED = "?";
+    var [buyerAccount, setBuyerAccount] = useState(NOT_SELECTED);
     
     async function getMinedOptionListAndUpt(buyerAccount) {
         if (isWeb3Enabled) {
-            appendLogs(`Fetch minted options from web server.`)
+            appendLogs(`Calling WebServer to update list of minted Options`)
             const res = JSON.parse(await getERC721MintedOptionList());
             if (res.hasOwnProperty('okCode')) {                
                 setMintedOptList(res.message.terms);                
@@ -40,7 +41,7 @@ const Contract = (props) => {
     async function update(newAccountId) {
         if (isWeb3Enabled) {
             setBuyerAccount(newAccountId)
-            appendLogs([`New Buyer Account: [${buyerAccount}]`])            
+            appendLogs([`New Buyer Account: [${newAccountId}]`])            
         } else {
             appendLogs([`Buyer Tab: Not Web3 Connected`])            
         }
@@ -69,20 +70,25 @@ const Contract = (props) => {
          *       - This means extending the create logic to assign the option NFT
          *       - to the buyer and move the option premium from buyer to seller.
          */        
-        appendLogs(`Buy [${uniqueId}] for account [${buyerAccount}]`);
-        
         if(!(uniqueId in offeredOptDict))
         {
             appendLogs(`Option [${uniqueId}] is not found!`);
             return;
         }            
 
+        if(NOT_SELECTED === buyerAccount){
+            appendLogs(`Please select a buyer account`);
+            return;
+        }
+
+        appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${buyerAccount}]`);
+        
         sendCreateOptionRequest(offeredOptDict[uniqueId]).then((res)=>{
-            appendLogs(`[${uniqueId}] option is created ${JSON.stringify(res)}!`);
+            appendLogs(`[${uniqueId}] minted with NFT Id ${JSON.stringify(res.optionId)}!`);
             if(uniqueId in offeredOptDict){
                 delete offeredOptDict[uniqueId]
                 setOfferedOptDict(offeredOptDict);
-                appendLogs(`Delete [${uniqueId}] from list`);
+                appendLogs(`[${uniqueId}] Deleted from offer list as it has been sold`);
             }
             getMinedOptionListAndUpt(buyerAccount);            
         }            

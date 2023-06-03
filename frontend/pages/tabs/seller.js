@@ -55,7 +55,6 @@ const Contract = (props) => {
     }
 
     useEffect(() => {
-        appendLogs(`Re Render [${Object.keys(offeredOptDict).length}]`);
     }, [isWeb3Enabled, offeredOptDict]);
 
     return (
