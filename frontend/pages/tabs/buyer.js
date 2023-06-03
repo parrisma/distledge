@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import AccountDropDown from "../../components/dropdown/AccountsDropDown";
 import OptionList from "../../components/OptionList";
-import { useMintedOptionContext } from "../../context/mintedOption";
+import { useOfferedOptionContext } from "../../context/offeredOption";
 import { useConsoleLogContext } from "../../context/consoleLog";
+import { sendCreateOptionRequest } from "../../lib/CreateOptionConnector";
+import { getERC721MintedOptionList } from "../../lib/ERC721Util";
 
 const Contract = (props) => {    
 
@@ -13,10 +15,28 @@ const Contract = (props) => {
         setLogs(logs.slice(-10))
     }
 
-    const [mintedOptDict] = useMintedOptionContext();    
+    //State [Dictionary] for options offered by seller
+    const [offeredOptDict,setOfferedOptDict] = useOfferedOptionContext();    
+    //State [List] for minted options retrieved from block chain.
+    const [mintedOptList,setMintedOptList] = useState([]);
+
     const { isWeb3Enabled } = useMoralis();
     var [buyerAccount, setBuyerAccount] = useState("?");
-
+    
+    async function getMinedOptionListAndUpt(buyerAccount) {
+        if (isWeb3Enabled) {
+            appendLogs(`Fetch minted options from web server.`)
+            const res = JSON.parse(await getERC721MintedOptionList());
+            if (res.hasOwnProperty('okCode')) {                
+                setMintedOptList(res.message.terms);                
+            } else {
+                appendLogs(`Failed to get OptionList from WebServer [${res.errorCode}]`);
+            }
+        } else {
+            appendLogs(`OptionList: Not Web3 Connected`);
+        }
+    }    
+    
     async function update(newAccountId) {
         if (isWeb3Enabled) {
             setBuyerAccount(newAccountId)
@@ -48,12 +68,36 @@ const Contract = (props) => {
          *  TODO - Implement exercise buy logic in Web Server & call it from here.
          *       - This means extending the create logic to assign the option NFT
          *       - to the buyer and move the option premium from buyer to seller.
-         */
-        appendLogs(`Buy [${uniqueId}] for account [${buyerAccount}] <not implemented yet>`);        
+         */        
+        appendLogs(`Buy [${uniqueId}] for account [${buyerAccount}]`);
+        
+        if(!(uniqueId in offeredOptDict))
+        {
+            appendLogs(`Option [${uniqueId}] is not found!`);
+            return;
+        }            
+
+        sendCreateOptionRequest(offeredOptDict[uniqueId]).then((res)=>{
+            appendLogs(`[${uniqueId}] option is created ${JSON.stringify(res)}!`);
+            if(uniqueId in offeredOptDict){
+                delete offeredOptDict[uniqueId]
+                setOfferedOptDict(offeredOptDict);
+                appendLogs(`Delete [${uniqueId}] from list`);
+            }
+            getMinedOptionListAndUpt(buyerAccount);            
+        }            
+        ).catch((err)=>{
+            appendLogs(`Failed to create option due to ${err}!`);
+        })
     }
 
+    /**
+     * component life cyble hook for construction
+     */
     useEffect(() => {
-    }, [isWeb3Enabled, buyerAccount]);
+        appendLogs('Initialization to get minted options');
+        getMinedOptionListAndUpt(buyerAccount);
+    },[])
 
     return (
         <div className="resizable">
@@ -75,6 +119,7 @@ const Contract = (props) => {
                                         <OptionList
                                             buyerAccount={buyerAccount}
                                             minted={true}
+                                            minedOptions={mintedOptList}
                                             handleExercise={handleExercise}
                                             handleLogChange={appendLogs} />
                                     </div>
@@ -84,7 +129,7 @@ const Contract = (props) => {
                                         <h2 className="header-2">Options Offered for Sale</h2>                                    
                                         <OptionList
                                             offered={true}
-                                            offeredOptionList={Object.values(mintedOptDict)}
+                                            offeredOptionList={Object.values(offeredOptDict)}
                                             handleBuy={handleBuy}
                                             asSeller={false}
                                             handleLogChange={appendLogs}/>
