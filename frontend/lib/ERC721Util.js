@@ -12,7 +12,7 @@ async function fetchAsync(uri) {
     return data;
 }
 
-function NFTServerBaseURI() {
+export function NFTServerBaseURI() {
     return `http://localhost:${serverConfig.port}`;
 }
 

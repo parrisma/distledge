@@ -152,11 +152,12 @@ export default function Contract(props) {
                             });
                         }}
                     >
-                        {isLoading || isFetching ? (
+                        <div>Update</div>
+                        {/* {isLoading || isFetching ? (
                             <div className="button"></div>
                         ) : (
                             <div>Update</div>
-                        )}
+                        )} */}
                     </button>
                 </div>
             ) : (

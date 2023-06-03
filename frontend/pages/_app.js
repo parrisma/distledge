@@ -2,20 +2,20 @@ import "@/styles/globals.css";
 import { MoralisProvider } from "react-moralis";
 import { NotificationProvider } from "web3uikit";
 import Layout from "@/components/Layout";
-import { MintedOptionProvider } from "../context/mintedOption";
+import { OfferedOptionProvider } from "../context/offeredOption";
 import { ConsoleLogProvider } from "../context/consoleLog";
 
 export default function App({ Component, pageProps }) {
   return (    
       <MoralisProvider initializeOnMount={false}>
         <NotificationProvider>
-          <MintedOptionProvider>
+          <OfferedOptionProvider>
             <ConsoleLogProvider>
               <Layout>
                 <Component {...pageProps} />
               </Layout>
             </ConsoleLogProvider>
-          </MintedOptionProvider>
+          </OfferedOptionProvider>
         </NotificationProvider>
       </MoralisProvider>    
   );

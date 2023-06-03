@@ -1,8 +1,15 @@
 import StableToken from "../../components/StableToken";
 import EscrowAccount from "../../components/Escrow";
 import { addressConfig } from "../../constants";
+import { useConsoleLogContext } from "../../context/consoleLog";
 
 const EscrowPage = (props) => {
+
+    const [logs,setLogs] = useConsoleLogContext()
+    function appendLogs(textLine){  
+        logs.push(textLine);
+        setLogs(logs.slice(-50))
+    }
 
     return (
         <div>
@@ -16,7 +23,7 @@ const EscrowPage = (props) => {
                                     : null,
                                 type: "EscrowAccount",
                             }}
-                            onAddInfo={props.handleLogChange}
+                            onAddInfo={appendLogs}
                         />
                     </div>
                     <div className="div-table-col-fix-wide">
@@ -27,7 +34,7 @@ const EscrowPage = (props) => {
                                     : null,
                                 type: "usdStableCoin",
                             }}
-                            onAddInfo={props.handleLogChange}
+                            onAddInfo={appendLogs}
                         />
                     </div>
                 </div>
@@ -40,7 +47,7 @@ const EscrowPage = (props) => {
                                     : null,
                                 type: "EscrowAccount",
                             }}
-                            onAddInfo={props.handleLogChange}
+                            onAddInfo={appendLogs}
                         />
                     </div>
                     <div className="div-table-col-fix-wide">
@@ -51,7 +58,7 @@ const EscrowPage = (props) => {
                                     : null,
                                 type: "eurStableCoin",
                             }}
-                            onAddInfo={props.handleLogChange}
+                            onAddInfo={appendLogs}
                         />
                     </div>
                 </div>
@@ -64,7 +71,7 @@ const EscrowPage = (props) => {
                                     : null,
                                 type: "EscrowAccount",
                             }}
-                            onAddInfo={props.handleLogChange}
+                            onAddInfo={appendLogs}
                         />
                     </div>
                     <div className="div-table-col-fix-wide">
@@ -75,7 +82,7 @@ const EscrowPage = (props) => {
                                     : null,
                                 type: "cnyStableCoin",
                             }}
-                            onAddInfo={props.handleLogChange}
+                            onAddInfo={appendLogs}
                         />
                     </div>
                 </div>
