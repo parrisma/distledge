@@ -84,23 +84,6 @@ async function fullPathAndNameOfOptionTermsJson(
  */
 async function persistInitializeIPFS() {
     await startIpfs();
-    // try {
-    //     /**
-    //      * Ensure root storage folder exists
-    //      */
-    //     fs.mkdirSync(baseTermsDir());
-    //     if (!fs.existsSync(baseTermsDir())) {
-    //         throw getFullyQualifiedError(
-    //             ERR_PERSIST_INIT,
-    //             `Failed to create root directory for file system persistence [${baseTermsDir()}]`,
-    //             err);
-    //     }
-    // } catch (err) {
-    //     throw getFullyQualifiedError(
-    //         ERR_PERSIST_INIT,
-    //         `Failed to initialize persistent in File System [${err.message}]`,
-    //         err);
-    // }
 }
 
 

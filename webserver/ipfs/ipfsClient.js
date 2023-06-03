@@ -1,6 +1,5 @@
 const IPFS_URL = process.env.IPFS_URL || "http://localhost:5001";
 const fs = require('fs');
-const { url } = require('inspector');
 
 async function addTextToIPFS(data) {
   const result = await global.ipfs.add(data);
