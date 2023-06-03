@@ -83,7 +83,9 @@ const Contract = (props) => {
 
         appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${buyerAccount}]`);
         
-        sendCreateOptionRequest(offeredOptDict[uniqueId]).then((res)=>{
+        let optionTermsAsJson = offeredOptDict[uniqueId];
+        optionTermsAsJson.buyer = buyerAccount;
+        sendCreateOptionRequest(optionTermsAsJson).then((res)=>{
             appendLogs(`[${uniqueId}] minted with NFT Id ${JSON.stringify(res.optionId)}!`);
             if(uniqueId in offeredOptDict){
                 delete offeredOptDict[uniqueId]

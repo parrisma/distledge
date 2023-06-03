@@ -12,7 +12,7 @@ const {
 } = require("@webserver/serverResponse");
 const { OK_CREATE_TERMS } = require("@webserver/serverResponseCodes");
 const { addressConfig } = require("@webserver/constants");
-const { mintERC721OptionNFT, erc721OptionNFTExists } = require("@lib/contracts/Options/ERC721OptionContractTypeOne");
+const { mintERC721OptionNFT, erc721OptionNFTExists, settleERC721OptionNFT } = require("@lib/contracts/Options/ERC721OptionContractTypeOne");
 const { persistOptionTerms, persistOptionIdExists } = require("@webserver/serverPersist");
 const { ERR_FAIL_CREATE } = require("@webserver/serverErrorCodes");
 
@@ -38,6 +38,29 @@ async function mintNFTOption(
         throw new Error(`Failed to mint new NTF for Type One Option Contract - [${err.message}]`);
     }
     return [mintedOptionId, hashOfTerms, response];
+}
+
+async function settleNFTOption(
+    termsAsJson,
+    managerAccount,
+    mintedOptionId,
+    contractDict) {
+    try {
+        /**
+         * This is an async call to the contract on chain, the handler [handleOptionMintedEmittedEvent] 
+         * will catch the emitted event and process the rest of the request
+         */
+        await settleERC721OptionNFT(contractDict[addressConfig.erc721OptionContractTypeOne], 
+            contractDict[termsAsJson.premiumToken], 
+            managerAccount,
+            termsAsJson.seller,
+            termsAsJson.buyer,
+            termsAsJson.premiumToken,
+            termsAsJson.premium,
+            mintedOptionId);
+    } catch (err) {
+        throw new Error(`Failed to settle NTF for Type One Option Contract - [${err.message}]`);
+    }
 }
 
 /**
@@ -81,6 +104,8 @@ async function mintAndPersistOptionNFT(
              * TODO - The code needs adding that will transfer the Option NFT from the manager account to the buyer account
              *      - As well as the logic to transfer the premium from the buyer to the seller.
              */
+
+            await settleNFTOption(optionTerms, managerAccount, mintedOptionId, contractDict);
 
             /**
              * All, done OK
