@@ -106,6 +106,9 @@ function getOK(OKCode, message) {
 
 /**
  * Return a 200 (OK) response in <res> with the given Json message
+ *
+ * Note: There is a CORS error from Chrome unless the access control is opened up in teh header as below. In a
+ * production setting this would not be OK , but for this simple test set-up it's fine.
  * 
  * @param {*} JsonOKMessage - The Json message to return
  * @param {*} res - http response
@@ -114,7 +117,8 @@ function handleJsonOK(JsonOKMessage, res) {
     console.log(`Handled OK`);
     const okMessage = JSON.stringify(JsonOKMessage);
     res.setHeader("Access-Control-Allow-Origin", "*"); // This would be a risk in a full production setup
-    res.setHeader("Access-Control-Allow-Methods", "POST, GET");
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization");
     res.writeHead(200, json_content);
     res.end(okMessage);
 }
