@@ -76,7 +76,7 @@ function createOptionTermsDir(optionId) {
 async function fullPathAndNameOfOptionTermsJson(
     optionTermsDirName,
     signedHash) {
-    return path.join(optionTermsDirName, `${signedHash}.json`);
+    return path.join(optionTermsDirName, `${signedHash}`);
 }
 
 /**
@@ -101,7 +101,7 @@ async function persistListAllIPFS() {
                 const terms = fs.readdirSync(path.join(baseTermsDir(), `${value}`));
                 terms.forEach((value1, index1, array1) => {
                     const optionId = value;
-                    const contractHash = value1.substring(0, value1.length - 5);
+                    const contractHash = value1;
                     optionsList.terms.push({ "optionId": `${optionId}`, "hash": `${contractHash}` });
                 });
             }
