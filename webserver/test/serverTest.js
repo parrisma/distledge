@@ -113,14 +113,6 @@ async function persistOptionByPOSTRequest(
         fxRates[Math.floor(Math.random() * fxRates.length)],
     );
 
-    
-    const premiumToken = contractDict[optionAsJson.premiumToken];
-    const erc721OptionNFTContract = contractDict[addressConfig.erc721OptionContractTypeOne];
-    const premiumInDecimal = 10 ** Number(await premiumToken.decimals()) * Number(optionAsJson.premium);
-    console.log(`Authorizing premium payment of [${optionAsJson.premium}, ${premiumInDecimal} in decimals] from Buyer [${buyerAccount.address}] to Seller [${sellerAccount.address}]`);
-    
-    await premiumToken.connect(buyerAccount).approve(erc721OptionNFTContract.address, premiumInDecimal); // Authorize payment to ERC721 contract.
-
     var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_CREATE, buyerAccount.address);
 
     const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
