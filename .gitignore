@@ -24,3 +24,27 @@ deployments
 ## Test terms database
 **/terms
 
+frontend/constants/EquityPrice-bytecode.json
+frontend/constants/ERC20AppleStableShare-bytecode.json
+frontend/constants/ERC20CNYStableCoin-bytecode.json
+frontend/constants/ERC20EURStableCoin-bytecode.json
+frontend/constants/ERC20USDStableCoin-bytecode.json
+frontend/constants/FXDeal-bytecode.json
+frontend/constants/FXPrice-bytecode.json
+frontend/constants/HelloWorld-bytecode.json
+frontend/constants/SimpleOption-bytecode.json
+frontend/constants/SimplePutOption-bytecode.json
+
+webserver/constants/EquityPrice-bytecode.json
+webserver/constants/ERC20AppleStableShare-bytecode.json
+webserver/constants/ERC20CNYStableCoin-bytecode.json
+webserver/constants/ERC20EURStableCoin-bytecode.json
+webserver/constants/ERC20TeslaStableShare-bytecode.json
+webserver/constants/ERC20USDStableCoin-bytecode.json
+webserver/constants/ERC721OptionContractTypeOne-bytecode.json
+webserver/constants/ERC721OptionContractTypeOne.json
+webserver/constants/FXDeal-bytecode.json
+webserver/constants/FXPrice-bytecode.json
+webserver/constants/HelloWorld-bytecode.json
+webserver/constants/SimpleOption-bytecode.json
+webserver/constants/SimplePutOption-bytecode.json
