@@ -5,6 +5,12 @@ const { persistOptionTerms, persistOptionIdExists } = require("@webserver/server
 const { OK_EXERCISE } = require("@webserver/serverResponseCodes"); // OK code to use if all works OK
 const { ERR_FAIL_EXERCISE } = require("@webserver/serverErrorCodes"); // Error to report if exercise fails.
 
+const {
+    getOKWithMessage,
+    handleJsonOK
+} = require("@webserver/serverResponse");
+
+
 /**
  * Handle POST Exercise request
  * 
@@ -32,6 +38,9 @@ async function handlePOSTExerciseTermsRequest(
      * 3. Burn the NFT (ask ERC721)
      * 4. Delete the persisted option on the web server - this will need a new delete single option method adding to serverPersist.js (look at current purge all function)
      */
+
+    
+
     handleJsonOK(getOKWithMessage(OK_EXERCISE, `<Not yet implemented>`, termsAsJson.Id), res);
 }
 
