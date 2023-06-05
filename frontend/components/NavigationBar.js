@@ -6,12 +6,12 @@ const NavigationBar = (props) =>{
     return (
     <nav className='nav'>
       <ul >
-        <li >
+        {/* <li >
             <Link href="/">Home</Link>
         </li>        
         <li >
           <Link href="/tabs/escrow">Escrow</Link>
-        </li>
+        </li> */}
         <li >
           <Link href="/tabs/accounts">Acounts</Link>
         </li>
