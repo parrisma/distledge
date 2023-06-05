@@ -6,21 +6,21 @@
             "request": "launch",
             "name": "FrontEnd",
             "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}\\frontend"
+            "webRoot": "${workspaceFolder}/frontend"
         },
         {
             "type": "node-terminal",
             "name": "WebServer",
             "request": "launch",
             "command": "npx hardhat run --network localhost server.js",
-            "cwd": "${workspaceFolder}\\webserver"
+            "cwd": "${workspaceFolder}/webserver"
         },
         {
             "type": "node-terminal",
             "name": "WebServerTest",
             "request": "launch",
             "command": "npx hardhat run --network localhost serverTest.js",
-            "cwd": "${workspaceFolder}\\webserver\\test"
+            "cwd": "${workspaceFolder}/webserver/test"
         }
     ]
 }
