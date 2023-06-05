@@ -60,7 +60,6 @@ const Contract = (props) => {
      *       - This means assigning the option NFT back to the seller & burning it
      *       - move the option value (if > 0) from seller to buyer
      */
-    alert("this is optionId:" + optionId);
 
     sendExerciseRequest(optionId, buyerAccount)
       .then((res) => {
