@@ -10,8 +10,8 @@ import { useConsoleLogContext } from "../../context/consoleLog";
 
 const Contract = (props) => {
 
-    const [logs,setLogs] = useConsoleLogContext()
-    function appendLogs(textLine){
+    const [logs, setLogs] = useConsoleLogContext()
+    function appendLogs(textLine) {
         logs.push(textLine);
         setLogs(logs.slice(-10))
     }
@@ -19,24 +19,23 @@ const Contract = (props) => {
     const { isWeb3Enabled } = useMoralis();
     const sellerAccount = addressConfig.sellerAccount.accountAddress.toString().toUpperCase();
     const [upd, setUpd] = useState(1);
-    const [offeredOptDict,setOfferedOptDict] = useOfferedOptionContext();
+    const [offeredOptDict, setOfferedOptDict] = useOfferedOptionContext();
 
     function offerOption(optionTermsAsJson) {
-        optionTermsAsJson.seller = sellerAccount;
+        optionTermsAsJson.seller = addressConfig.sellerAccount.accountAddress.toString();
         const [valid, msg] = OptionTypeOneTermsAreValid(optionTermsAsJson);
         if (valid) {
             appendLogs(`Terms valid [${valid}] Offering option`);
-            if(!(optionTermsAsJson.uniqueId in offeredOptDict))
-            {
-                offeredOptDict[optionTermsAsJson.uniqueId]=optionTermsAsJson            
+            if (!(optionTermsAsJson.uniqueId in offeredOptDict)) {
+                offeredOptDict[optionTermsAsJson.uniqueId] = optionTermsAsJson
                 setOfferedOptDict(offeredOptDict);
                 appendLogs(`Add option [${optionTermsAsJson.uniqueId}]`);
                 setUpd(upd + 1);
-            }else
+            } else
                 appendLogs(`option [${optionTermsAsJson.uniqueId}] exits already.`);
         } else {
             appendLogs(`Terms in-valid [${valid}] with message [${msg}]`);
-        }        
+        }
     }
 
     /**
@@ -45,14 +44,13 @@ const Contract = (props) => {
      */
     function handleDel(uniqueId) {
         // TODO - Implement Delete from Offered Options List - by callback into parent where list is kept
-        if((uniqueId in offeredOptDict))
-        {
+        if ((uniqueId in offeredOptDict)) {
             delete offeredOptDict[uniqueId]
             setOfferedOptDict(offeredOptDict);
             appendLogs(`Delete [${uniqueId}] from list`);
             setUpd(upd - 1);
-        }        
-        
+        }
+
     }
 
     useEffect(() => {
@@ -75,18 +73,18 @@ const Contract = (props) => {
                                         <h2 className="header-2">Print Option for Sale</h2>
                                         <SimpleOption
                                             handleOfferOption={offerOption}
-                                            handleLogChange={appendLogs}/>
+                                            handleLogChange={appendLogs} />
                                     </div>
                                 </div>
                                 <div className="div-table-col">
                                     <div className="pane-standard">
-                                        <h2 className="header-2">Options Offered for Sale</h2>                                        
+                                        <h2 className="header-2">Options Offered for Sale</h2>
                                         <OptionList
                                             offered={true}
                                             offeredOptionList={Object.values(offeredOptDict)}
                                             asSeller={true}
                                             handleDel={handleDel}
-                                            handleLogChange={appendLogs}/>
+                                            handleLogChange={appendLogs} />
                                     </div>
                                 </div>
                             </div>
