@@ -113,6 +113,10 @@ async function persistOptionByPOSTRequest(
         fxRates[Math.floor(Math.random() * fxRates.length)],
     );
 
+    // Send seller and buyer account in request
+    optionAsJson.seller = sellerAccount.address;
+    optionAsJson.buyer = buyerAccount.address;
+
     var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_CREATE, buyerAccount.address);
 
     const rawResponse = await fetch(`${NFTServerBaseURI()}`, {

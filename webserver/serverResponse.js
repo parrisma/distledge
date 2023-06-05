@@ -1,6 +1,6 @@
 require('module-alias/register'); // npm i --save module-alias
 const { json_content } = require("@webserver/utility");
-const { OK_DEFUNCT, OK_CREATE_TERMS, OK_PULL_TERMS, OK_LIST_TERMS, OK_PURGE, OK_VALUE, OK_EXERCISE } = require("@webserver/serverResponseCodes");
+const { OK_DEFUNCT, OK_CREATE_TERMS, OK_PULL_TERMS, OK_LIST_TERMS, OK_PURGE, OK_VALUE, OK_EXERCISE, OK_DELETE } = require("@webserver/serverResponseCodes");
 const { deepCopyJson } = require("@webserver/serverErrors");
 
 const HTTP_GET = "get";
@@ -16,6 +16,7 @@ const COMMAND_DEFUNCT = "defunct";
 const COMMAND_LIST = "list";
 const COMMAND_PURGE = "purge";
 const COMMAND_EXERCISE = "exercise";
+const COMMAND_DELETE = "delete";
 const COMMAND_ICON = "favicon.ico";
 
 var OKDict = {};
@@ -61,6 +62,13 @@ OKDict[OK_EXERCISE] =
     "okCode": `${OK_EXERCISE}`,
     "okMessage": `Valued Exercised OK`
 };
+
+OKDict[OK_DELETE] =
+{
+    "okCode": `${OK_DELETE}`,
+    "okMessage": `Handled delete OK`
+};
+
 
 /**
  * Return OK JSON response message, with option Id
@@ -136,6 +144,7 @@ module.exports = {
     COMMAND_LIST,
     COMMAND_PURGE,
     COMMAND_EXERCISE,
+    COMMAND_DELETE,
     getOKWithOptionId,
     getOKWithMessage,
     getOK,

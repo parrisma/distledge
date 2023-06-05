@@ -5,7 +5,7 @@ const {
     ERR_VALUE_OPTION_ID_NONEXISTENT, ERR_FAILED_TO_LOAD_TERMS, ERR_BAD_GET, ERR_UNKNOWN_COMMAND, ERR_OPTION_ID_NON_NUMERIC,
     ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL, ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, ERR_FAILED_LIST, ERR_BAD_TERMS,
     ERR_FAILED_PERSIST, ERR_PERSIST_INIT, ERR_FAIL_CREATE, ERR_BAD_PULL, ERR_UNKNOWN_OPTION_TYPE, ERR_BAD_VALUATION,
-    ERR_FAIL_EXERCISE
+    ERR_FAIL_EXERCISE, ERR_FAIL_DELETE
 } = require("@webserver/serverErrorCodes.js");
 const { guid } = require("@lib/guid");
 
@@ -147,6 +147,12 @@ errorsDict[ERR_FAIL_EXERCISE] =
 {
     "errorCode": `${ERR_FAIL_EXERCISE}`,
     "errorMessage": `Failed to exercise option`
+};
+
+errorsDict[ERR_FAIL_DELETE] =
+{
+    "errorCode": `${ERR_FAIL_DELETE}`,
+    "errorMessage": `Failed to delete option`
 };
 
 /**
