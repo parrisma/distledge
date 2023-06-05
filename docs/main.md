@@ -94,7 +94,10 @@ It works as a single on-chain contract that in effect holds a list of NFT identi
 
 The option terms are held off chain in a WebServer managed by the seller. An [ERC721](https://eips.ethereum.org/EIPS/eip-721) extension is used that allows a [URL](https://en.wikipedia.org/wiki/URL) (web link) to be associated with every NFT. This way we can link the on-chain NFT with the option stored on the WebServer as the URI is the link that will recover the Option terms from the WebServer
 
-We need the option terms to be secure and immutable so they cannot be changed and that there is no dispute between buyer and seller. To do the the option URI includes a signed hash of the option terms. Where the terms are hashed and then signed by the seller. This way **anyone** including the buyer can verify that the option terms recovered from the WebServer are the same as those agreed originally and further they can verify the terms were signed by the seller. As ERC721 contract does not allow the URI to be updated once the NFT is minted the URI becomes an immutable 
+We need the option terms to be secure and immutable so they cannot be changed and that there is no dispute between buyer and seller. To do the the option URI includes a signed hash of the option terms. Where the terms are hashed and then signed by the seller. This way **anyone** including the buyer can verify that the option terms recovered from the WebServer are the same as those agreed originally and further they can verify the terms were signed by the seller. As ERC721 contract does not allow the URI to be updated once the NFT is minted the URI becomes an immutable.
+
+
+
 record that can find and verify the terms of the option for the life of the option.
 
 ### Selling
@@ -127,7 +130,7 @@ This is managed on the user interface [buyer view](./interface/buyer.md) view.
 1. At this point any residual value is exchanged between buyer and seller.
     1. This is done on chain and settlement is in terms of on-chain token: Stable Coin or Stable-Share
     2. Here is the key value of on-chain contracts as settlement is direct between the parties
-1. With the residual value settled the option must be deleted.
+1. With the residual value [settled](#settlement) the option must be deleted.
    1. The seller removes the terms from the WebServer & instructs the ERC721 contract to burn the relevant NFT Id.
    2. At this point the binding dependency is terminated
    3. It is also at this point that in financial terms value flows and as such would be the point tax and other regular processes would kick in.

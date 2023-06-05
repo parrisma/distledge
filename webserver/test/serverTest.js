@@ -86,9 +86,15 @@ async function valueOptionById(optionId) {
  * Persist the given option terms
  * (Note: nopt option details are passed as the option terms are generated randomly)
  * 
+ * @param {*} SellerAccount - The account that is selling the option. 
+ * @param {*} buyerAccount - The account that is buying the option.
+ * @param {*} contractDict - The dictionary of deployed contracts
  * @returns optionId 
  */
-async function persistOptionByPOSTRequest() {
+async function persistOptionByPOSTRequest(
+    sellerAccount,
+    buyerAccount,
+    contractDict) {
 
     const stableCoins = getAllCoins(addressConfig);
     const fxRates = getAllFX(addressConfig);
@@ -107,7 +113,7 @@ async function persistOptionByPOSTRequest() {
         fxRates[Math.floor(Math.random() * fxRates.length)],
     );
 
-    var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_CREATE);
+    var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_CREATE, buyerAccount.address);
 
     const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
         method: 'POST',
@@ -159,7 +165,7 @@ async function main() {
      */
     const contractDict = await getDictionaryOfDeployedContracts(addressConfig);
 
-    const numOptionsToCreate = 10;
+    const numOptionsToCreate = 1;
     console.log(`\nUsing these SharedConfig settings :\n ${JSON.stringify(addressConfig, null, 2)}`);
 
     // Purge any existing contracts
@@ -172,7 +178,7 @@ async function main() {
     // Mint & Persist the prescribed number of new (random) contracts
     const [managerAccount, stableCoinIssuer, dataVendor, optionSeller, optionBuyer] = await namedAccounts(addressConfig);
     for (let step = 0; step < numOptionsToCreate; step++) {
-        respJson = await persistOptionByPOSTRequest(step, optionBuyer);
+        respJson = await persistOptionByPOSTRequest(managerAccount, optionBuyer, contractDict);
         if (respJson.hasOwnProperty("errorCode")) {
             console.log(JSON.stringify(respJson, null, 2));
             throw new Error(`Failed to persist/mint Option terms as NFT ${resp.error}`);

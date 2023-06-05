@@ -22,6 +22,7 @@ const Contract = (props) => {
     const [offeredOptDict,setOfferedOptDict] = useOfferedOptionContext();
 
     function offerOption(optionTermsAsJson) {
+        optionTermsAsJson.seller = sellerAccount;
         const [valid, msg] = OptionTypeOneTermsAreValid(optionTermsAsJson);
         if (valid) {
             appendLogs(`Terms valid [${valid}] Offering option`);

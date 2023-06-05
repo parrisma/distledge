@@ -23,6 +23,15 @@ async function namedAccounts(sharedConfig) {
     return [escrow_manager, stable_token_issuer, data_vendor, option_seller, option_buyer];
 }
 
+async function getAccount(accountAddr) {
+    /**
+     * Get and allocate account on the network
+     */
+    const account = await hre.ethers.getSigner(accountAddr);
+    return account;
+}
+
 module.exports = {
-    namedAccounts
+    namedAccounts,
+    getAccount
 }
