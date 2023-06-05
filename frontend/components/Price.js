@@ -12,39 +12,44 @@ const Contract = (props) => {
 
   const [ticker, setTicker] = useState("?");
   const [verifiedValue, setVerifiedValue] = useState("0");
-  const [decimals, setDecimals] = useState("0");
+  const [decimals, setDecimals] = useState(0);
   const [description, setDescription] = useState("?");
   const dispatch = useNotification();
+  const [decimalsForCalc,setDecimalsForCalc] = useState([]);
+  const [symbolForCalc,setSymbolForCalc] = useState([]);
 
   const contractABI = getLevelContractABI(contractType);
   const [getTicker, isFetching, isLoading] = getTickerC(levelAddress, contractABI, true);
   const getLevelDetails = getLevelDetailsC(levelAddress, contractABI);
   const getVerifiedValue = getVerifiedValueC(levelAddress, contractABI);
   const getDecimals = getDecimalsC(levelAddress, contractABI);
+ 
+  function formatValue(value, decimals){
+    return Number(value) / 10 ** decimals
+  }
 
   async function updateUI() {
     if (isWeb3Enabled) {
       const _decimals = Number(await getDecimals());
       const [_ticker, _description, _live, _value, _lastUpdate] = await getLevelDetails();
       setDescription(_description.toString());
-      setTicker(_ticker.toString());
-      setVerifiedValue(Number(_value) / 10 ** _decimals);
+      setTicker(_ticker.toString());      
+      setVerifiedValue(formatValue(_value, _decimals));
       setDecimals(_decimals);
+      decimalsForCalc.push(_decimals);
+      setDecimalsForCalc(decimalsForCalc);
+      symbolForCalc.push(_ticker);
+      setSymbolForCalc(symbolForCalc);
     }
   }
 
   useEffect(() => {
-    updateUI(); // update immediately after render
-    const interval = setInterval(() => { updateUI(); }, 2000);
-    return () => {
-      clearInterval(interval); // Stop update after unmounted
-    };
-  }, [isWeb3Enabled]);
+    updateUI(); // update immediately once page is mounted.
+  }, []);
 
   const handleSuccess = async (tx) => {
     handleButtonClick(`Request price update ${tx}.`);
-    handleNewNotification();
-    //updateUI();
+    handleNewNotification();    
   };
 
   const handleNewNotification = () => {
@@ -76,11 +81,13 @@ const Contract = (props) => {
         newSigner;
       props.onAddInfo(info);
     };
-    const handleSecureLevelUpdate = async (
+    const handleSecureLevelUpdate = async (      
       value,
       event
     ) => {
-      let info = "Secure level updated to " + value;
+      let valueFormatted = formatValue(value, decimalsForCalc[0]);
+      let info = `Secure ${symbolForCalc[0]} level updated to ${valueFormatted}`;
+      setVerifiedValue(valueFormatted);      
       props.onAddInfo(info);
     };
     const setSecureLevelEvents = async () => {
