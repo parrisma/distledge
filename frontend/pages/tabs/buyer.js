@@ -60,7 +60,7 @@ const Contract = (props) => {
      */
     alert("this is optionId:" + optionId);
 
-    sendExerciseRequest(optionId)
+    sendExerciseRequest(optionId, buyerAccount)
       .then((res) => {
         appendLogs(`[${optionId}] has benn sent for exercise. !`);
       })
