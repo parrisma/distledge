@@ -29,7 +29,8 @@ const Contract = (props) => {
             appendLogs(`Calling WebServer to update list of minted Options`)
             const res = JSON.parse(await getERC721MintedOptionList());
             if (res.hasOwnProperty('okCode')) {                
-                setMintedOptList(res.message.terms);                
+                //appendLogs(`res ${JSON.parse(res.message.terms)}`);
+                setMintedOptList(res.message.terms.sort((a,b)=> parseInt(a.optionId)-parseInt(b.optionId)));                
             } else {
                 appendLogs(`Failed to get OptionList from WebServer [${res.errorCode}]`);
             }
