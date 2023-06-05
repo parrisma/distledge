@@ -15,7 +15,8 @@ const {
     persistPurgeAllFileSystem,
     persistListAllFileSystem,
     persistOptionIdExistsFileSystem,
-    persistGetOptionTermsFileSystem } = require("@webserver/persistentSourceFileSystem");
+    persistGetOptionTermsFileSystem,
+    persistDeleteOneTermFileSystem } = require("@webserver/persistentSourceFileSystem");
 
 /**
  * Mint a new NFT and persist the terms of teh option to match the ERC271 URI associated with the newly minted NFT
@@ -63,6 +64,22 @@ async function persistInitialize() {
 async function persistPurgeAll() {
     try {
         await persistPurgeAllFileSystem();
+    } catch (err) {
+        throw getFullyQualifiedError(
+            ERR_PURGE,
+            `Persistence Layer, Failed to purge all terms`,
+            err);
+    }
+}
+
+/**
+ * Delete one persistent terms by optionId.
+ * Note: This would never be needed in a production context, but this is used for clean start testing
+ *       in our demo dApp
+ */
+async function persistDeleteOneTerm(optionId) {
+    try {
+        await persistDeleteOneTermFileSystem(optionId);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_PURGE,
@@ -137,5 +154,6 @@ module.exports = {
     persistPurgeAll,
     persistListAll,
     persistOptionIdExists,
-    persistGetOptionTerms
+    persistGetOptionTerms,
+    persistDeleteOneTerm
 };

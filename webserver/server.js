@@ -30,7 +30,8 @@ const {
 const {
     HTTP_OPTIONS, HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
     COMMAND_VALUE, COMMAND_LIST, COMMAND_PURGE, COMMAND_EXERCISE, COMMAND,
-    handleJsonOK
+    handleJsonOK,
+    COMMAND_DELETE
 } = require("./serverResponse");
 const { namedAccounts } = require("@scripts/lib/accounts");
 const { addressConfig } = require("./constants");
@@ -43,6 +44,7 @@ const { handlePOSTCreateTermsRequest } = require("./commandCreate");
 const { handlePOSTExerciseTermsRequest } = require("./commandExercise");
 const { pullHandler } = require("./commandPull");
 const { listHandler } = require("./commandList");
+const { deleteHandler } = require("./commandDelete");
 const { defunctHandler } = require("./commandDefunct");
 const { purgeHandler } = require("@webserver/commandPurge");
 const { getDictionaryOfDeployedContracts } = require("@lib/deployedContracts");
@@ -118,8 +120,11 @@ function handleMethodGET(
                     case COMMAND_EXERCISE:
                         handleJsonError(`Exercise command only supported via POST`, res);
                         break;
-                    case COMMAND_CRATE:
+                    case COMMAND_CREATE:
                         handleJsonError(`Create command only supported via POST`, res);
+                        break;
+                    case COMMAND_DELETE:
+                        deleteHandler(uriParts, res);
                         break;
                     default:
                         handleJsonError(getErrorWithMessage(ERR_UNKNOWN_COMMAND, command), res);
