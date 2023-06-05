@@ -115,7 +115,7 @@ async function mintAndPersistOptionNFT(
             /**
              * We need a valid buyer account to have been passed
              */
-            const buyerAddress = termsAsJson.buyerAccount; // This is just the address, not teh account object.
+            const buyerAddress = optionTerms.buyer; // This is just the address, not teh account object.
             if (!isValidAddressFormat(buyerAddress)) {
                 throw new Error(`Invalid account passed as Option buyer [${buyerAddress}]`);
             }
