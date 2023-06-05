@@ -52,6 +52,7 @@ async function mintNFTOption(
 async function settleNFTOption(
     termsAsJson,
     managerAccount,
+    sellerAddress,
     buyerAddress,
     mintedOptionId,
     contractDict) {
@@ -60,7 +61,6 @@ async function settleNFTOption(
          * This is an async call to the contract on chain, the handler [handleOptionMintedEmittedEvent] 
          * will catch the emitted event and process the rest of the request
          */
-        const sellerAddress = managerAccount.address; // In this case the manager Account is the seller.
         await settleERC721OptionNFT(
             contractDict[addressConfig.erc721OptionContractTypeOne],
             contractDict[termsAsJson.premiumToken],
@@ -115,6 +115,15 @@ async function mintAndPersistOptionNFT(
             /**
              * We need a valid buyer account to have been passed
              */
+            const sellerAddress = optionTerms.seller; // This is just the address, not teh account object.
+            if (!isValidAddressFormat(sellerAddress)) {
+                throw new Error(`Invalid account passed as Option seller [${sellerAddress}]`);
+            }
+
+
+            /**
+             * We need a valid buyer account to have been passed
+             */
             const buyerAddress = optionTerms.buyer; // This is just the address, not teh account object.
             if (!isValidAddressFormat(buyerAddress)) {
                 throw new Error(`Invalid account passed as Option buyer [${buyerAddress}]`);
@@ -127,6 +136,7 @@ async function mintAndPersistOptionNFT(
             await settleNFTOption(
                 optionTerms,
                 managerAccount,
+                sellerAddress,
                 buyerAddress,
                 mintedOptionId,
                 contractDict);
