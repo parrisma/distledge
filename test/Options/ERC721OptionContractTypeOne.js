@@ -209,7 +209,7 @@ describe("ERC721 Option Test Suite", function () {
 
         const paymentAmount = 25;
         // Transfer will fail, if buyer does not have required funds authorized, for current owner to transfer
-        await expect(erc721OptionContractTypeOne.connect(owner).safeTransferOptionFrom(owner.address, traderOne.address, expectedOptionId, erc20USDStableCoin.address, paymentAmount)).to.be.revertedWith(
+        await expect(erc721OptionContractTypeOne.connect(owner).safeTransferOptionFrom(owner.address, traderOne.address, expectedOptionId, erc20USDStableCoin.address, paymentAmount, false)).to.be.revertedWith(
             "ERC20: insufficient allowance"
         );
 
@@ -224,7 +224,8 @@ describe("ERC721 Option Test Suite", function () {
             traderOne.address,
             expectedOptionId,
             erc20USDStableCoin.address,
-            paymentAmount)).to.be.revertedWith(
+            paymentAmount,
+            false)).to.be.revertedWith(
                 "ERC721: caller is not token owner or approved"
             );
 
@@ -239,7 +240,8 @@ describe("ERC721 Option Test Suite", function () {
             traderOne.address,
             expectedOptionId,
             erc20USDStableCoin.address,
-            paymentAmount)
+            paymentAmount,
+            false)
         )
             .to.emit(erc721OptionContractTypeOne, 'OptionTransfer')
             .withArgs(expectedOptionURI, owner.address, traderOne.address);
