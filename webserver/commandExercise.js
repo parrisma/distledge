@@ -1,6 +1,6 @@
 require('module-alias/register'); // npm i --save module-alias
 const { addressConfig } = require("@webserver/constants");
-const { mintERC721OptionNFT, erc721OptionNFTExists, transferOwnerToManagerAccount } = require("@lib/contracts/Options/ERC721OptionContractTypeOne"); // <- expose extra ERC721 calls here
+const { mintERC721OptionNFT, erc721OptionNFTExists, exerciseERC721OptionNFT} = require("@lib/contracts/Options/ERC721OptionContractTypeOne"); // <- expose extra ERC721 calls here
 const { persistOptionTerms, persistOptionIdExists, persistGetOptionTerms } = require("@webserver/serverPersist"); // <- new delete method added here
 const { OK_EXERCISE } = require("@webserver/serverResponseCodes"); // OK code to use if all works OK
 const { ERR_FAIL_EXERCISE } = require("@webserver/serverErrorCodes"); // Error to report if exercise fails.
@@ -19,19 +19,19 @@ const {
 /**
  * Handle POST Exercise request
  * 
- * @param {*} termsAsJson - The option terms as Json object
+ * @param {*} exerciseRequest - The exercise request as Json object
  * @param {*} managerAccount - The managing account
  * @param {*} contractDict - the dictionary of all required and deployed utility contracts 
  * @param {*} req - http request
  * @param {*} res - http response
  */
 async function handlePOSTExerciseTermsRequest(
-    termsAsJson,
+    exerciseRequest,
     managerAccount,
     contractDict,
     req, res) {
 
-    console.log(`Handle POST Exercise Terms Request for Id [${termsAsJson.id}]`);
+    console.log(`Handle POST Exercise Terms Request for Id [${exerciseRequest.id}]`);
 
     /**
      * TODO - Implement Exercise logic and call it from the Exercise button on the Buyer Tab in front end.
@@ -44,18 +44,25 @@ async function handlePOSTExerciseTermsRequest(
      * 4. Delete the persisted option on the web server - this will need a new delete single option method adding to serverPersist.js (look at current purge all function)
      */
     
-    console.log(termsAsJson);
-    optionId = termsAsJson.id;
-
+    console.log(exerciseRequest);
+    optionId = exerciseRequest.id;
     
-    var temp = await persistGetOptionTerms(optionId);
+    var optionTerm = await persistGetOptionTerms(optionId);
+    console.log(optionTerm);
+    var valueToSettle = '2';
+
+    await exerciseERC721OptionNFT(
+        contractDict[addressConfig.erc721OptionContractTypeOne],
+        contractDict[optionTerm[0].settlementToken],
+        managerAccount,
+        optionTerm[0].seller, 
+        exerciseRequest.buyerAccount, 
+        exerciseRequest.id,   
+        optionTerm[0].settlementToken,
+        valueToSettle
+    );
     
-    transferOwnerToManagerAccount(contractDict[temp[0].settlementToken], managerAccount)
-
-    console.log(temp);
-
-
-    handleJsonOK(getOKWithMessage(OK_EXERCISE, `<Not yet implemented>`, termsAsJson.Id), res);
+    handleJsonOK(getOKWithMessage(OK_EXERCISE, `exercise is done.`, exerciseRequest.id), res);
 }
 
 module.exports = {

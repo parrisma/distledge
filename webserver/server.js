@@ -44,7 +44,6 @@ const { handlePOSTCreateTermsRequest } = require("./commandCreate");
 const { handlePOSTExerciseTermsRequest } = require("./commandExercise");
 const { pullHandler } = require("./commandPull");
 const { listHandler } = require("./commandList");
-const { deleteHandler } = require("./commandDelete");
 const { defunctHandler } = require("./commandDefunct");
 const { purgeHandler } = require("@webserver/commandPurge");
 const { getDictionaryOfDeployedContracts } = require("@lib/deployedContracts");
