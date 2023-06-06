@@ -64,6 +64,7 @@ const Contract = (props) => {
     sendExerciseRequest(optionId, buyerAccount)
       .then((res) => {
         appendLogs(`[${optionId}] has benn sent for exercise. !`);
+        getMinedOptionListAndUpt(buyerAccount);
       })
       .catch((err) => {
         appendLogs(`Failed to exercise option due to ${err}!`);
@@ -80,34 +81,34 @@ const Contract = (props) => {
      *       - This means extending the create logic to assign the option NFT
      *       - to the buyer and move the option premium from buyer to seller.
      */
-        if(!(uniqueId in offeredOptDict))
-        {
+    if(!(uniqueId in offeredOptDict))
+    {
       appendLogs(`Option [${uniqueId}] is not found!`);
       return;
     }
 
-        if(NOT_SELECTED === buyerAccount){
+    if(NOT_SELECTED === buyerAccount){
       appendLogs(`Please select a buyer account`);
       return;
     }
 
-        appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${buyerAccount}]`);
+    appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${buyerAccount}]`);
 
-        let optionTermsAsJson = offeredOptDict[uniqueId];
-        optionTermsAsJson.buyer = buyerAccount;
-        sendCreateOptionRequest(optionTermsAsJson).then((res)=>{
-
-            appendLogs(`[${uniqueId}] minted with NFT Id ${JSON.stringify(res.optionId)}!`);
-            if(uniqueId in offeredOptDict){
-                delete offeredOptDict[uniqueId]
+      let optionTermsAsJson = offeredOptDict[uniqueId];
+      optionTermsAsJson.buyer = buyerAccount;
+      sendCreateOptionRequest(optionTermsAsJson)
+      .then((res)=>{
+        appendLogs(`[${uniqueId}] minted with NFT Id ${JSON.stringify(res.optionId)}!`);
+        if(uniqueId in offeredOptDict){
+          delete offeredOptDict[uniqueId]
           setOfferedOptDict(offeredOptDict);
-                appendLogs(`[${uniqueId}] Deleted from offer list as it has been sold`);
+          appendLogs(`[${uniqueId}] Deleted from offer list as it has been sold`);
         }
         getMinedOptionListAndUpt(buyerAccount);
-        }            
-        ).catch((err)=>{
+      })
+      .catch((err)=>{
         appendLogs(`Failed to create option due to ${err}!`);
-        })
+      })
   }
 
   /**
