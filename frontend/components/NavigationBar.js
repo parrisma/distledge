@@ -19,10 +19,10 @@ const NavigationBar = (props) =>{
           <Link href="/tabs/price">Price</Link>
         </li>
         <li>
-          <Link href="/tabs/seller">Seller</Link>
+          <Link href="/tabs/seller">Sell</Link>
         </li>
         <li>
-          <Link href="/tabs/buyer">Buyer</Link>
+          <Link href="/tabs/buyer">Purchase</Link>
         </li>        
       </ul>
     </nav>
