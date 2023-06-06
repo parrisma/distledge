@@ -1,17 +1,18 @@
 import { NFTServerBaseURI } from "./ERC721Util";
 
-function formatExerciseMessage(optionId, buyerAccount, command) {
+function formatExerciseMessage(optionId, value, buyerAccount, command) {
   var exerciseMessage = {
     command: `${command}`,
     id: optionId,
-    buyerAccount: buyerAccount
+    buyerAccount: buyerAccount,
+    value: value
   };
 
   return exerciseMessage;
 }
 
-export async function sendExerciseRequest(optionId, buyerAccount) {
-  var optionToPersistAsJson = formatExerciseMessage(optionId, buyerAccount, "exercise");
+export async function sendExerciseRequest(optionId, value, buyerAccount) {
+  var optionToPersistAsJson = formatExerciseMessage(optionId, value, buyerAccount, "exercise");
   console.log(optionToPersistAsJson);
   const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
     method: "POST",
