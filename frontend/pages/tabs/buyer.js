@@ -54,20 +54,28 @@ const Contract = (props) => {
    * Exercise the option of the given Id
    * @param {*} optionId - The Option Id to Exercise
    */
-  function handleExercise(optionId) {
+  function handleExercise(optionId, value) {
     /**
      *  TODO - Implement the exercise logic on the Web Server and call it from here
      *       - This means assigning the option NFT back to the seller & burning it
      *       - move the option value (if > 0) from seller to buyer
      */
 
-    sendExerciseRequest(optionId, buyerAccount)
+    console.log(`Exericse value is: ${value}`);
+    value = value * 100; // double to int
+    
+    if (value > 0) {
+      sendExerciseRequest(optionId, value, buyerAccount)
       .then((res) => {
         appendLogs(`[${optionId}] has benn sent for exercise. !`);
       })
       .catch((err) => {
         appendLogs(`Failed to exercise option due to ${err}!`);
       });
+    } else {
+      alert(`Valuation(${value} is less than zero, can't exercise for this case!)`);
+      //TODO: need to clarify value less zero logic
+    }
   }
 
   /**
@@ -124,8 +132,8 @@ const Contract = (props) => {
         <div className="div-table-row">
           <div className="div-table-col">
             <AccountDropDown
-                            handleChange={(value) => { update(value) }}
-                            placeholder={`Buyer Account`} />
+              handleChange={(value) => { update(value) }}
+              placeholder={`Buyer Account`} />
           </div>
         </div>
         <div className="div-table-row">
@@ -140,7 +148,7 @@ const Contract = (props) => {
                       minted={true}
                       minedOptions={mintedOptList}
                       handleExercise={handleExercise}
-                                            handleLogChange={appendLogs} />
+                      handleLogChange={appendLogs} />
                   </div>
                 </div>
                 <div className="div-table-col">
@@ -151,7 +159,7 @@ const Contract = (props) => {
                       offeredOptionList={Object.values(offeredOptDict)}
                       handleBuy={handleBuy}
                       asSeller={false}
-                                            handleLogChange={appendLogs}/>
+                      handleLogChange={appendLogs}/>
                   </div>
                 </div>
               </div>

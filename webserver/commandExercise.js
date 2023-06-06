@@ -49,7 +49,7 @@ async function handlePOSTExerciseTermsRequest(
     
     var optionTerm = await persistGetOptionTerms(optionId);
     console.log(optionTerm);
-    var valueToSettle = '2';
+    var valueToSettle = exerciseRequest.value;
 
     await exerciseERC721OptionNFT(
         contractDict[addressConfig.erc721OptionContractTypeOne],
