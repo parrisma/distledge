@@ -1,6 +1,7 @@
 import { addressConfig } from "@/constants";
 import { getDisplayName } from "@/lib/DisplayName";
 import Select from 'react-select'
+import { useEffect } from "react";
 
 /* A list of all Accounts
 */
@@ -27,6 +28,10 @@ const Contract = (props) => {
     function handleChange(e) {
         props.handleChange(e.value);
     }
+
+    useEffect(() => {
+        props.handleChange(selectedValue.value);
+    }, [])
 
     return (
         <Select
