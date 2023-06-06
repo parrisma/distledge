@@ -145,7 +145,7 @@ const Contract = (props) => {
             </div>
             <div className="div-table-row">
               <div className="div-table-col-fix">Decimals</div>
-              <div className="div-table-col-fix">{decimals}</div>
+              <div className="div-table-col">{decimals}</div>
             </div>
             <div className="div-table-row">
               <div className="div-table-col-fix">Type</div>
