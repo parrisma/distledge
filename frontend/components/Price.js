@@ -46,14 +46,16 @@ const Contract = (props) => {
   }
 
   function updateUpdatePriceCell(formattedValue) {
-    if (formattedValue > verifiedValue) {
-      setPriceCellClass(prevPriceCellClass => "div-table-col price-up");
-    } else if (formattedValue < verifiedValue) {
-      setPriceCellClass(prevPriceCellClass => "div-table-col price-down");
-    } else {
-      setPriceCellClass(prevPriceCellClass => "div-table-col");
-    }
-    setVerifiedValue(prevValue => formattedValue);
+    setVerifiedValue(prevValue => {
+      if (formattedValue > prevValue) {
+        setPriceCellClass(prevPriceCellClass => "div-table-col price-up");
+      } else if (formattedValue < prevValue) {
+        setPriceCellClass(prevPriceCellClass => "div-table-col price-down");
+      } else {
+        setPriceCellClass(prevPriceCellClass => "div-table-col");
+      }
+      return formattedValue;
+    });
   }
 
   useEffect(() => {
@@ -145,7 +147,7 @@ const Contract = (props) => {
             </div>
             <div className="div-table-row">
               <div className="div-table-col-fix">Decimals</div>
-              <div className="div-table-col-fix">{decimals}</div>
+              <div className="div-table-col">{decimals}</div>
             </div>
             <div className="div-table-row">
               <div className="div-table-col-fix">Type</div>
