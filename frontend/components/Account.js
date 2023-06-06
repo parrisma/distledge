@@ -21,8 +21,8 @@ const Contract = (props) => {
     const getCNYTokenBalanceOfAccount = getBalanceOfC(addressConfig.cnyStableCoin, coinTokenABI, props.accountDetail.accountAddress);
 
     const getEURTokenDecimalsOfAccount = getDecimalsC(addressConfig.eurStableCoin, coinTokenABI, props.accountDetail.accountAddress);
-    const getUSDTokenDecimalsOfAccount = getDecimalsC(addressConfig.eurStableCoin, coinTokenABI, props.accountDetail.accountAddress);
-    const getCNYTokenDecimalsOfAccount = getDecimalsC(addressConfig.eurStableCoin, coinTokenABI, props.accountDetail.accountAddress);
+    const getUSDTokenDecimalsOfAccount = getDecimalsC(addressConfig.usdStableCoin, coinTokenABI, props.accountDetail.accountAddress);
+    const getCNYTokenDecimalsOfAccount = getDecimalsC(addressConfig.cnyStableCoin, coinTokenABI, props.accountDetail.accountAddress);
 
     async function updateAllTokenBalances() {
         if (isWeb3Enabled) {
