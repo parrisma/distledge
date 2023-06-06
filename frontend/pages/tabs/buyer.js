@@ -63,11 +63,12 @@ const Contract = (props) => {
 
     console.log(`Exericse value is: ${value}`);
     value = value * 100; // double to int
-    
+
     if (value > 0) {
       sendExerciseRequest(optionId, value, buyerAccount)
       .then((res) => {
         appendLogs(`[${optionId}] has benn sent for exercise. !`);
+        getMinedOptionListAndUpt(buyerAccount);
       })
       .catch((err) => {
         appendLogs(`Failed to exercise option due to ${err}!`);
