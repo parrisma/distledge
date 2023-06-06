@@ -11,7 +11,7 @@ const { loadEquityPricesFromAddresses } = require("../deploy/deployEquityPrices.
 const { loadFXRatesFromAddresses } = require("../deploy/deployFXRates.js");
 const { loadSharedConfig } = require("../lib/sharedConfig.js");
 const { signedValue } = require("../lib/signedValue.js");
-const timeout = 1000;
+const timeout = 5000;
 
 /**
  * Add a +/- a random amount to the given price.
