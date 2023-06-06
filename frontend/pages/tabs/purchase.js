@@ -62,8 +62,8 @@ const Contract = (props) => {
      */
 
     console.log(`Exericse value is: ${value}`);
-    value = value * 100; // double to int
-    
+    value = Number(value).toFixed(2) * 100; // double to int
+
     if (value > 0) {
       sendExerciseRequest(optionId, value, buyerAccount)
       .then((res) => {
