@@ -1,6 +1,7 @@
 import { addressConfig } from "@/constants";
 import { getDisplayName } from "@/lib/DisplayName";
 import Select from 'react-select'
+import { useEffect } from "react";
 
 /* A list of all Accounts
 */
@@ -11,10 +12,14 @@ const Contract = (props) => {
     ** The value is the contract address of the Token
     */
     var optionsList = [];
+    var selectedValue = undefined;
     for (const key in addressConfig) {
         if (key.match(/.*Account.*/)) {
             if (addressConfig[key].accountName) {
                 const optionName = getDisplayName(addressConfig[key].accountName);
+                if ('buyerAccount' === key.toString()) {
+                    selectedValue = { label: `${optionName}`, value: `${addressConfig[key].accountAddress}` };
+                }
                 optionsList.push({ label: `${optionName}`, value: `${addressConfig[key].accountAddress}` });
             }
         }
@@ -24,12 +29,17 @@ const Contract = (props) => {
         props.handleChange(e.value);
     }
 
+    useEffect(() => {
+        props.handleChange(selectedValue.value);
+    }, [])
+
     return (
         <Select
             className='selector'
             options={optionsList}
             placeholder={`${props.placeholder}`}
             clearable={false}
+            defaultValue={selectedValue}
             onChange={handleChange}
         />
     );

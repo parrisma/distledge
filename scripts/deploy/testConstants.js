@@ -35,7 +35,7 @@ const CNYCNY_ticker = "CNYCNY";
 const CNYCNY_Description = "CNY to CNY Fixed Rate"
 
 // Opening Deposits from cash to token
-const depositQtyUSD = 100 * (10 ** equityPriceDecimals); // 100.00 USD to 2 DP
+const depositQtyUSD = 10000 * (10 ** equityPriceDecimals); // 100.00 USD to 2 DP
 const depositQtyEUR = depositQtyUSD * USD_to_EUR;
 const depositQtyCNY = depositQtyUSD * USD_to_CNY;
 
