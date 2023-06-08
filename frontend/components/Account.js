@@ -1,7 +1,7 @@
 import { useMoralis } from "react-moralis";
 import { useState, useEffect } from "react";
 import { addressConfig } from "../constants";
-import { getTokenContractABI, getBalanceOfC } from "../lib/StableTokenWrapper";
+import { getTokenContractABI, getBalanceOfC, getDecimalsC } from "../lib/StableTokenWrapper";
 
 const Contract = (props) => {
 
@@ -10,20 +10,36 @@ const Contract = (props) => {
     const [usdTokenBalance, setUsdTokenBalance] = useState("0");
     const [eurTokenBalance, setEurTokenBalance] = useState("0");
     const [cnyTokenBalance, setCnyTokenBalance] = useState("0");
+    
+    const [usdCashBalance, setUsdCashBalance] = useState("0");
+    const [eurCashBalance, setEurCashBalance] = useState("0");
+    const [cnyCashBalance, setCnyCashBalance] = useState("0");
 
     const coinTokenABI = getTokenContractABI("usdStableCoin");
     const getEURTokenBalanceOfAccount = getBalanceOfC(addressConfig.eurStableCoin, coinTokenABI, props.accountDetail.accountAddress);
     const getUSDTokenBalanceOfAccount = getBalanceOfC(addressConfig.usdStableCoin, coinTokenABI, props.accountDetail.accountAddress);
     const getCNYTokenBalanceOfAccount = getBalanceOfC(addressConfig.cnyStableCoin, coinTokenABI, props.accountDetail.accountAddress);
 
+    const getEURTokenDecimalsOfAccount = getDecimalsC(addressConfig.eurStableCoin, coinTokenABI, props.accountDetail.accountAddress);
+    const getUSDTokenDecimalsOfAccount = getDecimalsC(addressConfig.usdStableCoin, coinTokenABI, props.accountDetail.accountAddress);
+    const getCNYTokenDecimalsOfAccount = getDecimalsC(addressConfig.cnyStableCoin, coinTokenABI, props.accountDetail.accountAddress);
+
     async function updateAllTokenBalances() {
         if (isWeb3Enabled) {
             const _usdTokenBalance = Number(await getUSDTokenBalanceOfAccount());
             const _eurTokenBalance = Number(await getEURTokenBalanceOfAccount());
             const _cnyTokenBalance = Number(await getCNYTokenBalanceOfAccount());
-            setUsdTokenBalance(_usdTokenBalance);
-            setEurTokenBalance(_eurTokenBalance);
-            setCnyTokenBalance(_cnyTokenBalance);
+            const _usdTokenDecimal = Number(await getUSDTokenDecimalsOfAccount());
+            const _eurTokenDecimal = Number(await getEURTokenDecimalsOfAccount());
+            const _cnyTokenDecimal = Number(await getCNYTokenDecimalsOfAccount());
+            
+            setUsdTokenBalance(_usdTokenBalance / 10 ** _usdTokenDecimal);
+            setEurTokenBalance(_eurTokenBalance / 10 ** _eurTokenDecimal);
+            setCnyTokenBalance(_cnyTokenBalance / 10 ** _cnyTokenDecimal);
+
+            setUsdCashBalance(props.accountDetail.usd / 10 ** _usdTokenDecimal);
+            setEurCashBalance(props.accountDetail.eur / 10 ** _eurTokenDecimal);
+            setCnyCashBalance(props.accountDetail.cny / 10 ** _cnyTokenDecimal);
         }
     }
 
@@ -89,19 +105,19 @@ const Contract = (props) => {
                         {props.accountDetail.accountAddress}
                     </div>
                     <div className="div-table-col-fix-number">
-                        {props.accountDetail.eur}
+                        {eurCashBalance}
                     </div>
                     <div className="div-table-col-fix-number">
                         {eurTokenBalance}
                     </div>
                     <div className="div-table-col-fix-number">
-                        {props.accountDetail.usd}
+                        {usdCashBalance}
                     </div>
                     <div className="div-table-col-fix-number">
                         {usdTokenBalance}
                     </div>
                     <div className="div-table-col-fix-number">
-                        {props.accountDetail.cny}
+                        {cnyCashBalance}
                     </div>
                     <div className="div-table-col-fix-number">
                         {cnyTokenBalance}

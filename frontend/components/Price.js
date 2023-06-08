@@ -12,39 +12,59 @@ const Contract = (props) => {
 
   const [ticker, setTicker] = useState("?");
   const [verifiedValue, setVerifiedValue] = useState("0");
-  const [decimals, setDecimals] = useState("0");
+  const [decimals, setDecimals] = useState(0);
   const [description, setDescription] = useState("?");
   const dispatch = useNotification();
+  const [decimalsForCalc, setDecimalsForCalc] = useState([]);
+  const [symbolForCalc, setSymbolForCalc] = useState([]);
 
   const contractABI = getLevelContractABI(contractType);
   const [getTicker, isFetching, isLoading] = getTickerC(levelAddress, contractABI, true);
   const getLevelDetails = getLevelDetailsC(levelAddress, contractABI);
   const getVerifiedValue = getVerifiedValueC(levelAddress, contractABI);
-  const getDecimals = getDecimalsC(levelAddress, contractABI);
+  const getDecimalsFromContract = getDecimalsC(levelAddress, contractABI);
+
+  const [priceCellClass, setPriceCellClass] = useState("div-table-col");
+
+  function formatValue(value, decimals) {
+    return Number(value) / 10 ** decimals
+  }
 
   async function updateUI() {
     if (isWeb3Enabled) {
-      const _decimals = Number(await getDecimals());
+      const _decimals = Number(await getDecimalsFromContract());
       const [_ticker, _description, _live, _value, _lastUpdate] = await getLevelDetails();
       setDescription(_description.toString());
       setTicker(_ticker.toString());
-      setVerifiedValue(Number(_value) / 10 ** _decimals);
+      updateUpdatePriceCell(formatValue(_value, _decimals));
       setDecimals(_decimals);
+      decimalsForCalc.push(_decimals);
+      setDecimalsForCalc(decimalsForCalc);
+      symbolForCalc.push(_ticker);
+      setSymbolForCalc(symbolForCalc);
     }
   }
 
+  function updateUpdatePriceCell(formattedValue) {
+    setVerifiedValue(prevValue => {
+      if (formattedValue > prevValue) {
+        setPriceCellClass(prevPriceCellClass => "div-table-col price-up");
+      } else if (formattedValue < prevValue) {
+        setPriceCellClass(prevPriceCellClass => "div-table-col price-down");
+      } else {
+        setPriceCellClass(prevPriceCellClass => "div-table-col");
+      }
+      return formattedValue;
+    });
+  }
+
   useEffect(() => {
-    updateUI(); // update immediately after render
-    const interval = setInterval(() => { updateUI(); }, 2000);
-    return () => {
-      clearInterval(interval); // Stop update after unmounted
-    };
-  }, [isWeb3Enabled]);
+    updateUI(); // update immediately once page is mounted.
+  }, []);
 
   const handleSuccess = async (tx) => {
     handleButtonClick(`Request price update ${tx}.`);
     handleNewNotification();
-    //updateUI();
   };
 
   const handleNewNotification = () => {
@@ -80,7 +100,10 @@ const Contract = (props) => {
       value,
       event
     ) => {
-      let info = "Secure level updated to " + value;
+      let valueFormatted = formatValue(value, decimalsForCalc[0]);
+      updateUpdatePriceCell(valueFormatted);
+      let info = `Secure ${symbolForCalc[0]} level updated to ${valueFormatted}`;
+      setVerifiedValue(valueFormatted);
       props.onAddInfo(info);
     };
     const setSecureLevelEvents = async () => {
@@ -120,7 +143,7 @@ const Contract = (props) => {
             </div>
             <div className="div-table-row">
               <div className="div-table-col-fix">Price</div>
-              <div className="div-table-col">{verifiedValue}</div>
+              <div className={priceCellClass}>{verifiedValue}</div>
             </div>
             <div className="div-table-row">
               <div className="div-table-col-fix">Decimals</div>
@@ -131,21 +154,6 @@ const Contract = (props) => {
               <div className="div-table-col">{contractType}</div>
             </div>
           </div>
-          <button
-            className="button"
-            disabled={isLoading || isFetching}
-            onClick={() => {
-              getTicker({
-                onSuccess: handleSuccess,
-              });
-            }}
-          >
-            {isLoading || isFetching ? (
-              <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
-            ) : (
-              <div>Update price</div>
-            )}
-          </button>
         </div>
       ) : (
         <div>Missing Level Contract Address</div>

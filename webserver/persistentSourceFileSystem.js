@@ -25,7 +25,7 @@ function baseTermsDir() {
 }
 
 /**
- * Get the root path where option terms are stored.
+ * Get the root path with id where option terms are stored.
 */
 function optionTermsDirName(optionId) {
     return path.join(baseTermsDir(), `${optionId}`);
@@ -248,11 +248,40 @@ async function persistGetOptionTermsFileSystem(optionId) {
     return [optionTermsAsJson, originalMangerSignedHash];
 }
 
+/**
+ * Delete one terms that exist in the terms folder by option id.
+ * this would never be needed in a production context, but this is used for clean start testing
+ * in our demo dApp
+ */
+async function persistDeleteOneTermFileSystem(optionId) {
+    const termsDirName = optionTermsDirName(optionId);
+    try {
+        if (fs.existsSync(termsDirName)) {
+            // Delete the terms id dir
+            rimraf.sync(termsDirName);
+            if (fs.existsSync(termsDirName)) {
+                throw getFullyQualifiedError(
+                    ERR_PURGE,
+                    `Failed to delete ${termsDirName}`,
+                    err);
+            }
+        }
+        console.log(`Terms dir ${termsDirName}`);
+    } catch (err) {
+        throw getFullyQualifiedError(
+            ERR_PURGE,
+            `Failed to delete terms ${termsDirName} dir`,
+            err);
+    }
+    return
+}
+
 module.exports = {
     persistInitializeFileSystem,
     persistOptionTermsFileSystem,
     persistPurgeAllFileSystem,
     persistListAllFileSystem,
     persistOptionIdExistsFileSystem,
-    persistGetOptionTermsFileSystem
+    persistGetOptionTermsFileSystem,
+    persistDeleteOneTermFileSystem
 };

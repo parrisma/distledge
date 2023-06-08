@@ -6,6 +6,7 @@ const OK_LIST_TERMS = "c8e1d29f-b1e3-4186-89a4-df3508f13b42";
 const OK_PURGE = "7d968317-c153-4806-b6ae-3f7314ea964b";
 const OK_VALUE = "2c16482d-9382-44f7-9184-240ff1326967";
 const OK_EXERCISE = "e7c13083-72c4-46b9-b260-323fc65b5815";
+const OK_DELETE = "2a28429d-2211-48a1-bd76-4bb4219f2dca";
 
 module.exports = {
     OK_DEFUNCT,
@@ -14,5 +15,6 @@ module.exports = {
     OK_LIST_TERMS,
     OK_PURGE,
     OK_VALUE,
-    OK_EXERCISE
+    OK_EXERCISE,
+    OK_DELETE
 };

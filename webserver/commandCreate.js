@@ -1,5 +1,6 @@
 require('module-alias/register'); // npm i --save module-alias
 var fs = require('fs');
+const { isValidAddressFormat } = require("@lib/generalUtil");
 const {
     getError,
     getFullyQualifiedError,
@@ -12,7 +13,7 @@ const {
 } = require("@webserver/serverResponse");
 const { OK_CREATE_TERMS } = require("@webserver/serverResponseCodes");
 const { addressConfig } = require("@webserver/constants");
-const { mintERC721OptionNFT, erc721OptionNFTExists } = require("@lib/contracts/Options/ERC721OptionContractTypeOne");
+const { mintERC721OptionNFT, erc721OptionNFTExists, settleERC721OptionNFT } = require("@lib/contracts/Options/ERC721OptionContractTypeOne");
 const { persistOptionTerms, persistOptionIdExists } = require("@webserver/serverPersist");
 const { ERR_FAIL_CREATE } = require("@webserver/serverErrorCodes");
 
@@ -41,7 +42,41 @@ async function mintNFTOption(
 }
 
 /**
- * Mint a new NFT and persist the terms of teh option to match the ERC271 URI associated with the newly minted NFT
+ * Transfer the newly minted NFT Option from manager to buyer and transfer premium from buyer to seller.
+ * @param {*} termsAsJson - The option terms as Json
+ * @param {*} managerAccount - The manager account (object) that issued the Option (NFT)
+ * @param {*} buyerAddress  - The buyer address (hex) for the option
+ * @param {*} mintedOptionId - The Id of the newly minted NFT
+ * @param {*} contractDict - Dictionary of deployed utility contracts.
+ */
+async function settleNFTOption(
+    termsAsJson,
+    managerAccount,
+    sellerAddress,
+    buyerAddress,
+    mintedOptionId,
+    contractDict) {
+    try {
+        /**
+         * This is an async call to the contract on chain, the handler [handleOptionMintedEmittedEvent] 
+         * will catch the emitted event and process the rest of the request
+         */
+        await settleERC721OptionNFT(
+            contractDict[addressConfig.erc721OptionContractTypeOne],
+            contractDict[termsAsJson.premiumToken],
+            managerAccount,
+            sellerAddress,
+            buyerAddress,
+            termsAsJson.premiumToken,
+            termsAsJson.premium,
+            mintedOptionId);
+    } catch (err) {
+        throw new Error(`Failed to settle NTF for Type One Option Contract - [${err.message}]`);
+    }
+}
+
+/**
+ * Mint a new NFT and persist the terms of the option to match the ERC271 URI associated with the newly minted NFT
  * 
  * @param {*} termsAsJson - The option terms as a Json object
  * @param {*} managerAccount - The manager account to sign the terms
@@ -78,9 +113,33 @@ async function mintAndPersistOptionNFT(
             }
 
             /**
+             * We need a valid buyer account to have been passed
+             */
+            const sellerAddress = optionTerms.seller; // This is just the address, not teh account object.
+            if (!isValidAddressFormat(sellerAddress)) {
+                throw new Error(`Invalid account passed as Option seller [${sellerAddress}]`);
+            }
+
+
+            /**
+             * We need a valid buyer account to have been passed
+             */
+            const buyerAddress = optionTerms.buyer; // This is just the address, not teh account object.
+            if (!isValidAddressFormat(buyerAddress)) {
+                throw new Error(`Invalid account passed as Option buyer [${buyerAddress}]`);
+            }
+
+            /**
              * TODO - The code needs adding that will transfer the Option NFT from the manager account to the buyer account
              *      - As well as the logic to transfer the premium from the buyer to the seller.
              */
+            await settleNFTOption(
+                optionTerms,
+                managerAccount,
+                sellerAddress,
+                buyerAddress,
+                mintedOptionId,
+                contractDict);
 
             /**
              * All, done OK
@@ -112,7 +171,11 @@ async function handlePOSTCreateTermsRequest(
     contractDict,
     req, res) {
     console.log(`Handle POST Create Terms Request for Id [${termsAsJson.id}]`);
-    await mintAndPersistOptionNFT(termsAsJson, signingAccount, contractDict, req, res);
+    try {
+        await mintAndPersistOptionNFT(termsAsJson, signingAccount, contractDict, req, res);
+    } catch (err) {
+        handleJsonError(err, res);
+    }
 }
 
 module.exports = {
