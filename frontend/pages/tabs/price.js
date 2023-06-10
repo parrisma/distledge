@@ -2,10 +2,10 @@ import Price from "../../components/Price";
 import { addressConfig } from "../../constants";
 import { useConsoleLogContext } from "../../context/consoleLog";
 
-const PricePage = (props) => {            
+const PricePage = (props) => {
 
-    const [logs,setLogs] = useConsoleLogContext()
-    function appendLogs(textLine){  
+    const [logs, setLogs] = useConsoleLogContext()
+    function appendLogs(textLine) {
         logs.push(textLine);
         setLogs(logs.slice(-50))
     }
@@ -14,7 +14,7 @@ const PricePage = (props) => {
         <div>
             <div className="div-table">
                 <div className="div-table-row">
-                    <div className="div-table-col-fix-wide">
+                    <div className="div-table-col">
                         <Price
                             contract={{
                                 address: addressConfig["teslaEquityPriceContract"]
@@ -23,22 +23,12 @@ const PricePage = (props) => {
                                 type: "equity",
                             }}
                             onAddInfo={appendLogs}
-                        />
-                    </div>
-                    <div className="div-table-col-fix-wide">
-                        <Price
-                            contract={{
-                                address: addressConfig["UsdEurFXRateContract"]
-                                    ? addressConfig["UsdEurFXRateContract"]
-                                    : null,
-                                type: "fx",
-                            }}
-                            onAddInfo={appendLogs}
+                            withHeader={true}
                         />
                     </div>
                 </div>
                 <div className="div-table-row">
-                    <div className="div-table-col-fix-wide">
+                    <div className="div-table-col">
                         <Price
                             contract={{
                                 address: addressConfig["appleEquityPriceContract"]
@@ -47,9 +37,26 @@ const PricePage = (props) => {
                                 type: "equity",
                             }}
                             onAddInfo={appendLogs}
+                            withHeader={false}
                         />
                     </div>
-                    <div className="div-table-col-fix-wide">
+                </div>
+                <div className="div-table-row">
+                    <div className="div-table-col">
+                        <Price
+                            contract={{
+                                address: addressConfig["UsdEurFXRateContract"]
+                                    ? addressConfig["UsdEurFXRateContract"]
+                                    : null,
+                                type: "fx",
+                            }}
+                            onAddInfo={appendLogs}
+                            withHeader={false}
+                        />
+                    </div>
+                </div>
+                <div className="div-table-row">
+                    <div className="div-table-col">
                         <Price
                             contract={{
                                 address: addressConfig["UsdCnyFXRateContract"]
@@ -58,6 +65,7 @@ const PricePage = (props) => {
                                 type: "fx",
                             }}
                             onAddInfo={appendLogs}
+                            withHeader={false}
                         />
                     </div>
                 </div>

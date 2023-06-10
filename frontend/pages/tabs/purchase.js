@@ -61,13 +61,13 @@ const Contract = (props) => {
      *       - move the option value (if > 0) from seller to buyer
      */
 
-    console.log(`Exericse value is: ${value}`);
+    console.log(`Exercise value is: ${value}`);
     value = Number(value).toFixed(2) * 100; // double to int
 
-    if (value > 0) {
+    if (value >= 0) {
       sendExerciseRequest(optionId, value, buyerAccount)
       .then((res) => {
-        appendLogs(`[${optionId}] has benn sent for exercise. !`);
+        appendLogs(`[${optionId}] has been sent for exercise. !`);
         getMinedOptionListAndUpt(buyerAccount);
       })
       .catch((err) => {

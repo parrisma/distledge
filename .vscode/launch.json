@@ -21,6 +21,13 @@
             "request": "launch",
             "command": "npx hardhat run --network localhost serverTest.js",
             "cwd": "${workspaceFolder}/webserver/test"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Deploy",
+            "request": "launch",
+            "command": "npx hardhat run --network localhost deploy.js",
+            "cwd": "${workspaceFolder}/scripts/deploy"
         }
     ]
 }

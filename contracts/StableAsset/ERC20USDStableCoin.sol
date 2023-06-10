@@ -17,8 +17,8 @@ contract ERC20USDStableCoin is ERC20StableAsset {
         ERC20StableAsset(
             _2decimal_places,
             _asset_code,
-            _token_name,
-            _token_symbol
+            _token_symbol,
+            _token_name
         )
     {}
 }

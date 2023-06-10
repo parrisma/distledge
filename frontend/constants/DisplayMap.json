@@ -21,6 +21,14 @@
             "displayName": "Option Buyer"
         },
         {
+            "rawName": "Buyer2",
+            "displayName": "Option Buyer Two"
+        },
+        {
+            "rawName": "Buyer3",
+            "displayName": "Option Buyer Three"
+        },
+        {
             "rawName": "usdStableCoin",
             "displayName": "USD Stable Coin"
         },
@@ -43,6 +51,14 @@
         {
             "rawName": "cnyEscrowAccount",
             "displayName": "CNY Escrow Service"
+        },
+        {
+            "rawName": "appleEscrowAccount",
+            "displayName": "Apple Escrow Service"
+        },
+        {
+            "rawName": "teslaEscrowAccount",
+            "displayName": "Tesla Escrow Service"
         },
         {
             "rawName": "teslaEquityPriceContract",

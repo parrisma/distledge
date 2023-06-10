@@ -65,51 +65,41 @@ export default function Contract(props) {
   };
 
   return (
-    <div className="p-5">
-      {addressOfDeployedToken ? (
-        <div>
-          <div className="div-table">
-            <div className="div-table-row">
-              <div className="div-table-col-fix">Name</div>
-              <div className="div-table-col">{token_name}</div>
-            </div>
-            <div className="div-table-row">
+    <div>
+      <div>
+        <div className="div-table">
+          {props.withHeader ? (
+            <div className="div-table-row-header">
+              <div className="div-table-col-fix-mid">Name</div>
               <div className="div-table-col-fix">Symbol</div>
-              <div className="div-table-col">{symbol}</div>
-            </div>
-            <div className="div-table-row">
               <div className="div-table-col-fix">Decimals</div>
-              <div className="div-table-col">{decimals}</div>
-            </div>
-            <div className="div-table-row">
               <div className="div-table-col-fix">Supply</div>
-              <div className="div-table-col">{token_supply}</div>
-            </div>
-            <div className="div-table-row">
               <div className="div-table-col-fix">Type</div>
-              <div className="div-table-col">{contractType}</div>
+              <div className="div-table-col-fix"><div /></div>
             </div>
-          </div>
-          <button
-            className="button"
-            disabled={isLoading || isFetching}
-            onClick={() => {
-              getSymbol({
-                onSuccess: handleSuccess,
-              });
-            }}
-          >
-            <div>Update Supply</div>
-            {/* {isLoading || isFetching ? (
-              <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
-            ) : (
+          ) : null}
+          <div className="div-table-row">
+            <div className="div-table-col-fix-mid">{token_name}</div>
+            <div className="div-table-col-fix">{symbol}</div>
+            <div className="div-table-col-fix">{decimals}</div>
+            <div className="div-table-col-fix">{token_supply}</div>
+            <div className="div-table-col-fix">{contractType}</div>
+            <div className="div-table-col-fix">
+            </div>
+            <button
+              className="button"
+              disabled={isLoading || isFetching}
+              onClick={() => {
+                getSymbol({
+                  onSuccess: handleSuccess,
+                });
+              }}
+            >
               <div>Update Supply</div>
-            )} */}
-          </button>
+            </button>
+          </div>
         </div>
-      ) : (
-        <div>Missing Token Contract Address</div>
-      )}
+      </div>
     </div>
   );
 }

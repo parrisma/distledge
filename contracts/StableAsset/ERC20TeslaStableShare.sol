@@ -8,14 +8,14 @@ import "./ERC20StableAsset.sol";
  ** @title Stable Share for AppTeslale
  */
 contract ERC20TeslaStableShare is ERC20StableAsset {
-    string private constant _token_symbol = "TeslaSS";
+    string private constant _token_symbol = "TSLASS";
     string private constant _token_name = "TeslaStableShare";
     string private constant _asset_code = "US88160R1014"; // isin code
-    uint8 private constant _2decimal_places = 2;
+    uint8 private constant _decimal_places = 0;
 
     constructor()
         ERC20StableAsset(
-            _2decimal_places,
+            _decimal_places,
             _asset_code,
             _token_symbol,
             _token_name

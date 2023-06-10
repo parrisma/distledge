@@ -50,6 +50,16 @@ describe("ERC20USDStableCoin", function () {
             const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
             expect(await erc20USDStableCoin.assetCode()).to.equal("USD");
         });
+
+        it("Should have symbol 'USDS'", async function () {
+            const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
+            expect(await erc20USDStableCoin.symbol()).to.equal("USDS");
+        });
+
+        it("Should have name 'USDStableCoin'", async function () {
+            const { erc20USDStableCoin, owner } = await loadFixture(deployERC20USDStableCoin);
+            expect(await erc20USDStableCoin.name()).to.equal("USDStableCoin");
+        });
     });
 
     describe("MintAndBurn", function () {

@@ -27,11 +27,11 @@ async function main() {
   await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20USDStableCoin", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20AppleStableShare", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20TeslaStableShare", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20StableAsset", webServerAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Escrow", "EscrowAccount", webServerAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("HelloWorld", "HelloWorld", webServerAbiLocation);
   console.log("Update ./webserver/constants/index.js if you have added new contracts");
-
 }
-
 
 /**
  * Write the current state of the WebService to file.

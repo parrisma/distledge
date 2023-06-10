@@ -33,6 +33,7 @@ const Contract = (props) => {
   async function updateUI() {
     if (isWeb3Enabled) {
       const _decimals = Number(await getDecimalsFromContract());
+      console.log(`Decimals :[${_decimals}]`);
       const [_ticker, _description, _live, _value, _lastUpdate] = await getLevelDetails();
       setDescription(_description.toString());
       setTicker(_ticker.toString());
@@ -48,11 +49,11 @@ const Contract = (props) => {
   function updateUpdatePriceCell(formattedValue) {
     setVerifiedValue(prevValue => {
       if (formattedValue > prevValue) {
-        setPriceCellClass(prevPriceCellClass => "div-table-col price-up");
+        setPriceCellClass(prevPriceCellClass => "div-table-col-fix price-up");
       } else if (formattedValue < prevValue) {
-        setPriceCellClass(prevPriceCellClass => "div-table-col price-down");
+        setPriceCellClass(prevPriceCellClass => "div-table-col-fix price-down");
       } else {
-        setPriceCellClass(prevPriceCellClass => "div-table-col");
+        setPriceCellClass(prevPriceCellClass => "div-table-col-fix");
       }
       return formattedValue;
     });
@@ -129,35 +130,27 @@ const Contract = (props) => {
   }, [levelAddress, contractABI]);
 
   return (
-    <div className="p-5">
-      {levelAddress ? (
-        <div>
-          <div className="div-table">
-            <div className="div-table-row">
-              <div className="div-table-col-fix">Description</div>
-              <div className="div-table-col">{description}</div>
-            </div>
-            <div className="div-table-row">
+    <div>
+      <div>
+        <div className="div-table-lite">
+          {props.withHeader ? (
+            <div className="div-table-row-header">
+              <div className="div-table-col-fix-mid">Description</div>
               <div className="div-table-col-fix">Ticker</div>
-              <div className="div-table-col">{ticker}</div>
-            </div>
-            <div className="div-table-row">
               <div className="div-table-col-fix">Price</div>
-              <div className={priceCellClass}>{verifiedValue}</div>
-            </div>
-            <div className="div-table-row">
               <div className="div-table-col-fix">Decimals</div>
-              <div className="div-table-col">{decimals}</div>
-            </div>
-            <div className="div-table-row">
               <div className="div-table-col-fix">Type</div>
-              <div className="div-table-col">{contractType}</div>
             </div>
+          ) : null}
+          <div className="div-table-row">
+            <div className="div-table-col-fix-mid">{description}</div>
+            <div className="div-table-col-fix">{ticker}</div>
+            <div className={priceCellClass}>{verifiedValue}</div>
+            <div className="div-table-col-fix">{decimals}</div>
+            <div className="div-table-col-fix">{contractType}</div>
           </div>
         </div>
-      ) : (
-        <div>Missing Level Contract Address</div>
-      )}
+      </div>
     </div>
   );
 };

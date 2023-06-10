@@ -2,20 +2,17 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/router'
 
-const NavigationBar = (props) =>{    
+const NavigationBar = (props) => {
 
   const currentRoute = useRouter().pathname;
   return (
     <nav className='nav'>
       <ul >
-        {/* <li >
-            <Link href="/">Home</Link>
-        </li>        
         <li >
-          <Link href="/tabs/escrow">Escrow</Link>
-        </li> */}
+          <Link href="/tabs/escrow" className={currentRoute === '/tabs/escrow' ? 'active' : ''}>Escrow</Link>
+        </li>
         <li >
-          <Link href="/tabs/accounts" className={currentRoute === '/tabs/accounts' ? 'active' : ''}>Acounts</Link>
+          <Link href="/tabs/accounts" className={currentRoute === '/tabs/accounts' ? 'active' : ''}>Accounts</Link>
         </li>
         <li >
           <Link href="/tabs/price" className={currentRoute === '/tabs/price' ? 'active' : ''}>Price</Link>
@@ -25,7 +22,7 @@ const NavigationBar = (props) =>{
         </li>
         <li>
           <Link href="/tabs/purchase" className={currentRoute === '/tabs/purchase' ? 'active' : ''}>Purchase</Link>
-        </li>        
+        </li>
       </ul>
     </nav>
   );

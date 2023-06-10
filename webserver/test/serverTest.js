@@ -169,7 +169,7 @@ async function main() {
      */
     const contractDict = await getDictionaryOfDeployedContracts(addressConfig);
 
-    const numOptionsToCreate = 1;
+    const numOptionsToCreate = 10;
     console.log(`\nUsing these SharedConfig settings :\n ${JSON.stringify(addressConfig, null, 2)}`);
 
     // Purge any existing contracts

@@ -10,7 +10,8 @@ const teslaDescription = "TESLA Regular Stock"
 const applePriceFeb2023 = 16968; // $169.68
 const appleTicker = "AAPL";
 const appleDescription = "APPLE Regular Stock"
-
+const appleIssue = 10000; // Number of share to issue in Escrow
+const teslaIssue = 10000; // Number of share to issue in Escrow
 
 // Initial FX Rates
 const fxRateDecimals = 5;
@@ -67,5 +68,7 @@ module.exports = {
     teslaDescription,
     applePriceFeb2023,
     appleTicker,
-    appleDescription
+    appleDescription,
+    appleIssue,
+    teslaIssue
 }

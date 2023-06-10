@@ -1,7 +1,7 @@
 import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
 import { useNotification } from "web3uikit";
-import { getEscrowContractABI, getManagedTokenNameC, getBalanceOnHandC, getIsBalancedC } from "@/lib/EscrowWrapper";
+import { getEscrowContractABI, getManagedTokenNameC, getBalanceOnHandC, getIsBalancedC, getEscrowDecimalsC } from "@/lib/EscrowWrapper";
 import { ethers } from "ethers";
 
 export default function Contract(props) {
@@ -13,20 +13,23 @@ export default function Contract(props) {
     const [managed_token_name, setManagedTokenName] = useState("?");
     const [balance_on_hand, setBalanceOnHand] = useState("0");
     const [isBalanced, setIsBalanced] = useState("?");
+    const [decimals, setDecimals] = useState("0");
     const dispatch = useNotification();
 
     const contractABI = getEscrowContractABI(contractType);
     const [getManagedTokenName, isFetching, isLoading] = getManagedTokenNameC(escrowAddress, contractABI, true);
     const getBalanceOnHand = getBalanceOnHandC(escrowAddress, contractABI);
     const getIsBalanced = getIsBalancedC(escrowAddress, contractABI);
+    const getEscrowDecimals = getEscrowDecimalsC(escrowAddress, contractABI);
 
     async function updateUI() {
         if (isWeb3Enabled) {
             const _managed_token_name = (await getManagedTokenName());
             const _balance_on_hand = Number(await getBalanceOnHand());
             const _isBalanced = Boolean(await getIsBalanced());
+            const _decimals = Number(await getEscrowDecimals());
             setManagedTokenName(_managed_token_name);
-            setBalanceOnHand(_balance_on_hand);
+            setBalanceOnHand(_balance_on_hand / (10 ** _decimals));
             setIsBalanced(_isBalanced.toString());
         }
     }
@@ -63,106 +66,100 @@ export default function Contract(props) {
         props.onAddInfo(info);
     };
 
-  useEffect(() => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const contract = new ethers.Contract(escrowAddress, contractABI, provider);
-    const handleDeposit = async (
-      assetCode,
-      from,
-      quantity,
-      transactionId,
-      balance,
-      event
-    ) => {
-      let info =
-        quantity +
-        " " +
-        assetCode +
-        " deposited from " +
-        from +
-        ", balance " +
-        balance;
-      props.onAddInfo(info);
-    };
-    const handleWithdrawal = async (
-      assetCode,
-      to,
-      quantity,
-      transactionId,
-      balance,
-      event
-    ) => {
-      let info =
-        quantity +
-        " " +
-        assetCode +
-        " withdrawn to " +
-        to +
-        ", balance " +
-        balance;
-      props.onAddInfo(info);
-    };
-    const setEscrowEvents = async () => {
-      // Subscribe to the "Deposit" event
-      contract.on("Deposit", handleDeposit, {
-        fromBlock: 0,
-        toBlock: "latest",
-      });
+    useEffect(() => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const contract = new ethers.Contract(escrowAddress, contractABI, provider);
+        const handleDeposit = async (
+            assetCode,
+            from,
+            quantity,
+            transactionId,
+            balance,
+            event
+        ) => {
+            let info =
+                quantity +
+                " " +
+                assetCode +
+                " deposited from " +
+                from +
+                ", balance " +
+                balance;
+            props.onAddInfo(info);
+        };
+        const handleWithdrawal = async (
+            assetCode,
+            to,
+            quantity,
+            transactionId,
+            balance,
+            event
+        ) => {
+            let info =
+                quantity +
+                " " +
+                assetCode +
+                " withdrawn to " +
+                to +
+                ", balance " +
+                balance;
+            props.onAddInfo(info);
+        };
+        const setEscrowEvents = async () => {
+            // Subscribe to the "Deposit" event
+            contract.on("Deposit", handleDeposit, {
+                fromBlock: 0,
+                toBlock: "latest",
+            });
 
-      // Subscribe to the "Withdrawal" event
-      contract.on("Withdrawal", handleWithdrawal, {
-        fromBlock: 0,
-        toBlock: "latest",
-      });
-    };
+            // Subscribe to the "Withdrawal" event
+            contract.on("Withdrawal", handleWithdrawal, {
+                fromBlock: 0,
+                toBlock: "latest",
+            });
+        };
 
-    setEscrowEvents();
+        setEscrowEvents();
 
-    return () => {
-      contract.off("Deposit", handleDeposit);
-      contract.off("Withdrawal", handleWithdrawal);
-    };
-  }, [escrowAddress, contractABI]);
+        return () => {
+            contract.off("Deposit", handleDeposit);
+            contract.off("Withdrawal", handleWithdrawal);
+        };
+    }, [escrowAddress, contractABI]);
 
     return (
-        <div className="p-5">
-            {escrowAddress ? (
-                <div>
-                    <div className="div-table">
-                        <div className="div-table-row">
-                            <div className="div-table-col-fix">Escrow For</div>
-                            <div className="div-table-col">{managed_token_name}</div>
-                        </div>
-                        <div className="div-table-row">
+        <div>
+            <div>
+                <div className="div-table-lite">
+                    {props.withHeader ? (
+                        <div className="div-table-row-header">
+                            <div className="div-table-col-fix-mid">Escrow For</div>
                             <div className="div-table-col-fix">Supply</div>
-                            <div className="div-table-col">{balance_on_hand}</div>
-                        </div>
-                        <div className="div-table-row">
                             <div className="div-table-col-fix">Balanced</div>
-                            <div className="div-table-col">{isBalanced}</div>
+                            <div className="div-table-col-fix"><div /></div>
                         </div>
-                    </div>
-                    <button
-                        className="button"
-                        disabled={isLoading || isFetching}
-                        onClick={() => {
-                            getManagedTokenName({
-                                onSuccess: handleSuccess,
-                                onError: handleError,
-                            });
-                        }}
-                    >
-                        <div>Update</div>
-                        {/* {isLoading || isFetching ? (
-                            <div className="button"></div>
-                        ) : (
+                    ) : null}
+                    <div className="div-table-row">
+                        <div className="div-table-col-fix-mid">{managed_token_name}</div>
+                        <div className="div-table-col-fix">{balance_on_hand}</div>
+                        <div className="div-table-col-fix">{isBalanced}</div>
+                        <div className="div-table-col-fix">
+                        </div>
+                        <button
+                            className="button"
+                            disabled={isLoading || isFetching}
+                            onClick={() => {
+                                getManagedTokenName({
+                                    onSuccess: handleSuccess,
+                                    onError: handleError,
+                                });
+                            }}
+                        >
                             <div>Update</div>
-                        )} */}
-                    </button>
+                        </button>
+                    </div>
                 </div>
-            ) : (
-                <div>Missing Escrow Contract Address</div>
-            )}
+            </div>
         </div>
     );
 }

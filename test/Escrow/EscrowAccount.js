@@ -54,6 +54,10 @@ describe("Escrow Account", function () {
             expect(await escrowAccount.connect(escrow).isBalanced()).to.equal(true);
             expect(await escrowAccount.connect(escrow).managedTokenAddress()).to.equal(erc20USDStableCoin.address);
 
+            // Escrow, should report same number of decimals as the underlying token.
+            const expected_decimals = await erc20USDStableCoin.decimals();
+            expect(await escrowAccount.connect(escrow).decimals()).to.equal(expected_decimals);
+
             // Test paused enforcement
             await expect(escrowAccount.connect(escrow).balanceOnHand()).to.be.revertedWith(
                 "Pausable: paused"

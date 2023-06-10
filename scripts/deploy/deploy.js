@@ -35,14 +35,22 @@ async function main() {
   /**
    * Get and allocate account roles on the network
    */
-  [escrow_manager, stable_token_issuer, data_vendor, option_seller, option_buyer] = await namedAccounts(sharedConfig);
+  [escrow_manager,
+    stable_token_issuer,
+    data_vendor,
+    option_seller,
+    option_buyer,
+    option_buyer2,
+    option_buyer3] = await namedAccounts(sharedConfig);
 
   console.log(`\nAccount Addresses`);
   console.log(`Escrow Manager      : [${sharedConfig.escrowAccount.accountAddress}]`);
   console.log(`Stable Token Issuer : [${sharedConfig.tokenAccount.accountAddress}]`);
   console.log(`Data Vendor         : [${sharedConfig.dataAccount.accountAddress}]`);
   console.log(`Option Seller       : [${sharedConfig.sellerAccount.accountAddress}]`);
-  console.log(`Option Buyer        : [${sharedConfig.buyerAccount.accountAddress}]`);
+  console.log(`Option Buyer 1      : [${sharedConfig.buyerAccount.accountAddress}]`);
+  console.log(`Option Buyer 2      : [${sharedConfig.buyer2Account.accountAddress}]`);
+  console.log(`Option Buyer 3      : [${sharedConfig.buyer3Account.accountAddress}]`);
 
   /**
   ** Deploy the three stable coin currencies.
@@ -52,12 +60,25 @@ async function main() {
   /**
   ** Deploy the three stable shares.
   */
-  const [teslaStableShare, appleStableShare] = await deployStableShares(sharedConfig, hre, stable_token_issuer);
+  const [appleStableShare, teslaStableShare] = await deployStableShares(sharedConfig, hre, stable_token_issuer);
 
   /**
   ** Deploy the three Escrow accounts and take ownership of the three stable coins.
   */
-  const [usdEscrowAccount, eurEscrowAccount, cnyEscrowAccount] = await deployAndLinkEscrowAccounts(sharedConfig, hre, escrow_manager, usdStableCoin, eurStableCoin, cnyStableCoin);
+  const [usdEscrowAccount,
+    eurEscrowAccount,
+    cnyEscrowAccount,
+    appleEscrowAccount,
+    teslaEscrowAccount] =
+    await deployAndLinkEscrowAccounts(
+      sharedConfig,
+      hre,
+      escrow_manager,
+      usdStableCoin,
+      eurStableCoin,
+      cnyStableCoin,
+      appleStableShare,
+      teslaStableShare);
 
   /**
   ** Deploy & initialize the equity prices
@@ -86,12 +107,16 @@ async function main() {
     escrow_manager,
     option_buyer,
     option_seller,
-    escrowUSDAccount,
-    escrowEURAccount,
-    escrowCNYAccount,
-    erc20USDStableCoin,
-    erc20EURStableCoin,
-    erc20CNYStableCoin);
+    usdEscrowAccount,
+    eurEscrowAccount,
+    cnyEscrowAccount,
+    appleEscrowAccount,
+    teslaEscrowAccount,
+    usdStableCoin, 
+    eurStableCoin, 
+    cnyStableCoin,
+    appleStableShare, 
+    teslaStableShare);
 
   /**
    * Save the shared config for other test services to read.
