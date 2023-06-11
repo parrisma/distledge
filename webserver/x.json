@@ -1,23 +1,11 @@
-{
-    "okCode": "3e856ee3-331d-4e73-86b4-0519329b6f14",
-    "okMessage": "Handed Pull Terms",
-    "message": {
-        "hash": "0x77c2c406391b36a1b5d05a4b95a98efeae9f9bbf3f996b5d087ac9791074b85937d21b28d241cb42eb6d6d7cea9ef5a2b76bb0020550aa283ee327e2532581a61c",
-        "terms": {
-            "type": "TypeOneOption",
-            "uniqueId": "fc50b2f5-3ac7-45bb-813c-6ed2d502b0f7",
-            "optionName": "Option name - busy-Raymond",
-            "description": "Ultrices sagittis orci a scelerisque purus semper eget duis at. ",
-            "premium": "76",
-            "premiumToken": "0x948B3c65b89DF0B4894ABE91E6D02FE579834F8F",
-            "settlementToken": "0x71C95911E9a5D330f4D621842EC243EE1343292e",
-            "notional": "69",
-            "strike": "141",
-            "referenceLevel": "0x8438Ad1C834623CfF278AB6829a248E37C2D7E3f",
-            "fxReferenceLevel": "0x4F41b941940005aE25D5ecB0F01BaDbc7065E2dD",
-            "seller": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-            "buyer": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65"
+[
+    {
+        "errorCode": "4f10a99c-bdb1-4213-9ece-9d9185efce98",
+        "errorMessage": "Failed to mint and/or persist option terms",
+        "fullyQualifiedError": "Create Handler, failed to mint and persist option terms",
+        "subError": {
+            "stack": "Error: Failed to settle NTF for Type One Option Contract - [cannot estimate gas; transaction may fail or may require manual gas limit [ See: https://links.ethers.org/v5-errors-UNPREDICTABLE_GAS_LIMIT ] (reason=\"Error: VM Exception while processing transaction: reverted with reason string 'ERC721: caller is not token owner or approved'\", method=\"estimateGas\", transaction={\"from\":\"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266\",\"to\":\"0x68B1D87F95878fE05B998F19b66F4baba5De1aed\",\"data\":\"0x8d65777d00000000000000000000000090f79bf6eb2c4f870365e785982e1f101e93b90600000000000000000000000015d34aaf54267db7d7c367839aaf71a00a2c6a65000000000000000000000000000000000000000000000000000000000000001800000000000000000000000071c95911e9a5d330f4d621842ec243ee1343292e00000000000000000000000000000000000000000000000000000000000017d4\",\"accessList\":null}, error={\"name\":\"ProviderError\",\"_stack\":\"ProviderError: Error: VM Exception while processing transaction: reverted with reason string 'ERC721: caller is not token owner or approved'\\n    at HttpProvider.request (D:\\\\devroot\\\\distledge\\\\node_modules\\\\hardhat\\\\src\\\\internal\\\\core\\\\providers\\\\http.ts:88:21)\\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\\n    at EthersProviderWrapper.send (D:\\\\devroot\\\\distledge\\\\node_modules\\\\@nomiclabs\\\\hardhat-ethers\\\\src\\\\internal\\\\ethers-provider-wrapper.ts:13:20)\",\"code\":-32603,\"_isProviderError\":true,\"data\":{\"message\":\"Error: VM Exception while processing transaction: reverted with reason string 'ERC721: caller is not token owner or approved'\",\"data\":\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002d4552433732313a2063616c6c6572206973206e6f7420746f6b656e206f776e6572206f7220617070726f76656400000000000000000000000000000000000000\"}}, code=UNPREDICTABLE_GAS_LIMIT, version=providers/5.7.2)]\n    at settleNFTOption (D:\\devroot\\distledge\\webserver\\commandCreate.js:79:15)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at mintAndPersistOptionNFT (D:\\devroot\\distledge\\webserver\\commandCreate.js:142:13)\n    at handlePOSTCreateTermsRequest (D:\\devroot\\distledge\\webserver\\commandCreate.js:181:9)\n    at handlePOSTedJson (D:\\devroot\\distledge\\webserver\\server.js:161:17)\n    at IncomingMessage.<anonymous> (D:\\devroot\\distledge\\webserver\\server.js:202:17)",
+            "message": "Failed to settle NTF for Type One Option Contract - [cannot estimate gas; transaction may fail or may require manual gas limit [ See: https://links.ethers.org/v5-errors-UNPREDICTABLE_GAS_LIMIT ] (reason=\"Error: VM Exception while processing transaction: reverted with reason string 'ERC721: caller is not token owner or approved'\", method=\"estimateGas\", transaction={\"from\":\"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266\",\"to\":\"0x68B1D87F95878fE05B998F19b66F4baba5De1aed\",\"data\":\"0x8d65777d00000000000000000000000090f79bf6eb2c4f870365e785982e1f101e93b90600000000000000000000000015d34aaf54267db7d7c367839aaf71a00a2c6a65000000000000000000000000000000000000000000000000000000000000001800000000000000000000000071c95911e9a5d330f4d621842ec243ee1343292e00000000000000000000000000000000000000000000000000000000000017d4\",\"accessList\":null}, error={\"name\":\"ProviderError\",\"_stack\":\"ProviderError: Error: VM Exception while processing transaction: reverted with reason string 'ERC721: caller is not token owner or approved'\\n    at HttpProvider.request (D:\\\\devroot\\\\distledge\\\\node_modules\\\\hardhat\\\\src\\\\internal\\\\core\\\\providers\\\\http.ts:88:21)\\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\\n    at EthersProviderWrapper.send (D:\\\\devroot\\\\distledge\\\\node_modules\\\\@nomiclabs\\\\hardhat-ethers\\\\src\\\\internal\\\\ethers-provider-wrapper.ts:13:20)\",\"code\":-32603,\"_isProviderError\":true,\"data\":{\"message\":\"Error: VM Exception while processing transaction: reverted with reason string 'ERC721: caller is not token owner or approved'\",\"data\":\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002d4552433732313a2063616c6c6572206973206e6f7420746f6b656e206f776e6572206f7220617070726f76656400000000000000000000000000000000000000\"}}, code=UNPREDICTABLE_GAS_LIMIT, version=providers/5.7.2)]"
         }
-    },
-    "optionId": "1"
-}
+    }
+]

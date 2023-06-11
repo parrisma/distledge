@@ -34,6 +34,8 @@ const EUREUR_ticker = "EUREUR";
 const EUREUR_Description = "EUR to EUR Fixed Rate"
 const CNYCNY_ticker = "CNYCNY";
 const CNYCNY_Description = "CNY to CNY Fixed Rate"
+const Physical_ticker = "Physical";
+const Physical_Description = "Physical Fixed Rate"
 
 // Opening Deposits from cash to token
 const depositQtyUSD = 10000 * (10 ** equityPriceDecimals); // 100.00 USD to 2 DP
@@ -70,5 +72,7 @@ module.exports = {
     appleTicker,
     appleDescription,
     appleIssue,
-    teslaIssue
+    teslaIssue,
+    Physical_ticker,
+    Physical_Description
 }

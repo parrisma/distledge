@@ -75,7 +75,7 @@ You will need to import the test accounts from the hardhat test network started 
 
 ## Export abi and contract address
 
-The UI needs to know about the contracts that have been deployed to the test network. SO teh command below make the deployment addresses and ```abi``` files available to the UI.
+The UI needs to know about the contracts that have been deployed to the test network. So the command below make the deployment addresses and ```abi``` files available to the UI.
 
 ```bash
 yarn hardhat run ./scripts/exportToFrontEnd/updateFrontEnd.js --network localhost

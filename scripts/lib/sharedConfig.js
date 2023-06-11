@@ -12,10 +12,10 @@ var sharedConfig = {
     escrowAccount: { accountName: `Escrow`, accountAddress: ``, usd: 0, eur: 0, cny: 0 },
     tokenAccount: { accountName: 'Token', accountAddress: ``, usd: 0, eur: 0, cny: 0 },
     dataAccount: { accountName: 'Data', accountAddress: ``, usd: 0, eur: 0, cny: 0 },
-    sellerAccount: { accountName: `Seller`, accountAddress: ``, usd: 1000000, eur: 900, cny: 7000 },
-    buyerAccount: { accountName: `Buyer`, accountAddress: ``, usd: 1000000, eur: 900, cny: 7000 },
-    buyer2Account: { accountName: `Buyer2`, accountAddress: ``, usd: 1000000, eur: 900, cny: 7000 },
-    buyer3Account: { accountName: `Buyer3`, accountAddress: ``, usd: 1000000, eur: 900, cny: 7000 },
+    sellerAccount: { accountName: `Seller`, accountAddress: ``, usd: 100000, eur: 9000, cny: 70000 },
+    buyerAccount: { accountName: `Buyer`, accountAddress: ``, usd: 100000, eur: 9000, cny: 70000 },
+    buyer2Account: { accountName: `Buyer2`, accountAddress: ``, usd: 100000, eur: 9000, cny: 70000 },
+    buyer3Account: { accountName: `Buyer3`, accountAddress: ``, usd: 100000, eur: 9000, cny: 70000 },
     usdStableCoin: "",
     eurStableCoin: "",
     cnyStableCoin: "",
@@ -31,7 +31,10 @@ var sharedConfig = {
     UsdUsdFXRateContract: "",
     EurEurFXRateContract: "",
     CnyCnyFXRateContract: "",
-    erc721OptionContractTypeOne: ""
+    PhysicalFXRateContract: "",
+    erc721OptionContractTypeOne: "",
+    appleStableShare: "",
+    teslaStableShare: ""
 };
 
 const configRoot = "./scripts/tmp";
@@ -65,6 +68,14 @@ function getAllCoins(loadedSharedConfig) {
 }
 
 /**
+ * Return a list of all stable shares
+ */
+function getAllShares(loadedSharedConfig) {
+    return [loadedSharedConfig.appleStableShare,
+    loadedSharedConfig.teslaStableShare,];
+}
+
+/**
  * Return a list of all FX Levels.
  */
 function getAllFX(loadedSharedConfig) {
@@ -73,7 +84,8 @@ function getAllFX(loadedSharedConfig) {
     loadedSharedConfig.UsdCnyFXRateContract,
     loadedSharedConfig.CnyCnyFXRateContract,
     loadedSharedConfig.UsdEurFXRateContract,
-    loadedSharedConfig.EurEurFXRateContract
+    loadedSharedConfig.EurEurFXRateContract,
+    loadedSharedConfig.PhysicalFXRateContract
     ];
 }
 
@@ -124,6 +136,7 @@ module.exports = {
     writeSharedConfig,
     loadSharedConfig,
     getAllCoins,
+    getAllShares,
     getAllFX,
     getAllLevels
 }

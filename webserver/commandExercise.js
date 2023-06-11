@@ -58,7 +58,7 @@ async function handlePOSTExerciseTermsRequest(
         optionTerm[0].seller, 
         exerciseRequest.buyerAccount, 
         exerciseRequest.id,   
-        optionTerm[0].settlementToken,
+        contractDict[optionTerm[0].fxReferenceLevel],
         valueToSettle
     );
     

@@ -40,7 +40,7 @@ Your application will need to know the address of the contract that was deployed
      * deployment. You must make sure the deployment and the app are pointing at the same
      * network.
      * 
-     * Where "ContractName" is teh actual name of the Contract &
+     * Where "ContractName" is the actual name of the Contract &
      *       "0x8464135c8F25Da09e49BC8782676a84730C318bC" is an example of a real deployed contract address.
      */
     const contractInstance = await hre.ethers.getContractAt("ContractName", "0x8464135c8F25Da09e49BC8782676a84730C318bC");      

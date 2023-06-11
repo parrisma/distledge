@@ -182,7 +182,7 @@ async function main() {
     // Mint & Persist the prescribed number of new (random) contracts
     const [managerAccount, stableCoinIssuer, dataVendor, optionSeller, optionBuyer] = await namedAccounts(addressConfig);
     for (let step = 0; step < numOptionsToCreate; step++) {
-        respJson = await persistOptionByPOSTRequest(managerAccount, optionBuyer, contractDict);
+        respJson = await persistOptionByPOSTRequest(optionSeller, optionBuyer, contractDict);
         if (respJson.hasOwnProperty("errorCode")) {
             console.log(JSON.stringify(respJson, null, 2));
             throw new Error(`Failed to persist/mint Option terms as NFT ${resp.error}`);
@@ -223,7 +223,7 @@ async function main() {
         }
 
         /**
-         * Check the saved terms match the signatire
+         * Check the saved terms match the signature
          */
         if (!await verifyTerms(respJson.message.terms, respJson.message.hash, managerAccount)) {
             throw new Error("Failed to verify option terms were immutable and signed by both buyer and manager");

@@ -111,7 +111,7 @@ record that can find and verify the terms of the option for the life of the opti
 This is managed on the user interface [buyer view](./interface/seller.md)
 
 1. The seller decides what terms they wish to offer
-1. These terms are full off-chain to start with and only exist on teh WebServer
+1. These terms are full off-chain to start with and only exist on the WebServer
 1. For each of the terms, the seller determines the premium to be paid (as an ERC20 token) to enter into the option
 1. The buyer then selects the [contract of interest](#buying) and it is at this point the on-chain NFT and other elements are created.
 1. This means the seller can offer as many terms as they wish without incurring any [gas fees](#gas-fees) until a buyer comes forward.

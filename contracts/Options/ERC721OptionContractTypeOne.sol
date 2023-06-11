@@ -118,19 +118,14 @@ contract ERC721OptionContractTypeOne is ERC721URIStorage, Pausable, Ownable {
         address to,
         uint256 optionId,
         address paymentToken,
-        uint256 paymentAmount,
-        bool isExercise // Would be buy settlement if it's not exercise
+        uint256 paymentAmount
     ) public virtual whenNotPaused {
         require(
             paymentToken.isContract(),
             "paymentToken not an ERC20 Contract"
         );
-        ERC20(paymentToken).transferFrom(to, from, paymentAmount);
-        if (isExercise) {
-            safeTransferFrom(from, owner(), optionId, "");
-        } else {
-            safeTransferFrom(owner(), to, optionId, "");
-        }
+        ERC20(paymentToken).transferFrom(to, from, paymentAmount); // Buyer pays premium to seller
+        safeTransferFrom(from, to, optionId, "");
         emit OptionTransfer(tokenURI(optionId), from, to);
     }
 }

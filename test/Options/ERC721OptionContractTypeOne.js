@@ -97,6 +97,8 @@ describe("ERC721 Option Test Suite", function () {
         }
     }
 
+    var expectedOptionId = 0; // The NFT Id expected, we need to increment as wo do each test where an NFT is minted.
+
     /**
      * Create the ERC721 Contract Against which all the tests will run.
      */
@@ -157,7 +159,7 @@ describe("ERC721 Option Test Suite", function () {
             "Ownable: caller is not the owner"
         );
 
-        const expectedOptionId = 1;
+        expectedOptionId = expectedOptionId + 1;
         signedHashOfTerms = await getSignedHashOfOptionTerms(optionOneTerms, owner);
         const expectedOptionURI = `${expectedBaseURI}/${expectedOptionId}/${signedHashOfTerms}`
         await expect(erc721OptionContractTypeOne.connect(owner).mintOption(signedHashOfTerms))
@@ -196,7 +198,7 @@ describe("ERC721 Option Test Suite", function () {
     it("ERC721 Mint and Transfer", async function () {
 
         // Mint an Option that can be transferred
-        const expectedOptionId = 2;
+        expectedOptionId = expectedOptionId + 1;
         expect(await erc721OptionContractTypeOne.connect(owner).exists(expectedOptionId)).to.equal(false);
         signedHashOfTerms = await getSignedHashOfOptionTerms(optionOneTerms, owner);
         const expectedOptionURI = `${expectedBaseURI}/${expectedOptionId}/${signedHashOfTerms}`
@@ -209,7 +211,12 @@ describe("ERC721 Option Test Suite", function () {
 
         const paymentAmount = 25;
         // Transfer will fail, if buyer does not have required funds authorized, for current owner to transfer
-        await expect(erc721OptionContractTypeOne.connect(owner).safeTransferOptionFrom(owner.address, traderOne.address, expectedOptionId, erc20USDStableCoin.address, paymentAmount, false)).to.be.revertedWith(
+        await expect(erc721OptionContractTypeOne.connect(owner).safeTransferOptionFrom(owner.address,
+            traderOne.address,
+            expectedOptionId,
+            erc20USDStableCoin.address,
+            paymentAmount) 
+        ).to.be.revertedWith(
             "ERC20: insufficient allowance"
         );
 
@@ -224,24 +231,23 @@ describe("ERC721 Option Test Suite", function () {
             traderOne.address,
             expectedOptionId,
             erc20USDStableCoin.address,
-            paymentAmount,
-            false)).to.be.revertedWith(
-                "ERC721: caller is not token owner or approved"
-            );
+            paymentAmount)
+        ).to.be.revertedWith(
+            "ERC721: caller is not token owner or approved"
+        );
 
         // Approve transfer of Option NFT
         await expect(await erc721OptionContractTypeOne.connect(owner).approve(traderOne.address, expectedOptionId))
             .to.emit(erc721OptionContractTypeOne, 'Approval')
             .withArgs(owner.address, traderOne.address, expectedOptionId);
 
-        // Transfer will fail, if seller has not approved transfer
+        // Should transfer OK now ERC Spend and NFT allowance have been set.
         await expect(erc721OptionContractTypeOne.connect(owner).safeTransferOptionFrom(
             owner.address,
             traderOne.address,
             expectedOptionId,
             erc20USDStableCoin.address,
-            paymentAmount,
-            false)
+            paymentAmount) 
         )
             .to.emit(erc721OptionContractTypeOne, 'OptionTransfer')
             .withArgs(expectedOptionURI, owner.address, traderOne.address);
@@ -256,5 +262,4 @@ describe("ERC721 Option Test Suite", function () {
         expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(traderOne.address)).to.equal(1);
         expect(await erc721OptionContractTypeOne.connect(owner).balanceOf(traderTwo.address)).to.equal(0);
     });
-
 });

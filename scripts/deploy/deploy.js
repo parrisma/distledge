@@ -106,16 +106,18 @@ async function main() {
   await mintAndAllocate(hre,
     escrow_manager,
     option_buyer,
+    option_buyer2,
+    option_buyer3,
     option_seller,
     usdEscrowAccount,
     eurEscrowAccount,
     cnyEscrowAccount,
     appleEscrowAccount,
     teslaEscrowAccount,
-    usdStableCoin, 
-    eurStableCoin, 
+    usdStableCoin,
+    eurStableCoin,
     cnyStableCoin,
-    appleStableShare, 
+    appleStableShare,
     teslaStableShare);
 
   /**
