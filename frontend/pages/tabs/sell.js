@@ -87,14 +87,16 @@ const Contract = (props) => {
                                 <div className="div-table-col">
                                     <div className="pane-narrow">
                                         <h2 className="header-2">Print Option for Sale</h2>
-                                        {connectedAccountIsSeller ? (
-                                            <SimpleOption
-                                                handleOfferOption={offerOption}
-                                                handleLogChange={appendLogs} />
-                                        ) :
-                                            (<div className="header-3-red">
-                                                Connect as a Seller account to print options
-                                            </div>)}
+                                        <div>
+                                            {connectedAccountIsSeller ? (
+                                                <SimpleOption
+                                                    handleOfferOption={offerOption}
+                                                    handleLogChange={appendLogs} />
+                                            ) :
+                                                (<div className="header-3-red">
+                                                    Connect as a Seller account to print options
+                                                </div>)}
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="div-table-col">
