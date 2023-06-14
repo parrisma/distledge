@@ -1,11 +1,11 @@
 {
     "map": [
         {
-            "rawName": "escrowAccount",
+            "rawName": "Escrow",
             "displayName": "Escrow Manager"
         },
         {
-            "rawName": "tokenAccount",
+            "rawName": "Token",
             "displayName": "Token Issuer"
         },
         {

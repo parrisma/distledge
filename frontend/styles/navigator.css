@@ -1,6 +1,4 @@
-.nav {
-
-}
+.nav {}
 
 .nav ul {
   list-style-type: none;
@@ -9,7 +7,7 @@
   overflow: hidden;
   background-color: #333;
 }
-  
+
 .nav li {
   float: left;
 }
@@ -22,14 +20,9 @@
   text-decoration: none;
 }
 
- .nav li a:hover {
+.nav li a:hover {
   background-color: #111;
 }
-
-/* .nav li :active {
-  color: yellow;
-  background-color: red;
-} */
 
 .nav li .active {
   background-color: orange;

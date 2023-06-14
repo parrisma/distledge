@@ -11,7 +11,7 @@
     font-size: 24px;
 }
 
-.header-decription {
+.header-description {
     display: flex;
     flex-flow: column;
     width: 300px;
@@ -29,6 +29,27 @@
 .header-2 {
     font-size: 18px;
     color: #1098FC;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.header-2-red {
+    font-size: 18px;
+    color: #fc102f;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.header-3 {
+    font-size: 16px;
+    color: #1098FC;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.header-3-red {
+    font-size: 16px;
+    color: #fc102f;
     text-align: center;
     padding-bottom: 10px;
 }

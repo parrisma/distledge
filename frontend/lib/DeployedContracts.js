@@ -16,6 +16,17 @@ export function getAllCoins(loadedSharedConfig) {
 }
 
 /**
+ * Return a list of all stable assets i.e. ERC20 Tokens
+ */
+export function getAllTokens(loadedSharedConfig) {
+    return [loadedSharedConfig.usdStableCoin,
+    loadedSharedConfig.eurStableCoin,
+    loadedSharedConfig.cnyStableCoin,
+    loadedSharedConfig.appleStableShare,
+    loadedSharedConfig.teslaStableShare];
+}
+
+/**
  * Return a list of all FX Levels.
  */
 export function getAllFX(loadedSharedConfig) {

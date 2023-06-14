@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
-import AccountDropDown from "../../components/dropdown/AccountsDropDown";
+import ConnectedAccount from "../../components/ConnectedAccount";
 import OptionList from "../../components/OptionList";
 import { useOfferedOptionContext } from "../../context/offeredOption";
 import { useConsoleLogContext } from "../../context/consoleLog";
@@ -11,6 +11,11 @@ import { getERC721MintedOptionList } from "../../lib/ERC721Util";
 const Contract = (props) => {
 
   const [logs, setLogs] = useConsoleLogContext()
+
+  /**
+   * TODO: Would ideally be a shared func in central library as all tabs use Console
+   * @param {*} textLine 
+   */
   function appendLogs(textLine) {
     logs.push(textLine);
     setLogs(logs.slice(-10))
@@ -22,32 +27,39 @@ const Contract = (props) => {
   const [mintedOptList, setMintedOptList] = useState([]);
 
   const { isWeb3Enabled } = useMoralis();
+  const { account } = useMoralis();
   const NOT_SELECTED = "?";
-  var [buyerAccount, setBuyerAccount] = useState(NOT_SELECTED);
+  var [connectedAccount, setConnectedAccount] = useState(NOT_SELECTED);
 
-  async function getMinedOptionListAndUpt(buyerAccount) {
+  /**
+   * Get current list of all minted options from the server and filter for the current buyer account.
+   * We filter as the connected account can only exercise the options for which they are the owner.
+   * 
+   * @param {*} buyerAccount - The buyer Account (currently connected) to filter for.
+   */
+  async function getMinedOptionListAndUpdate(buyerAccount) {
     if (isWeb3Enabled) {
       appendLogs(`Calling WebServer to update list of minted Options`)
-      const res = JSON.parse(await getERC721MintedOptionList());
+      var res = {};
+      if (buyerAccount !== null && buyerAccount !== undefined && buyerAccount !== NOT_SELECTED) {
+        console.log(`Filter for [${buyerAccount}]`);
+        res = await getERC721MintedOptionList(buyerAccount);
+      } else {
+        console.log(`Invalid buyer account [${buyerAccount}]`);
+      }
       if (res.hasOwnProperty('okCode')) {
-
-        //appendLogs(`res ${JSON.parse(res.message.terms)}`);
         setMintedOptList(res.message.terms.sort((a, b) => parseInt(a.optionId) - parseInt(b.optionId)));
       } else {
         appendLogs(`Failed to get OptionList from WebServer [${res.errorCode}]`);
       }
     } else {
-      appendLogs(`OptionList: Not Web3 Connected`);
+      appendLogs(`Cannot update Minted Option list as we are Not Web3 Connected`);
     }
   }
 
-  async function update(newAccountId) {
-    if (isWeb3Enabled) {
-      setBuyerAccount(newAccountId)
-      appendLogs([`New Buyer Account: [${newAccountId}]`])
-    } else {
-      appendLogs([`Buyer Tab: Not Web3 Connected`])
-    }
+  async function handleAccountChange(acct) {
+    appendLogs(`Connected account :[${acct}]`);
+    setConnectedAccount(acct);
   }
 
   /**
@@ -60,15 +72,13 @@ const Contract = (props) => {
      *       - This means assigning the option NFT back to the seller & burning it
      *       - move the option value (if > 0) from seller to buyer
      */
-
-    console.log(`Exercise value is: ${value}`);
     value = Number(value).toFixed(2) * 100; // double to int
 
     if (value >= 0) {
-      sendExerciseRequest(optionId, value, buyerAccount)
+      sendExerciseRequest(optionId, value, connectedAccount)
         .then((res) => {
           appendLogs(`[${optionId}] has been sent for exercise. !`);
-          getMinedOptionListAndUpt(buyerAccount);
+          getMinedOptionListAndUpdate(connectedAccount);
         })
         .catch((err) => {
           appendLogs(`Failed to exercise option due to ${err}!`);
@@ -89,20 +99,20 @@ const Contract = (props) => {
      *       - This means extending the create logic to assign the option NFT
      *       - to the buyer and move the option premium from buyer to seller.
      */
+    if (NOT_SELECTED === connectedAccount) {
+      appendLogs(`Please select a buyer account`);
+      return;
+    }
+
     if (!(uniqueId in offeredOptDict)) {
       appendLogs(`Option [${uniqueId}] is not found!`);
       return;
     }
 
-    if (NOT_SELECTED === buyerAccount) {
-      appendLogs(`Please select a buyer account`);
-      return;
-    }
-
-    appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${buyerAccount}]`);
+    appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${connectedAccount}]`);
 
     let optionTermsAsJson = offeredOptDict[uniqueId];
-    optionTermsAsJson.buyer = buyerAccount;
+    optionTermsAsJson.buyer = connectedAccount;
     sendCreateOptionRequest(optionTermsAsJson)
       .then((res) => {
         appendLogs(`[${uniqueId}] minted with NFT Id ${JSON.stringify(res.optionId)}!`);
@@ -111,7 +121,7 @@ const Contract = (props) => {
           setOfferedOptDict(offeredOptDict);
           appendLogs(`[${uniqueId}] Deleted from offer list as it has been sold`);
         }
-        getMinedOptionListAndUpt(buyerAccount);
+        getMinedOptionListAndUpdate(connectedAccount);
       })
       .catch((err) => {
         appendLogs(`Failed to create option due to ${err}!`);
@@ -119,21 +129,21 @@ const Contract = (props) => {
   }
 
   /**
-   * component life cyble hook for construction
+   * component life cycle hook for construction
    */
   useEffect(() => {
-    appendLogs('Initialization to get minted options');
-    getMinedOptionListAndUpt(buyerAccount);
-  }, [])
+    appendLogs(`Get minted options for connected account [${connectedAccount}]`);
+    getMinedOptionListAndUpdate(connectedAccount);
+  }, [isWeb3Enabled, account, connectedAccount])
 
   return (
     <div className="resizable">
       <div className="div-table">
         <div className="div-table-row">
           <div className="div-table-col">
-            <AccountDropDown
-              handleChange={(value) => { update(value) }}
-              placeholder={`Buyer Account`} />
+            <ConnectedAccount
+              handleChange={handleAccountChange}
+            />
           </div>
         </div>
         <div className="div-table-row">
@@ -144,7 +154,7 @@ const Contract = (props) => {
                   <div className="pane-standard">
                     <h2 className="header-2">Options Purchased</h2>
                     <OptionList
-                      buyerAccount={buyerAccount}
+                      buyerAccount={connectedAccount}
                       minted={true}
                       minedOptions={mintedOptList}
                       handleExercise={handleExercise}

@@ -14,14 +14,15 @@ const { OK_LIST_TERMS } = require("./serverResponseCodes");
 /**
  * Return a list of all current terms as Json response
  * 
+ * @param {*} contractDict - Dictionary of deployed contracts
  * @param {*} res - http response
+ * @returns Current Option terms held by the server as JSON array
  */
-async function listHandler(res) {
+async function listHandler(contractDict, res) {
     console.log(`Handle List all Terms Request`);
     try {
-        handleJsonOK(getOK(OK_LIST_TERMS, await persistListAll()), res);
+        handleJsonOK(getOK(OK_LIST_TERMS, await persistListAll(contractDict)), res);
     } catch (err) {
-        console.log(`Here 101 [${JSON.stringify(err)}]`);
         handleJsonError(getError(ERR_FAILED_LIST, err), res);
     }
 }

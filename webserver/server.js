@@ -111,7 +111,7 @@ function handleMethodGET(
                         purgeHandler(res);
                         break;
                     case COMMAND_LIST:
-                        listHandler(res);
+                        listHandler(contractDict, res);
                         break;
                     case COMMAND_ICON:
                         handleIcon(res);

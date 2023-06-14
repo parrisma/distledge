@@ -4,7 +4,7 @@
 const { serverConfig } = require("../lib/serverConfig");
 const { formatOptionTermsMessage } = require("../lib/optionTermsUtil");
 const { addressConfig } = require("../constants");
-const { getAllCoins, getAllFX, getAllLevels } = require("./DeployedContracts"); // out of Front end, would need to be deployed/packaged
+const { getAllTokens, getAllFX, getAllLevels } = require("./DeployedContracts"); // out of Front end, would need to be deployed/packaged
 
 async function fetchAsync(uri) {
     let response = await fetch(uri);
@@ -17,12 +17,25 @@ export function NFTServerBaseURI() {
 }
 
 /**
- * Request a list of existing options from the option NFT Server
-*/
-export async function getERC721MintedOptionList() {
+ * Get a list of existing options from the option NFT Server, that are owned
+ * by the given account
+ * 
+ * @param {*} owningAccount - The account that options should be owned by to be reported.
+ * @returns A list if options owned by the given account.
+ */
+export async function getERC721MintedOptionList(owningAccount) {
     var resAsJson;
     try {
-        resAsJson = JSON.stringify(await fetchAsync(`${NFTServerBaseURI()}/list`), null, 2);
+        var resAsJson = await fetchAsync(`${NFTServerBaseURI()}/list`);
+        const res = resAsJson.message.terms.filter((v, i) => {
+            const a = v.ownerAddress.toUpperCase();
+            const b = owningAccount.toUpperCase();
+            console.log(`[${a}] === [${b}] is [${a === b}]`);
+            return a === b;
+        });
+        resAsJson.message.terms = res;
+        console.log(`RES2 : [${JSON.stringify(resAsJson.message.terms, null, 2)}]`);
+
     } catch (err) {
         resAsJson = { "error": `${err.message}` }
     }
@@ -107,7 +120,7 @@ export function emptyValuationResponse() {
 export function OptionTypeOneTermsAreValid(optionTermsAsJson) {
     try {
         console.log(`Terms: [${JSON.stringify(optionTermsAsJson, null, 4)}]`);
-        const stableCoins = getAllCoins(addressConfig);
+        const stableAssets = getAllTokens(addressConfig);
         const fxRates = getAllFX(addressConfig);
         const levels = getAllLevels(addressConfig);
 
@@ -126,10 +139,10 @@ export function OptionTypeOneTermsAreValid(optionTermsAsJson) {
         if (0 === String(optionTermsAsJson.strike).length || Number(optionTermsAsJson.strike) < 0) {
             return [false, `Strike must be greater than zero, but given [${strike}]`];
         }
-        if (!stableCoins.includes(optionTermsAsJson.premiumToken)) {
-            return [false, `Premium token address [${optionTermsAsJson.premiumToken}] is not a valid stable coin contract address`]
+        if (!stableAssets.includes(optionTermsAsJson.premiumToken)) {
+            return [false, `Premium token address [${optionTermsAsJson.premiumToken}] is not a valid stable asset contract address`]
         }
-        if (!stableCoins.includes(optionTermsAsJson.settlementToken)) {
+        if (!stableAssets.includes(optionTermsAsJson.settlementToken)) {
             return [false, `Settlement token address [${optionTermsAsJson.settlementToken}] is not a valid stable coin contract address`]
         }
         if (!fxRates.includes(optionTermsAsJson.fxReferenceLevel)) {

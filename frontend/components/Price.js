@@ -33,7 +33,6 @@ const Contract = (props) => {
   async function updateUI() {
     if (isWeb3Enabled) {
       const _decimals = Number(await getDecimalsFromContract());
-      console.log(`Decimals :[${_decimals}]`);
       const [_ticker, _description, _live, _value, _lastUpdate] = await getLevelDetails();
       setDescription(_description.toString());
       setTicker(_ticker.toString());

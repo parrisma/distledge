@@ -91,12 +91,13 @@ async function persistDeleteOneTerm(optionId) {
 /**
  * Get a list of all current option ID's and their associated hash
  * 
+ * @param {*} contractDict - Dictionary of all currently deployed contracts
  * @returns List of terms in form of a Json Object containing an (array) list of option Id and Hash of terms
  */
-async function persistListAll() {
+async function persistListAll(contractDict) {
     var optionsList = undefined;
     try {
-        optionsList = await persistListAllFileSystem();
+        optionsList = await persistListAllFileSystem(contractDict);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_FAILED_LIST,

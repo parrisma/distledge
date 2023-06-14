@@ -180,9 +180,11 @@ async function main() {
     console.log(`\nRequest Purge     :\n${resp}\n`);
 
     // Mint & Persist the prescribed number of new (random) contracts
-    const [managerAccount, stableCoinIssuer, dataVendor, optionSeller, optionBuyer] = await namedAccounts(addressConfig);
+    // ****
+    const [managerAccount, stableCoinIssuer, dataVendor, optionSeller, optionBuyer, option_buyer_2, option_buyer_3] = await namedAccounts(addressConfig);
+    const buyers = [optionBuyer, option_buyer_2, option_buyer_3];
     for (let step = 0; step < numOptionsToCreate; step++) {
-        respJson = await persistOptionByPOSTRequest(optionSeller, optionBuyer, contractDict);
+        respJson = await persistOptionByPOSTRequest(optionSeller, buyers[Math.floor(Math.random() * 3)], contractDict);
         if (respJson.hasOwnProperty("errorCode")) {
             console.log(JSON.stringify(respJson, null, 2));
             throw new Error(`Failed to persist/mint Option terms as NFT ${resp.error}`);

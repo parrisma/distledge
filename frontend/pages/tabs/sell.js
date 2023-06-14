@@ -3,8 +3,8 @@ import { useMoralis } from "react-moralis";
 import { useState, useEffect } from "react";
 import { addressConfig } from "../../constants";
 import OptionList from "../../components/OptionList";
+import ConnectedAccount from "../../components/ConnectedAccount";
 import { OptionTypeOneTermsAreValid } from "../../lib/ERC721Util";
-
 import { useOfferedOptionContext } from "../../context/offeredOption";
 import { useConsoleLogContext } from "../../context/consoleLog";
 
@@ -17,12 +17,15 @@ const Contract = (props) => {
     }
 
     const { isWeb3Enabled } = useMoralis();
-    const sellerAccount = addressConfig.sellerAccount.accountAddress.toString().toUpperCase();
+    const { account } = useMoralis();
+    const NOT_SELECTED = "?";
+    var [connectedAccount, setConnectedAccount] = useState(NOT_SELECTED);
+    var [connectedAccountIsSeller, setConnectedAccountIsSeller] = useState(false);
     const [upd, setUpd] = useState(1);
     const [offeredOptDict, setOfferedOptDict] = useOfferedOptionContext();
 
     function offerOption(optionTermsAsJson) {
-        optionTermsAsJson.seller = addressConfig.sellerAccount.accountAddress.toString();
+        optionTermsAsJson.seller = connectedAccount; // Set seller to be current connected account.
         const [valid, msg] = OptionTypeOneTermsAreValid(optionTermsAsJson);
         if (valid) {
             appendLogs(`Terms valid [${valid}] Offering option`);
@@ -53,15 +56,28 @@ const Contract = (props) => {
 
     }
 
+    function isSellerAccount(account) {
+        const acctUpper = `${account}`.toUpperCase();
+        return `${account}`.toUpperCase() == addressConfig.sellerAccount.accountAddress.toString().toUpperCase();
+    }
+
+    function handleAccountChange(acct) {
+        setConnectedAccount(acct);
+        setConnectedAccountIsSeller(isSellerAccount(acct));
+        appendLogs(`Connected account :[${acct}] and is seller account [${connectedAccountIsSeller}]`);
+    }
+
     useEffect(() => {
-    }, [isWeb3Enabled, offeredOptDict]);
+    }, [isWeb3Enabled, offeredOptDict, account, connectedAccount]);
 
     return (
         <div className="resizable">
             <div className="div-table">
                 <div className="div-table-row">
                     <div className="div-table-col">
-                        <p>Seller Account: [{sellerAccount}]</p>
+                        <ConnectedAccount
+                            handleChange={handleAccountChange}
+                        />
                     </div>
                 </div>
                 <div className="div-table-row">
@@ -71,9 +87,14 @@ const Contract = (props) => {
                                 <div className="div-table-col">
                                     <div className="pane-narrow">
                                         <h2 className="header-2">Print Option for Sale</h2>
-                                        <SimpleOption
-                                            handleOfferOption={offerOption}
-                                            handleLogChange={appendLogs} />
+                                        {connectedAccountIsSeller ? (
+                                            <SimpleOption
+                                                handleOfferOption={offerOption}
+                                                handleLogChange={appendLogs} />
+                                        ) :
+                                            (<div className="header-3-red">
+                                                Connect as a Seller account to print options
+                                            </div>)}
                                     </div>
                                 </div>
                                 <div className="div-table-col">
