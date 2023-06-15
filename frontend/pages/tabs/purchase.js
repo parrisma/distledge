@@ -21,10 +21,9 @@ const Contract = (props) => {
     setLogs(logs.slice(-10))
   }
 
-  //State [Dictionary] for options offered by seller
-  const [offeredOptDict, setOfferedOptDict] = useOfferedOptionContext();
-  //State [List] for minted options retrieved from block chain.
-  const [mintedOptList, setMintedOptList] = useState([]);
+
+  const [offeredOptDict, setOfferedOptDict] = useOfferedOptionContext(); // [Dictionary] for options offered by seller
+  const [mintedOptList, setMintedOptList] = useState([]); // [List] for minted options retrieved from block chain.
 
   const { isWeb3Enabled } = useMoralis();
   const { account } = useMoralis();
@@ -57,6 +56,10 @@ const Contract = (props) => {
     }
   }
 
+  /**
+ * Handle the event that the in-browser wallet switches (connects) as a different account.
+ * @param {*} acct - The account that is now active
+ */
   async function handleAccountChange(acct) {
     appendLogs(`Connected account :[${acct}]`);
     setConnectedAccount(acct);
@@ -79,6 +82,11 @@ const Contract = (props) => {
         .then((res) => {
           appendLogs(`[${optionId}] has been sent for exercise. !`);
           getMinedOptionListAndUpdate(connectedAccount);
+          if (res.hasOwnProperty(`errorCode`)) {
+            appendLogs(`Exercise Failed : [${res.message}]`);
+          } else {
+            appendLogs(`Exercise Ok [${res.message}]`);
+          }
         })
         .catch((err) => {
           appendLogs(`Failed to exercise option due to ${err}!`);
@@ -115,16 +123,21 @@ const Contract = (props) => {
     optionTermsAsJson.buyer = connectedAccount;
     sendCreateOptionRequest(optionTermsAsJson)
       .then((res) => {
-        appendLogs(`[${uniqueId}] minted with NFT Id ${JSON.stringify(res.optionId)}!`);
-        if (uniqueId in offeredOptDict) {
-          delete offeredOptDict[uniqueId]
-          setOfferedOptDict(offeredOptDict);
-          appendLogs(`[${uniqueId}] Deleted from offer list as it has been sold`);
+        if (res.hasOwnProperty(`errorCode`)) {
+          appendLogs(`Mint & Transfer Failed : [${res.message}]`);
+        } else {
+          appendLogs(`[${uniqueId}] minted with NFT Id ${JSON.stringify(res.optionId)}!`);
+          if (uniqueId in offeredOptDict) {
+            delete offeredOptDict[uniqueId]
+            setOfferedOptDict(offeredOptDict);
+            appendLogs(`[${uniqueId}] Deleted from offer list as it has been sold`);
+          }
+          appendLogs(`Mint & Transfer Ok [${res.message}]`);
         }
         getMinedOptionListAndUpdate(connectedAccount);
       })
       .catch((err) => {
-        appendLogs(`Failed to create option due to ${err}!`);
+        appendLogs(`Failed to Mint & Transfer option due to ${err}!`);
       })
   }
 

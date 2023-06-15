@@ -48,7 +48,19 @@ async function getAccount(accountAddr) {
     return account;
 }
 
+/**
+ * Case insensitive address comparison as hex numbers in address can be both upper & lower case.
+ * 
+ * @param {*} addr1 - Address one to compare
+ * @param {*} addr2 - Address two to compare
+ * @returns True, if address are the same.
+ */
+function isSameAddress(addr1, addr2){
+    return (`${addr1}`.toUpperCase() === `${addr2}`.toUpperCase());
+}
+
 module.exports = {
     namedAccounts,
+    isSameAddress,
     getAccount
 }

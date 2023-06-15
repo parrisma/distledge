@@ -41,6 +41,14 @@
             "displayName": "CNY Stable Coin"
         },
         {
+            "rawName": "appleStableShare",
+            "displayName": "Apple Stable Share"
+        },
+        {
+            "rawName": "teslaStableShare",
+            "displayName": "Tesla Stable Share"
+        },
+        {
             "rawName": "usdEscrowAccount",
             "displayName": "USD Escrow Service"
         },

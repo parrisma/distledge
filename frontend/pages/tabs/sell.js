@@ -56,17 +56,29 @@ const Contract = (props) => {
 
     }
 
+    /**
+     * Return True if given account is the defined 'seller' account.
+     * @param {*} account - The account verify (or not) as seller
+     * @returns True if given account is the seller.
+     */
     function isSellerAccount(account) {
         const acctUpper = `${account}`.toUpperCase();
         return `${account}`.toUpperCase() == addressConfig.sellerAccount.accountAddress.toString().toUpperCase();
     }
 
+    /**
+     * Handle the event that the in-browser wallet switches (connects) as a different account.
+     * @param {*} acct - The account that is now active
+     */
     function handleAccountChange(acct) {
         setConnectedAccount(acct);
         setConnectedAccountIsSeller(isSellerAccount(acct));
         appendLogs(`Connected account :[${acct}] and is seller account [${connectedAccountIsSeller}]`);
     }
 
+    /**
+     * Update given change to variables depended on by active UI components.
+     */
     useEffect(() => {
     }, [isWeb3Enabled, offeredOptDict, account, connectedAccount]);
 

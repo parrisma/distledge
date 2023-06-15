@@ -82,7 +82,6 @@ const Contract = (props) => {
                         <button
                             className="button"
                             onClick={() => {
-                                // alert(props.optionId);
                                 props.handleExercise(props.optionId, optionValuation.value);
                             }}>
                             <div>Exercise</div>
