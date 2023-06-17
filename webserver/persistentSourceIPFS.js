@@ -223,11 +223,40 @@ async function persistGetOptionTermsIPFS(optionId) {
     return [optionTermsAsJson, originalMangerSignedHash];
 }
 
+/**
+ * Delete one terms that exist in the terms folder by option id.
+ * this would never be needed in a production context, but this is used for clean start testing
+ * in our demo dApp
+ */
+async function persistDeleteOneTermIPFS(optionId) {
+    const termsDirName = optionTermsDirName(optionId);
+    try {
+        if (fs.existsSync(termsDirName)) {
+            // Delete the terms id dir
+            rimraf.sync(termsDirName);
+            if (fs.existsSync(termsDirName)) {
+                throw getFullyQualifiedError(
+                    ERR_PURGE,
+                    `Failed to delete ${termsDirName}`,
+                    err);
+            }
+        }
+        console.log(`Terms dir ${termsDirName}`);
+    } catch (err) {
+        throw getFullyQualifiedError(
+            ERR_PURGE,
+            `Failed to delete terms ${termsDirName} dir`,
+            err);
+    }
+    return
+}
+
 module.exports = {
     persistInitializeIPFS,
     persistListAllIPFS,
     persistPurgeAllIPFS,
     persistOptionTermsIPFS,
     persistOptionIdExistsIPFS,
-    persistGetOptionTermsIPFS
+    persistGetOptionTermsIPFS,
+    persistDeleteOneTermIPFS
 };

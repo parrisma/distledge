@@ -9,21 +9,22 @@ const {
     ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, ERR_BAD_PULL
 } = require("@webserver/serverErrorCodes.js");
 const { getFullyQualifiedError } = require("@webserver/serverErrors");
-const {
-    persistInitializeFileSystem,
-    persistOptionTermsFileSystem,
-    persistPurgeAllFileSystem,
-    persistListAllFileSystem,
-    persistOptionIdExistsFileSystem,
-    persistGetOptionTermsFileSystem,
-    persistDeleteOneTermFileSystem } = require("@webserver/persistentSourceFileSystem");
+// const {
+//     persistInitializeFileSystem,
+//     persistOptionTermsFileSystem,
+//     persistPurgeAllFileSystem,
+//     persistListAllFileSystem,
+//     persistOptionIdExistsFileSystem,
+//     persistGetOptionTermsFileSystem,
+//     persistDeleteOneTermFileSystem } = require("@webserver/persistentSourceFileSystem");
 const {
     persistInitializeIPFS,
     persistListAllIPFS,
     persistPurgeAllIPFS,
     persistOptionTermsIPFS,
     persistOptionIdExistsIPFS,
-    persistGetOptionTermsIPFS } = require("@webserver/persistentSourceIPFS");
+    persistGetOptionTermsIPFS,
+    persistDeleteOneTermIPFS } = require("@webserver/persistentSourceIPFS");
 
 /**
  * Mint a new NFT and persist the terms of teh option to match the ERC271 URI associated with the newly minted NFT
@@ -102,7 +103,7 @@ async function persistDeleteOneTerm(optionId) {
  */
 async function persistDeleteOneTerm(optionId) {
     try {
-        await persistDeleteOneTermFileSystem(optionId);
+        await persistDeleteOneTermIPFS(optionId);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_PURGE,
