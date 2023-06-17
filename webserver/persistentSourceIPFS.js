@@ -3,8 +3,8 @@
  */
 require('module-alias/register'); // npm i --save module-alias
 var fs = require('fs');
-const { addTextToIPFS, getTextFromIPFS } = require('./ipfs/ipfsCore.js'); 
-const { startIpfs } = require('./ipfs/ipfsCore.js'); 
+const { addTextToIPFS, getTextFromIPFS } = require('./ipfs/ipfsCore.js');
+const { startIpfs } = require('./ipfs/ipfsCore.js');
 var path = require('path');
 const { serverConfig } = require("@webserver/serverConfig");
 const { ERR_FAILED_PERSIST, ERR_PERSIST_INIT, ERR_PURGE, ERR_FAILED_LIST } = require("@webserver/serverErrorCodes.js");
@@ -224,9 +224,12 @@ async function persistGetOptionTermsIPFS(optionId) {
 }
 
 /**
- * Delete one terms that exist in the terms folder by option id.
- * this would never be needed in a production context, but this is used for clean start testing
- * in our demo dApp
+ * Delete the persisted terms for the given option Id, this should remove any local data held by
+ * the WebServer and also remove the item from IPFS
+ * 
+ * TODO: Delete the item in IPFS space.
+ * 
+ * @param {*} optionId - The option id who's terms are to be deleted from local store and IPFS space.
  */
 async function persistDeleteOneTermIPFS(optionId) {
     const termsDirName = optionTermsDirName(optionId);

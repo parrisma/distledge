@@ -1,5 +1,5 @@
 /*
-** Get the currently connect acount/wallet or open metamask login
+** Get the currently connect account/wallet or open metamask login
 **
 ** Used window.ethereum which only exists if MetaMask or other wallet is installed in browser.
 */

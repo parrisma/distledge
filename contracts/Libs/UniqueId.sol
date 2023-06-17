@@ -12,7 +12,7 @@ library UniqueId {
      */
     function getUniqueId() public view returns (bytes32 id) {
         id = keccak256(
-            abi.encodePacked(msg.sender, block.timestamp, block.prevrandao)
+            abi.encodePacked(msg.sender, block.timestamp, block.difficulty)
         );
     }
 }

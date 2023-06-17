@@ -1,48 +1,89 @@
-# Doing Deployments
+# Deploying
 
-## Policy
+- [Deploying](#deploying)
+  - [Things we use](#things-we-use)
+  - [Pull Project](#pull-project)
+  - [Install node](#install-node)
+  - [Start Services](#start-services)
+    - [Hardhat Test Network (local chain)](#hardhat-test-network-local-chain)
+    - [Local WebServer that supports NFTs](#local-webserver-that-supports-nfts)
+    - [Test Option Contracts](#test-option-contracts)
+    - [Dummy Price Feeds](#dummy-price-feeds)
+    - [Front End - React UI](#front-end---react-ui)
 
-For this project we choose to use [Hardhat](https://www.npmjs.com/package/hardhat) deployments directly inside the ```test``` scripts.
+## Things we use
 
-There are no auto deployment scripts in this ```deploy``` directory.
+1. [Node Package Manager](https://docs.npmjs.com/)
+2. [Yarn](https://yarnpkg.com/)
+3. [JavaScript](https://www.w3schools.com/js/)
+4. [React JS](https://react.dev/)
+5. [Moralis](https://moralis.io/)
+6. [Solidity](https://docs.soliditylang.org/en/v0.8.20/)
+7. [Open Zeppelin](https://www.openzeppelin.com/)
+8. [ERC20 Token Standard](https://docs.openzeppelin.com/contracts/4.x/erc20)
+9. [ERC721 NFT Standard](https://docs.openzeppelin.com/contracts/4.x/erc721)
+10. [Hardhat](https://hardhat.org/)
+11. [Interplanetary File System (IPFS)](https://ipfs.tech/)
+12. [MetaMask](https://metamask.io/)
 
-## Tests with Deployed Contracts
+## Pull Project
 
-To run with deployed contracts such that we can test with Ui and [MetaMask](https://metamask.io/), we start a hard hat node and then use the ```scripts\deploy.js``` to deploy the contracts to that test network, see below.
-
-In one window
+Clone or pull the project locally. e.g.
 
 ```text
-npx hardhat node
+mkdir distledge
+cd distledge
+git clone https://github.com/parrisma/distledge.git
 ```
 
-This will start the network named ```hardhat``` as defined in ```hardhat.config.js```
+## Install node
 
-In another window, you can deploy contracts to that running now network. **However** to connect to this network you need to use ```--network localhost``` to connect to the running instance. Or the name of the host and port where the stand alone network was started.
+Install npm and then run npm install from within the project directory to install all the [required node packages](https://github.com/parrisma/distledge/blob/main/package.json).
 
 ```text
-npx hardhat run --network localhost scripts\deploy\deploy.js
+npm install -g npm
+cd distledge
+npm install --legacy-peer-deps
 ```
 
-This deploy script will show the accounts being used and the addresses of the deployed contracts. These details can then be used with other test scripts or services such as [MetaMask](https://metamask.io/)
+## Start Services
 
-**or** if you have a dapp in another script that needs to load the deployed contracts, you will need to run that script against localhost also.
+In this order, in different command windows.
+
+### Hardhat Test Network (local chain)
 
 ```text
-npx hardhat run --network localhost myApp.js
+npm run node
 ```
 
-Your application will need to know the address of the contract that was deployed. You can log this or save it in configuration. Then use the code below to connect to a given contract instance.
+### Local WebServer that supports NFTs
 
-```javascript
-    /**
-     * Create a contract instance by loading it from the address that resulted from its
-     * deployment. You must make sure the deployment and the app are pointing at the same
-     * network.
-     * 
-     * Where "ContractName" is the actual name of the Contract &
-     *       "0x8464135c8F25Da09e49BC8782676a84730C318bC" is an example of a real deployed contract address.
-     */
-    const contractInstance = await hre.ethers.getContractAt("ContractName", "0x8464135c8F25Da09e49BC8782676a84730C318bC");      
-    console.log(await contractInstance.contractFunc());
+```text
+npm run ftb
 ```
+
+For full details see [here](../howto/strart-environment.md), once the WebServer is running, so can interact with it via [http://localhost:8191](http://localhost:8191).
+
+It, will also start an IPFS server that you can read about [here](../howto/ipfs.md) and interact with via [http://localhost:9091](http://localhost:9091)
+
+### Test Option Contracts
+
+```text
+npm run deploy-opt
+```
+
+### Dummy Price Feeds
+
+To simulate a ticking market
+
+```text
+npm run price-feed
+```
+
+### Front End - React UI
+
+```text
+npm run frontend
+```
+
+For full details on UI setup and use, see [here](../howto/start-ui.md), once it is running you can interact with it via [http://localhost:3000/](http://localhost:3000/)
