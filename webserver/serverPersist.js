@@ -9,14 +9,22 @@ const {
     ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, ERR_BAD_PULL
 } = require("@webserver/serverErrorCodes.js");
 const { getFullyQualifiedError } = require("@webserver/serverErrors");
+// const {
+//     persistInitializeFileSystem,
+//     persistOptionTermsFileSystem,
+//     persistPurgeAllFileSystem,
+//     persistListAllFileSystem,
+//     persistOptionIdExistsFileSystem,
+//     persistGetOptionTermsFileSystem,
+//     persistDeleteOneTermFileSystem } = require("@webserver/persistentSourceFileSystem");
 const {
-    persistInitializeFileSystem,
-    persistOptionTermsFileSystem,
-    persistPurgeAllFileSystem,
-    persistListAllFileSystem,
-    persistOptionIdExistsFileSystem,
-    persistGetOptionTermsFileSystem,
-    persistDeleteOneTermFileSystem } = require("@webserver/persistentSourceFileSystem");
+    persistInitializeIPFS,
+    persistListAllIPFS,
+    persistPurgeAllIPFS,
+    persistOptionTermsIPFS,
+    persistOptionIdExistsIPFS,
+    persistGetOptionTermsIPFS,
+    persistDeleteOneTermIPFS } = require("@webserver/persistentSourceIPFS");
 
 /**
  * Mint a new NFT and persist the terms of the option to match the ERC271 URI associated with the newly minted NFT
@@ -33,7 +41,7 @@ async function persistOptionTerms(
     signedHash) {
 
     try {
-        persistOptionTermsFileSystem(termsAsJson, optionId, signedHash);
+        await persistOptionTermsIPFS(termsAsJson, optionId, signedHash);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_FAILED_PERSIST,
@@ -47,7 +55,7 @@ async function persistOptionTerms(
  */
 async function persistInitialize() {
     try {
-        await persistInitializeFileSystem();
+        await persistInitializeIPFS();
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_PERSIST_INIT,
@@ -63,7 +71,39 @@ async function persistInitialize() {
  */
 async function persistPurgeAll() {
     try {
-        await persistPurgeAllFileSystem();
+        await persistPurgeAllIPFS();
+    } catch (err) {
+        throw getFullyQualifiedError(
+            ERR_PURGE,
+            `Persistence Layer, Failed to purge all terms`,
+            err);
+    }
+}
+
+/**
+ * Delete one persistent terms by optionId.
+ * Note: This would never be needed in a production context, but this is used for clean start testing
+ *       in our demo dApp
+ */
+async function persistDeleteOneTerm(optionId) {
+    try {
+        await persistDeleteOneTermFileSystem(optionId);
+    } catch (err) {
+        throw getFullyQualifiedError(
+            ERR_PURGE,
+            `Persistence Layer, Failed to purge all terms`,
+            err);
+    }
+}
+
+/**
+ * Delete one persistent terms by optionId.
+ * Note: This would never be needed in a production context, but this is used for clean start testing
+ *       in our demo dApp
+ */
+async function persistDeleteOneTerm(optionId) {
+    try {
+        await persistDeleteOneTermIPFS(optionId);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_PURGE,
@@ -97,7 +137,7 @@ async function persistDeleteOneTerm(optionId) {
 async function persistListAll(contractDict) {
     var optionsList = undefined;
     try {
-        optionsList = await persistListAllFileSystem(contractDict);
+        optionsList = await persistListAllIPFS();
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_FAILED_LIST,
@@ -115,7 +155,7 @@ async function persistListAll(contractDict) {
 async function persistOptionIdExists(optionId) {
     var exists = undefined;
     try {
-        exists = await persistOptionIdExistsFileSystem(optionId);
+        exists = await persistOptionIdExistsIPFS(optionId);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_FAILED_PERSIST,
@@ -139,7 +179,7 @@ async function persistGetOptionTerms(optionId) {
                 ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST,
                 `Cannot get option from persistence as option id [${optionId}] does not exist`);
         }
-        [optionTermsAsJson, signedHash] = await persistGetOptionTermsFileSystem(optionId);
+        [optionTermsAsJson, signedHash] = await persistGetOptionTermsIPFS(optionId);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_BAD_PULL,
