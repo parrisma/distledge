@@ -126,6 +126,7 @@ contract SimpleOption is OptionContract {
 
     /**
      ** @notice Exercise the option and pay valuation to buyer if > 0
+     ** @notice emits Exercised on success
      ** @return true when done
      */
     function exercise() public override onlyBuyer whenLive returns (bool) {

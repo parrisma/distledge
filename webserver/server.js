@@ -78,7 +78,7 @@ function mainPage(res) {
  * Handle HTTP GET Requests
  * 
  * @param {*} mgrAccount - the manager account used to handle the requests on chain and in storage
- * @param {*} contractDict - teh dictionary of all required and deployed utility contracts
+ * @param {*} contractDict - the dictionary of all required and deployed utility contracts
  * @param {*} req - http request
  * @param {*} res - http response
  */
@@ -144,7 +144,7 @@ function handleMethodGET(
  * Process JSON document when posted to server
  * 
  * @param {*} mgrAccount - the manager account used to handle the requests on chain and in storage
- * @param {*} contractDict - teh dictionary of all required and deployed utility contracts 
+ * @param {*} contractDict - the dictionary of all required and deployed utility contracts 
  * @param {*} bodyAsJson - the Json body to process as Json object
  * @param {*} req - http request
  * @param {*} res - http response
@@ -178,7 +178,7 @@ async function handlePOSTedJson(
 /**
  * Handle and delegate http Post requests 
  * @param {*} mgrAccount - the manager account used to handle the requests on chain and in storage
- * @param {*} contractDict - teh dictionary of all required and deployed utility contracts 
+ * @param {*} contractDict - the dictionary of all required and deployed utility contracts 
  * @param {*} req - http request
  * @param {*} res - http response
  */

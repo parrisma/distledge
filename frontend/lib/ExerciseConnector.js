@@ -23,8 +23,8 @@ function formatExerciseMessage(optionId, value, currentOwnerAddress) {
  * Send a request to WebServer to exercise an option
  * 
  * @param {*} optionId - The Option Id to request exercise for
- * @param {*} value - The current value of teh option
- * @param {*} currentOwnerAddress - The address of the account that owns teh option.
+ * @param {*} value - The current value of the option
+ * @param {*} currentOwnerAddress - The address of the account that owns the option.
  * @returns 
  */
 export async function sendExerciseRequest(optionId, value, currentOwnerAddress) {

@@ -13,7 +13,7 @@ async function persistInitializeIPFS() {
 
 
 /**
- * Get a list of all persisted option terms, in teh form {OptionId & Signed Hash}
+ * Get a list of all persisted option terms, in the form {OptionId & Signed Hash}
  * 
  * @returns List of terms in form of a Json Object containing an (array) list of option Id and Hash of terms
  */

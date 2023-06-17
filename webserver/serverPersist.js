@@ -19,7 +19,7 @@ const {
     persistDeleteOneTermFileSystem } = require("@webserver/persistentSourceFileSystem");
 
 /**
- * Mint a new NFT and persist the terms of teh option to match the ERC271 URI associated with the newly minted NFT
+ * Mint a new NFT and persist the terms of the option to match the ERC271 URI associated with the newly minted NFT
  * 
  * @param {*} termsAsJson - The option terms as a Json object
  * @param {*} optionId - The NTF Option Id of the given terms

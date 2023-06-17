@@ -228,7 +228,7 @@ async function persistOptionIdExistsFileSystem(optionId) {
 }
 
 /**
- * Get the signed hash which is the filename of teh stored terms
+ * Get the signed hash which is the filename of the stored terms
  */
 function getSignedHashFromOptionTermsFileName(fileName) {
     const fileNameBits = fileName.split(path.sep);

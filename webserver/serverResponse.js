@@ -115,7 +115,7 @@ function getOK(OKCode, message) {
 /**
  * Return a 200 (OK) response in <res> with the given Json message
  *
- * Note: There is a CORS error from Chrome unless the access control is opened up in teh header as below. In a
+ * Note: There is a CORS error from Chrome unless the access control is opened up in the header as below. In a
  * production setting this would not be OK , but for this simple test set-up it's fine.
  * 
  * @param {*} JsonOKMessage - The Json message to return

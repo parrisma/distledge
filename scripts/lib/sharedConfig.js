@@ -3,7 +3,7 @@ var path = require('path');
 
 /** 
    * We need to export all of the contract addresses to so other test modules can 
-   * interact with them. As teh contracts are deployed they will populate the members.
+   * interact with them. As the contracts are deployed they will populate the members.
    * 
    * After all contracts are deployed, this will be written out as a file.
   */

@@ -12,7 +12,17 @@ import "../Libs/VerifySigner.sol";
  ** defined valid source.
  */
 contract SecureLevel is Ownable {
+    /**
+     * @notice When teh secure source of levels is changes
+     * @param current_ - The previous source address
+     * @param new_ - The now current (new) source address
+     */
+
     event ChangeOfSource(address current_, address new_);
+    /**
+     * @notice When the secure level is updated
+     * @param value_ - The new value
+     */
     event LevelUpdated(int256 value_);
 
     using VerifySigner for *;
@@ -118,22 +128,16 @@ contract SecureLevel is Ownable {
 
     /**
      ** @notice Get all of the contract details.
-     ** @return The symbol
-     ** @return The description
-     ** @return True, if an an update been seen since construction
-     ** @return The current value
-     ** @return The timestamp of the update
+     ** @return symbol
+     ** @return description
+     ** @return live - True, if an an update been seen since construction
+     ** @return value - The current value
+     ** @return lastUpdate - The timestamp of the update
      */
     function getDetails()
         public
         view
-        returns (
-            string memory,
-            string memory,
-            bool,
-            int256,
-            uint256
-        )
+        returns (string memory, string memory, bool, int256, uint256)
     {
         return (_symbol, _description, _live, _value, _lastUpdate);
     }

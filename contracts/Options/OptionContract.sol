@@ -13,7 +13,20 @@ import "../StableAsset/ERC20StableAsset.sol";
  ** @title Implements protocol for option contracts
  */
 abstract contract OptionContract is Ownable, Pausable {
+    /**
+     * @notice When an new option contract is created between parties
+     * @param _buyer - The buyer of the option
+     * @param _seller - The seller of the option
+     * @param _uniqueId - A globally unique id generated for the transation
+     */
     event DealStruck(address _buyer, address _seller, string _uniqueId);
+
+    /**
+     * @notice When the contract owner exits (exercises) the option to release any residual value and terminate the agreement
+     * @param _buyer - The buyer of the option
+     * @param _seller - The seller of the option
+     * @param _uniqueId - A globally unique id generated for the transation
+     */
     event Exercised(address _buyer, address _seller, string _uniqueId);
 
     address internal _seller;
@@ -114,6 +127,7 @@ abstract contract OptionContract is Ownable, Pausable {
 
     /**
      ** @notice Accept the terms by paying the premium
+     ** @notice emits DealStruck on success
      ** @return true when done.
      */
     function acceptTerms() public virtual onlyBuyer whenNotLive returns (bool) {

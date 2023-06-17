@@ -3,7 +3,7 @@ import { getDisplayName } from "@/lib/DisplayName";
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 
-/* Show the name of teh given connected account
+/* Show the name of the given connected account
 */
 const Contract = (props) => {
 

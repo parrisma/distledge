@@ -22,7 +22,7 @@ const { ERR_FAIL_CREATE } = require("@webserver/serverErrorCodes");
  * 
  * @param {*} termsAsJson - The option terms as a Json object
  * @param {*} managerAccount - The manager account to sign the terms
- * @param {*} sellerAddress - The address of teh seller account
+ * @param {*} sellerAddress - The address of the seller account
  * @param {*} contractDict - the dictionary of all required and deployed utility contracts 
  */
 async function mintNFTOption(
@@ -113,7 +113,7 @@ async function mintAndPersistOptionNFT(
             /**
              * We need a valid buyer account to have been passed
              */
-            const buyerAddress = termsAsJson.terms.buyer; // This is just the address, not teh account object.
+            const buyerAddress = termsAsJson.terms.buyer; // This is just the address, not the account object.
             if (!isValidAddressFormat(buyerAddress)) {
                 throw new Error(`Invalid account passed as Option buyer [${buyerAddress}]`);
             }

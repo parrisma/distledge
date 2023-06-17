@@ -230,7 +230,7 @@ function getErrorWithMessage(errorCode, message, err) {
 /**
  * Return a Json error response.
  *
- * Note: There is a CORS error from Chrome unless the access control is opened up in teh header as below. In a
+ * Note: There is a CORS error from Chrome unless the access control is opened up in the header as below. In a
  * production setting this would not be OK , but for this simple test set-up it's fine.
  * 
  * @param {*} JsonErrorMessage - The error message as Json
