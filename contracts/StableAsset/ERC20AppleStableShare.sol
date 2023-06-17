@@ -10,14 +10,14 @@ import "./ERC20StableAsset.sol";
  ** TODO: Also, we can move share_symbol() into base class and rename it token_symbol.
  */
 contract ERC20AppleStableShare is ERC20StableAsset {
-    string private constant _token_symbol = "AppleSS";
+    string private constant _token_symbol = "APLSS";
     string private constant _token_name = "AppleStableShare";
     string private constant _asset_code = "US0378331005"; // isin code
-    uint8 private constant _2decimal_places = 2;
+    uint8 private constant _decimal_places = 0;
 
     constructor()
         ERC20StableAsset(
-            _2decimal_places,
+            _decimal_places,
             _asset_code,
             _token_symbol,
             _token_name

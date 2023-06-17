@@ -27,7 +27,7 @@ contract EscrowAccount is Ownable, Pausable {
         uint256 _balance
     );
 
-    ERC20StableAsset private _erc20StableCoin;
+    ERC20StableAsset private _erc20StableAsset;
     uint256 _physicalBalance;
     uint256 _reserverPercent;
     uint256 _unitsPerToken;
@@ -46,18 +46,18 @@ contract EscrowAccount is Ownable, Pausable {
 
         require(
             reserverPercent_ >= 1 && reserverPercent_ <= 100,
-            "Rserver percent (%) must be > 0 and < 100"
+            "Reserve percent (%) must be > 0 and < 100"
         );
         _reserverPercent = reserverPercent_;
 
-        _erc20StableCoin = ERC20StableAsset(erc20StableCoinAddr_);
-        _unitsPerToken = _erc20StableCoin.unitsPerToken();
-        _tokenDecimals = _erc20StableCoin.decimals();
+        _erc20StableAsset = ERC20StableAsset(erc20StableCoinAddr_);
+        _unitsPerToken = _erc20StableAsset.unitsPerToken();
+        _tokenDecimals = _erc20StableAsset.decimals();
         _physicalBalance = 0;
 
         require(
             isBalanced() == true,
-            "escrow balance and coin supply must be equal at inception."
+            "Escrow balance and coin supply must be equal at inception."
         );
     }
 
@@ -67,12 +67,12 @@ contract EscrowAccount is Ownable, Pausable {
      */
     function unPause() public onlyOwner whenPaused returns (bool) {
         require(
-            _erc20StableCoin.owner() == address(this),
+            _erc20StableAsset.owner() == address(this),
             "EscrowAccount not owner of managed token"
         );
         require(
             isBalanced() == true,
-            "escrow balance and coin supply must be equal at inception."
+            "Escrow balance and coin supply must be equal at inception."
         );
         super._unpause();
         return true;
@@ -91,7 +91,7 @@ contract EscrowAccount is Ownable, Pausable {
      ** @return the address of the managed token
      */
     function managedTokenAddress() public view onlyOwner returns (address) {
-        return address(_erc20StableCoin);
+        return address(_erc20StableAsset);
     }
 
     /**
@@ -99,7 +99,7 @@ contract EscrowAccount is Ownable, Pausable {
      ** @return the name of the managed token
      */
     function managedTokenName() public view returns (string memory) {
-        return _erc20StableCoin.name();
+        return _erc20StableAsset.name();
     }
 
     /**
@@ -107,7 +107,14 @@ contract EscrowAccount is Ownable, Pausable {
      ** @return true if registered ok
      */
     function isBalanced() public view returns (bool) {
-        return _physicalBalance >= _erc20StableCoin.totalSupply();
+        return _physicalBalance >= _erc20StableAsset.totalSupply();
+    }
+
+    /**
+     * @notice return the number of decimal places underlying token uses.
+     */
+    function decimals() public view returns (uint8) {
+        return _erc20StableAsset.decimals();
     }
 
     /**
@@ -166,12 +173,12 @@ contract EscrowAccount is Ownable, Pausable {
         );
 
         if (deposit) {
-            _erc20StableCoin.mint(quantity_);
-            _erc20StableCoin.approve(owner(), quantity_);
-            _erc20StableCoin.transfer(transactingAddress_, quantity_);
+            _erc20StableAsset.mint(quantity_);
+            _erc20StableAsset.approve(owner(), quantity_);
+            _erc20StableAsset.transfer(transactingAddress_, quantity_);
             _physicalBalance = _physicalBalance + quantity_;
             emit Deposit(
-                _erc20StableCoin.assetCode(),
+                _erc20StableAsset.assetCode(),
                 transactingAddress_,
                 quantity_,
                 uniqueTransactionId_,
@@ -182,15 +189,15 @@ contract EscrowAccount is Ownable, Pausable {
                 _physicalBalance >= quantity_,
                 "Insufficent escrow balance for token withdrawal"
             );
-            _erc20StableCoin.transferFrom(
+            _erc20StableAsset.transferFrom(
                 transactingAddress_,
                 address(this),
                 quantity_
             );
             _physicalBalance = _physicalBalance - quantity_;
-            _erc20StableCoin.burn(quantity_);
+            _erc20StableAsset.burn(quantity_);
             emit Withdrawal(
-                _erc20StableCoin.assetCode(),
+                _erc20StableAsset.assetCode(),
                 transactingAddress_,
                 quantity_,
                 uniqueTransactionId_,
@@ -205,7 +212,7 @@ contract EscrowAccount is Ownable, Pausable {
      ** @return the contract instance address.
      */
     function txfr(address from, address to, uint256 qty) public returns (bool) {
-        _erc20StableCoin.transferFrom(from, to, qty);
+        _erc20StableAsset.transferFrom(from, to, qty);
         return true;
     }
 

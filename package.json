@@ -6,9 +6,11 @@
     "deploy": "npx hardhat run --network localhost ./scripts/deploy/deploy.js",
     "export-fe": "npx hardhat run --network localhost ./scripts/exportToFrontEnd/updateFrontEnd.js",
     "export-be": "npx hardhat run --network localhost ./scripts/exportToWebService/updateWebService.js",
+    "deploy-opt": "npx hardhat run --network localhost ./webserver/test/serverTest.js",
     "backend": "npx hardhat run --network localhost ./webserver/server.js",
     "ftb": "npm run deploy && npm run export-fe && npm run export-be && npm run backend",
-    "frontend": "cd frontend && yarn dev"
+    "frontend": "cd frontend && yarn dev",
+    "price-feed": "npx hardhat run --network localhost ./scripts/priceInject/priceInject.js"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",

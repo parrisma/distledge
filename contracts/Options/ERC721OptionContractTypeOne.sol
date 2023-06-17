@@ -124,7 +124,7 @@ contract ERC721OptionContractTypeOne is ERC721URIStorage, Pausable, Ownable {
             paymentToken.isContract(),
             "paymentToken not an ERC20 Contract"
         );
-        ERC20(paymentToken).transferFrom(to, from, paymentAmount);
+        ERC20(paymentToken).transferFrom(to, from, paymentAmount); // Buyer pays premium to seller
         safeTransferFrom(from, to, optionId, "");
         emit OptionTransfer(tokenURI(optionId), from, to);
     }

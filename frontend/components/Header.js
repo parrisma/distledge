@@ -11,7 +11,7 @@ const Header = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="header-row">
-        <div className="header-decription">
+        <div className="header-description">
           <h1 className="header">Distributed Ledger</h1>
         </div>
         <div className="header-connect">

@@ -10,17 +10,23 @@ const equityPriceABI = require("./EquityPrice.json");
 const FXPriceABI = require("./FXPrice.json");
 const FXPriceByteCode = require("./FXPrice-bytecode.json");
 const ERC20AppleStableShare = require("./ERC20AppleStableShare.json");
+const ERC20TeslaStableShare = require("./ERC20TeslaStableShare.json");
+const ERC20StableAsset = require("./ERC20StableAsset.json");
 const ERC20CNYStableCoin = require("./ERC20CNYStableCoin");
 const ERC20EURStableCoin = require("./ERC20EURStableCoin");
 const ERC20USDStableCoin = require("./ERC20USDStableCoin");
 const ERC20USDStableByteCode = require("./ERC20USDStableCoin-bytecode.json");
-const EscrowStableCoinABI = require("./EscrowCurrenyAccount.json");
+const EscrowAccountABI = require("./EscrowAccount.json");
 const FXDeal = require("./FXDeal.json");
 const SimpleOptionABI = require("./SimpleOption.json");
 const SimpleOptionByteCode = require("./SimpleOption-bytecode.json");
 const SimplePutOption = require("./SimplePutOption.json");
 const HelloWorldABI = require("./HelloWorld.json");
 const HelloWorldByteCode = require("./HelloWorld-bytecode.json");
+
+const StableShareType = "Stable Share";
+const StableCoinType = "Stable Coin";
+const EscrowAccountType = "EscrowAccount";
 
 module.exports = {
   addressConfig,
@@ -29,15 +35,20 @@ module.exports = {
   FXPriceABI,
   FXPriceByteCode,
   ERC20AppleStableShare,
+  ERC20TeslaStableShare,
+  StableShareType,
+  ERC20StableAsset,
   ERC20CNYStableCoin,
   ERC20EURStableCoin,
   ERC20USDStableCoin,
+  StableCoinType,
   ERC20USDStableByteCode,
-  EscrowStableCoinABI,
+  EscrowAccountABI,
   FXDeal,
   SimpleOptionABI,
   SimpleOptionByteCode,
   SimplePutOption,
+  EscrowAccountType,
   HelloWorldABI,
   HelloWorldByteCode
 };

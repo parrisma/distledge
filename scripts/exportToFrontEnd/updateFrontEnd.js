@@ -25,6 +25,9 @@ async function main() {
   await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20EURStableCoin", frontEndAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20USDStableCoin", frontEndAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20AppleStableShare", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20TeslaStableShare", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("StableAsset", "ERC20StableAsset", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Escrow", "EscrowAccount", frontEndAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("HelloWorld", "HelloWorld", frontEndAbiLocation);
   console.log("Update ./frontend/constants/index.js if you have added new contracts");
 }

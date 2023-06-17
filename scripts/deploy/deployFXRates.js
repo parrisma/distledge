@@ -14,7 +14,9 @@ const { fxRateDecimals,
     EUREUR_ticker,
     EUREUR_Description,
     CNYCNY_ticker,
-    CNYCNY_Description } = require("@deploy/testConstants.js");
+    CNYCNY_Description,
+    Physical_ticker,
+    Physical_Description } = require("@deploy/testConstants.js");
 
 /**
  * Deploy a secure off chain FXRate
@@ -67,22 +69,33 @@ async function deployFXRates(sharedConfig, hre, price_issuer, secure_source) {
     const [UsdCnyFXRateContract] = await deployFXRate(hre, price_issuer, secure_source, USDCNY_ticker, USDCNY_Description, fxRateDecimals, USD_to_CNY * (10 ** fxRateDecimals));
     console.log("FX Rate feed created with ticker " + await UsdCnyFXRateContract.getTicker() + " with initial price " + Number(await UsdCnyFXRateContract.getVerifiedValue()) / (10 ** await UsdCnyFXRateContract.getDecimals()));
 
-    const [UsdUsdFXRateContract] = await deployFXRate(hre, price_issuer, secure_source, USDUSD_ticker, USDUSD_Description, fxRateDecimals, USD_to_USD * (10 ** fxRateDecimals));
+    const [UsdUsdFXRateContract] = await deployFXRate(hre, price_issuer, secure_source, USDUSD_ticker, USDUSD_Description, 0, USD_to_USD);
     console.log("FX Rate feed created with ticker " + await UsdUsdFXRateContract.getTicker() + " with initial price " + Number(await UsdUsdFXRateContract.getVerifiedValue()) / (10 ** await UsdUsdFXRateContract.getDecimals()));
 
-    const [EurEurFXRateContract] = await deployFXRate(hre, price_issuer, secure_source, EUREUR_ticker, EUREUR_Description, fxRateDecimals, EUR_to_EUR * (10 ** fxRateDecimals));
+    const [EurEurFXRateContract] = await deployFXRate(hre, price_issuer, secure_source, EUREUR_ticker, EUREUR_Description, 0, EUR_to_EUR);
     console.log("FX Rate feed created with ticker " + await EurEurFXRateContract.getTicker() + " with initial price " + Number(await EurEurFXRateContract.getVerifiedValue()) / (10 ** await EurEurFXRateContract.getDecimals()));
 
-    const [CnyCnyFXRateContract] = await deployFXRate(hre, price_issuer, secure_source, CNYCNY_ticker, CNYCNY_Description, fxRateDecimals, CNY_to_CNY * (10 ** fxRateDecimals));
+    const [CnyCnyFXRateContract] = await deployFXRate(hre, price_issuer, secure_source, CNYCNY_ticker, CNYCNY_Description, 0, CNY_to_CNY);
     console.log("FX Rate feed created with ticker " + await CnyCnyFXRateContract.getTicker() + " with initial price " + Number(await CnyCnyFXRateContract.getVerifiedValue()) / (10 ** await CnyCnyFXRateContract.getDecimals()));
+
+    const [PhysicalFXRateContract] = await deployFXRate(hre, price_issuer, secure_source, Physical_ticker, Physical_Description, 0, Number(1));
+    console.log("FX Rate feed created with ticker " + await PhysicalFXRateContract.getTicker() + " with initial price " + Number(await PhysicalFXRateContract.getVerifiedValue()) / (10 ** await PhysicalFXRateContract.getDecimals()));
+
+
 
     sharedConfig.UsdEurFXRateContract = UsdEurFXRateContract.address;
     sharedConfig.UsdCnyFXRateContract = UsdCnyFXRateContract.address;
     sharedConfig.UsdUsdFXRateContract = UsdUsdFXRateContract.address;
     sharedConfig.EurEurFXRateContract = EurEurFXRateContract.address;
     sharedConfig.CnyCnyFXRateContract = CnyCnyFXRateContract.address;
+    sharedConfig.PhysicalFXRateContract = PhysicalFXRateContract.address;
 
-    return [UsdEurFXRateContract, UsdCnyFXRateContract, UsdUsdFXRateContract, EurEurFXRateContract, CnyCnyFXRateContract]
+    return [UsdEurFXRateContract,
+        UsdCnyFXRateContract,
+        UsdUsdFXRateContract,
+        EurEurFXRateContract,
+        CnyCnyFXRateContract,
+        PhysicalFXRateContract]
 }
 
 /**

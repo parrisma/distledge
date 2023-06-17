@@ -15,7 +15,8 @@ const {
     persistPurgeAllFileSystem,
     persistListAllFileSystem,
     persistOptionIdExistsFileSystem,
-    persistGetOptionTermsFileSystem } = require("@webserver/persistentSourceFileSystem");
+    persistGetOptionTermsFileSystem,
+    persistDeleteOneTermFileSystem } = require("@webserver/persistentSourceFileSystem");
 const {
     persistInitializeIPFS,
     persistListAllIPFS,
@@ -79,11 +80,60 @@ async function persistPurgeAll() {
 }
 
 /**
+ * Delete one persistent terms by optionId.
+ * Note: This would never be needed in a production context, but this is used for clean start testing
+ *       in our demo dApp
+ */
+async function persistDeleteOneTerm(optionId) {
+    try {
+        await persistDeleteOneTermFileSystem(optionId);
+    } catch (err) {
+        throw getFullyQualifiedError(
+            ERR_PURGE,
+            `Persistence Layer, Failed to purge all terms`,
+            err);
+    }
+}
+
+/**
+ * Delete one persistent terms by optionId.
+ * Note: This would never be needed in a production context, but this is used for clean start testing
+ *       in our demo dApp
+ */
+async function persistDeleteOneTerm(optionId) {
+    try {
+        await persistDeleteOneTermFileSystem(optionId);
+    } catch (err) {
+        throw getFullyQualifiedError(
+            ERR_PURGE,
+            `Persistence Layer, Failed to purge all terms`,
+            err);
+    }
+}
+
+/**
+ * Delete one persistent terms by optionId.
+ * Note: This would never be needed in a production context, but this is used for clean start testing
+ *       in our demo dApp
+ */
+async function persistDeleteOneTerm(optionId) {
+    try {
+        await persistDeleteOneTermFileSystem(optionId);
+    } catch (err) {
+        throw getFullyQualifiedError(
+            ERR_PURGE,
+            `Persistence Layer, Failed to purge all terms`,
+            err);
+    }
+}
+
+/**
  * Get a list of all current option ID's and their associated hash
  * 
+ * @param {*} contractDict - Dictionary of all currently deployed contracts
  * @returns List of terms in form of a Json Object containing an (array) list of option Id and Hash of terms
  */
-async function persistListAll() {
+async function persistListAll(contractDict) {
     var optionsList = undefined;
     try {
         optionsList = await persistListAllIPFS();
@@ -144,5 +194,6 @@ module.exports = {
     persistPurgeAll,
     persistListAll,
     persistOptionIdExists,
-    persistGetOptionTerms
+    persistGetOptionTerms,
+    persistDeleteOneTerm
 };

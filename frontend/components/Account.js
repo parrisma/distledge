@@ -1,7 +1,8 @@
 import { useMoralis } from "react-moralis";
 import { useState, useEffect } from "react";
 import { addressConfig } from "../constants";
-import { getTokenContractABI, getBalanceOfC } from "../lib/StableTokenWrapper";
+import { getTokenContractABI, getBalanceOfC, getDecimalsC } from "../lib/StableTokenWrapper";
+import { StableCoinType, StableShareType } from "../constants";
 
 const Contract = (props) => {
 
@@ -10,20 +11,52 @@ const Contract = (props) => {
     const [usdTokenBalance, setUsdTokenBalance] = useState("0");
     const [eurTokenBalance, setEurTokenBalance] = useState("0");
     const [cnyTokenBalance, setCnyTokenBalance] = useState("0");
+    const [appleTokenBalance, setAppleTokenBalance] = useState("0");
+    const [teslaTokenBalance, setTeslaTokenBalance] = useState("0");
 
-    const coinTokenABI = getTokenContractABI("usdStableCoin");
+    const [usdCashBalance, setUsdCashBalance] = useState("0");
+    const [eurCashBalance, setEurCashBalance] = useState("0");
+    const [cnyCashBalance, setCnyCashBalance] = useState("0");
+
+    const coinTokenABI = getTokenContractABI(StableCoinType);
     const getEURTokenBalanceOfAccount = getBalanceOfC(addressConfig.eurStableCoin, coinTokenABI, props.accountDetail.accountAddress);
     const getUSDTokenBalanceOfAccount = getBalanceOfC(addressConfig.usdStableCoin, coinTokenABI, props.accountDetail.accountAddress);
     const getCNYTokenBalanceOfAccount = getBalanceOfC(addressConfig.cnyStableCoin, coinTokenABI, props.accountDetail.accountAddress);
+
+    const getEURTokenDecimalsOfAccount = getDecimalsC(addressConfig.eurStableCoin, coinTokenABI, props.accountDetail.accountAddress);
+    const getUSDTokenDecimalsOfAccount = getDecimalsC(addressConfig.usdStableCoin, coinTokenABI, props.accountDetail.accountAddress);
+    const getCNYTokenDecimalsOfAccount = getDecimalsC(addressConfig.cnyStableCoin, coinTokenABI, props.accountDetail.accountAddress);
+
+    const shareTokenABI = getTokenContractABI(StableShareType);
+    const getAppleTokenBalanceOfAccount = getBalanceOfC(addressConfig.appleStableShare, shareTokenABI, props.accountDetail.accountAddress);
+    const getTeslaTokenBalanceOfAccount = getBalanceOfC(addressConfig.teslaStableShare, shareTokenABI, props.accountDetail.accountAddress);
+
+    const getAppleTokenDecimalsOfAccount = getDecimalsC(addressConfig.appleStableShare, shareTokenABI, props.accountDetail.accountAddress);
+    const getTeslaTokenDecimalsOfAccount = getDecimalsC(addressConfig.teslaStableShare, shareTokenABI, props.accountDetail.accountAddress);
+
 
     async function updateAllTokenBalances() {
         if (isWeb3Enabled) {
             const _usdTokenBalance = Number(await getUSDTokenBalanceOfAccount());
             const _eurTokenBalance = Number(await getEURTokenBalanceOfAccount());
             const _cnyTokenBalance = Number(await getCNYTokenBalanceOfAccount());
-            setUsdTokenBalance(_usdTokenBalance);
-            setEurTokenBalance(_eurTokenBalance);
-            setCnyTokenBalance(_cnyTokenBalance);
+            const _usdTokenDecimal = Number(await getUSDTokenDecimalsOfAccount());
+            const _eurTokenDecimal = Number(await getEURTokenDecimalsOfAccount());
+            const _cnyTokenDecimal = Number(await getCNYTokenDecimalsOfAccount());
+            const _appleTokenBalance = Number(await getAppleTokenBalanceOfAccount());
+            const _teslaTokenBalance = Number(await getTeslaTokenBalanceOfAccount());
+            const _appleTokenDecimals = Number(await getAppleTokenDecimalsOfAccount());
+            const _teslaTokenDecimals = Number(await getTeslaTokenDecimalsOfAccount());
+
+            setUsdTokenBalance(_usdTokenBalance / (10 ** _usdTokenDecimal));
+            setEurTokenBalance(_eurTokenBalance / (10 ** _eurTokenDecimal));
+            setCnyTokenBalance(_cnyTokenBalance / (10 ** _cnyTokenDecimal));
+            setAppleTokenBalance(_appleTokenBalance / (10 ** _appleTokenDecimals));
+            setTeslaTokenBalance(_teslaTokenBalance / (10 ** _teslaTokenDecimals));
+
+            setUsdCashBalance(props.accountDetail.usd);
+            setEurCashBalance(props.accountDetail.eur);
+            setCnyCashBalance(props.accountDetail.cny);
         }
     }
 
@@ -41,7 +74,7 @@ const Contract = (props) => {
         <div>
             <div className="div-table">
                 {props.withHeader ? (
-                    <div className="div-table-row">
+                    <div className="div-table-row-header">
                         <div className="div-table-col-fix-lab">
                             &nbsp;
                         </div>
@@ -49,7 +82,7 @@ const Contract = (props) => {
                             Name:
                         </div>
                         <div className="div-table-col-fix-address">
-                            Address:
+                            Wallet Address:
                         </div>
                         <div className="div-table-col-fix-lab">
                             EUR Cash:
@@ -69,6 +102,12 @@ const Contract = (props) => {
                         <div className="div-table-col-fix-lab">
                             CNY Token
                         </div>
+                        <div className="div-table-col-fix-lab">
+                            Apple Token
+                        </div>
+                        <div className="div-table-col-fix-lab">
+                            Tesla Token
+                        </div>
                     </div>
                 ) : null}
                 <div className="div-table-row">
@@ -83,28 +122,34 @@ const Contract = (props) => {
                         </button>
                     </div>
                     <div className="div-table-col-fix-lab">
-                        {props.accountDetail.accountName}
+                        {props.displayName}
                     </div>
                     <div className="div-table-col-fix-address-data">
                         {props.accountDetail.accountAddress}
                     </div>
-                    <div className="div-table-col-fix-number">
-                        {props.accountDetail.eur}
+                    <div className="div-table-col-fix-lab">
+                        {eurCashBalance}
                     </div>
-                    <div className="div-table-col-fix-number">
+                    <div className="div-table-col-fix-lab">
                         {eurTokenBalance}
                     </div>
-                    <div className="div-table-col-fix-number">
-                        {props.accountDetail.usd}
+                    <div className="div-table-col-fix-lab">
+                        {usdCashBalance}
                     </div>
-                    <div className="div-table-col-fix-number">
+                    <div className="div-table-col-fix-lab">
                         {usdTokenBalance}
                     </div>
-                    <div className="div-table-col-fix-number">
-                        {props.accountDetail.cny}
+                    <div className="div-table-col-fix-lab">
+                        {cnyCashBalance}
                     </div>
-                    <div className="div-table-col-fix-number">
+                    <div className="div-table-col-fix-lab">
                         {cnyTokenBalance}
+                    </div>
+                    <div className="div-table-col-fix-lab">
+                        {appleTokenBalance}
+                    </div>
+                    <div className="div-table-col-fix-lab">
+                        {teslaTokenBalance}
                     </div>
                 </div>
             </div>

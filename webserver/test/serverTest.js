@@ -86,9 +86,15 @@ async function valueOptionById(optionId) {
  * Persist the given option terms
  * (Note: nopt option details are passed as the option terms are generated randomly)
  * 
+ * @param {*} SellerAccount - The account that is selling the option. 
+ * @param {*} buyerAccount - The account that is buying the option.
+ * @param {*} contractDict - The dictionary of deployed contracts
  * @returns optionId 
  */
-async function persistOptionByPOSTRequest() {
+async function persistOptionByPOSTRequest(
+    sellerAccount,
+    buyerAccount,
+    contractDict) {
 
     const stableCoins = getAllCoins(addressConfig);
     const fxRates = getAllFX(addressConfig);
@@ -107,7 +113,11 @@ async function persistOptionByPOSTRequest() {
         fxRates[Math.floor(Math.random() * fxRates.length)],
     );
 
-    var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_CREATE);
+    // Send seller and buyer account in request
+    optionAsJson.seller = sellerAccount.address;
+    optionAsJson.buyer = buyerAccount.address;
+
+    var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_CREATE, buyerAccount.address);
 
     const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
         method: 'POST',
@@ -170,9 +180,11 @@ async function main() {
     console.log(`\nRequest Purge     :\n${resp}\n`);
 
     // Mint & Persist the prescribed number of new (random) contracts
-    const [managerAccount, stableCoinIssuer, dataVendor, optionSeller, optionBuyer] = await namedAccounts(addressConfig);
+    // ****
+    const [managerAccount, stableCoinIssuer, dataVendor, optionSeller, optionBuyer, option_buyer_2, option_buyer_3] = await namedAccounts(addressConfig);
+    const buyers = [optionBuyer, option_buyer_2, option_buyer_3];
     for (let step = 0; step < numOptionsToCreate; step++) {
-        respJson = await persistOptionByPOSTRequest(step, optionBuyer);
+        respJson = await persistOptionByPOSTRequest(optionSeller, buyers[Math.floor(Math.random() * 3)], contractDict);
         if (respJson.hasOwnProperty("errorCode")) {
             console.log(JSON.stringify(respJson, null, 2));
             throw new Error(`Failed to persist/mint Option terms as NFT ${resp.error}`);
@@ -213,7 +225,7 @@ async function main() {
         }
 
         /**
-         * Check the saved terms match the signatire
+         * Check the saved terms match the signature
          */
         if (!await verifyTerms(respJson.message.terms, respJson.message.hash, managerAccount)) {
             throw new Error("Failed to verify option terms were immutable and signed by both buyer and manager");

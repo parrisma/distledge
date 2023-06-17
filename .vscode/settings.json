@@ -1,12 +1,14 @@
 {
     "solidity.defaultCompiler": "localNodeModule",
     "cSpell.words": [
+        "APLSS",
         "arrayify",
         "CNYCNY",
         "Curreny",
         "distledge",
         "EUREUR",
         "IPFS",
+        "ISIN",
         "keccak",
         "Mata",
         "Moralis",
@@ -20,6 +22,7 @@
         "USDCNY",
         "USDEUR",
         "USDEURFX",
+        "USDS",
         "USDUSD",
         "Verdana",
         "webserver"

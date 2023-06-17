@@ -7,8 +7,8 @@ This is a demo project to show how smart contracts can be used to issue, price a
 ## Contents
 
 1. [Overview](./main)
-2. [Testing](./testing/index)
-3. [Deployment](./deployment/index)
-4. [Minutes](./minutes/index)
-5. [How To](./howto/index)
-6. [Knowledge](./knowledge/index)
+1. [Testing](./testing/index)
+1. [Deployment](./deployment/index)
+1. [How To](./howto/index)
+1. [Knowledge](./knowledge/index)
+1. [Team Minutes](./minutes/index)

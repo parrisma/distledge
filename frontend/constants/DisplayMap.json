@@ -1,11 +1,11 @@
 {
     "map": [
         {
-            "rawName": "escrowAccount",
+            "rawName": "Escrow",
             "displayName": "Escrow Manager"
         },
         {
-            "rawName": "tokenAccount",
+            "rawName": "Token",
             "displayName": "Token Issuer"
         },
         {
@@ -21,6 +21,14 @@
             "displayName": "Option Buyer"
         },
         {
+            "rawName": "Buyer2",
+            "displayName": "Option Buyer Two"
+        },
+        {
+            "rawName": "Buyer3",
+            "displayName": "Option Buyer Three"
+        },
+        {
             "rawName": "usdStableCoin",
             "displayName": "USD Stable Coin"
         },
@@ -33,6 +41,14 @@
             "displayName": "CNY Stable Coin"
         },
         {
+            "rawName": "appleStableShare",
+            "displayName": "Apple Stable Share"
+        },
+        {
+            "rawName": "teslaStableShare",
+            "displayName": "Tesla Stable Share"
+        },
+        {
             "rawName": "usdEscrowAccount",
             "displayName": "USD Escrow Service"
         },
@@ -43,6 +59,14 @@
         {
             "rawName": "cnyEscrowAccount",
             "displayName": "CNY Escrow Service"
+        },
+        {
+            "rawName": "appleEscrowAccount",
+            "displayName": "Apple Escrow Service"
+        },
+        {
+            "rawName": "teslaEscrowAccount",
+            "displayName": "Tesla Escrow Service"
         },
         {
             "rawName": "teslaEquityPriceContract",

@@ -10,7 +10,8 @@ const teslaDescription = "TESLA Regular Stock"
 const applePriceFeb2023 = 16968; // $169.68
 const appleTicker = "AAPL";
 const appleDescription = "APPLE Regular Stock"
-
+const appleIssue = 10000; // Number of share to issue in Escrow
+const teslaIssue = 10000; // Number of share to issue in Escrow
 
 // Initial FX Rates
 const fxRateDecimals = 5;
@@ -33,9 +34,11 @@ const EUREUR_ticker = "EUREUR";
 const EUREUR_Description = "EUR to EUR Fixed Rate"
 const CNYCNY_ticker = "CNYCNY";
 const CNYCNY_Description = "CNY to CNY Fixed Rate"
+const Physical_ticker = "Physical";
+const Physical_Description = "Physical Fixed Rate"
 
 // Opening Deposits from cash to token
-const depositQtyUSD = 100 * (10 ** equityPriceDecimals); // 100.00 USD to 2 DP
+const depositQtyUSD = 10000 * (10 ** equityPriceDecimals); // 100.00 USD to 2 DP
 const depositQtyEUR = depositQtyUSD * USD_to_EUR;
 const depositQtyCNY = depositQtyUSD * USD_to_CNY;
 
@@ -67,5 +70,9 @@ module.exports = {
     teslaDescription,
     applePriceFeb2023,
     appleTicker,
-    appleDescription
+    appleDescription,
+    appleIssue,
+    teslaIssue,
+    Physical_ticker,
+    Physical_Description
 }

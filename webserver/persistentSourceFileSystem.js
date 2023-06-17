@@ -16,6 +16,7 @@ const { ERR_FAILED_PERSIST, ERR_PERSIST_INIT, ERR_PURGE, ERR_FAILED_LIST } = req
 const { getFullyQualifiedError } = require("@webserver/serverErrors");
 const { isNumeric } = require("@lib/generalUtil");
 const { rimraf } = require('rimraf');
+const { addressConfig } = require("@webserver/constants");
 
 /**
  * Get the root path where option terms are stored.
@@ -25,7 +26,7 @@ function baseTermsDir() {
 }
 
 /**
- * Get the root path where option terms are stored.
+ * Get the root path with id where option terms are stored.
 */
 function optionTermsDirName(optionId) {
     return path.join(baseTermsDir(), `${optionId}`);
@@ -180,11 +181,13 @@ async function persistPurgeAllFileSystem() {
 /**
  * Get a list of all current option ID's and their associated hash
  * 
+ * @param {*} contractDict - Dictionary of all currently deployed contracts
  * @returns List of terms in form of a Json Object containing an (array) list of option Id and Hash of terms
  */
-async function persistListAllFileSystem() {
+async function persistListAllFileSystem(contractDict) {
     var optionsList = { "terms": [] };
     try {
+        const erc721Contract = contractDict[addressConfig.erc721OptionContractTypeOne];
         const options = fs.readdirSync(baseTermsDir());
         options.forEach((value, index, array) => {
             if (isNumeric(value)) {
@@ -196,6 +199,10 @@ async function persistListAllFileSystem() {
                 });
             }
         });
+        for (let i = 0; i < optionsList.terms.length; i++) {
+            const ownerAddress = await erc721Contract.ownerOf(Number(optionsList.terms[i].optionId));
+            optionsList.terms[i].ownerAddress = ownerAddress;
+        }
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_FAILED_LIST,
@@ -248,11 +255,40 @@ async function persistGetOptionTermsFileSystem(optionId) {
     return [optionTermsAsJson, originalMangerSignedHash];
 }
 
+/**
+ * Delete one terms that exist in the terms folder by option id.
+ * this would never be needed in a production context, but this is used for clean start testing
+ * in our demo dApp
+ */
+async function persistDeleteOneTermFileSystem(optionId) {
+    const termsDirName = optionTermsDirName(optionId);
+    try {
+        if (fs.existsSync(termsDirName)) {
+            // Delete the terms id dir
+            rimraf.sync(termsDirName);
+            if (fs.existsSync(termsDirName)) {
+                throw getFullyQualifiedError(
+                    ERR_PURGE,
+                    `Failed to delete ${termsDirName}`,
+                    err);
+            }
+        }
+        console.log(`Terms dir ${termsDirName}`);
+    } catch (err) {
+        throw getFullyQualifiedError(
+            ERR_PURGE,
+            `Failed to delete terms ${termsDirName} dir`,
+            err);
+    }
+    return
+}
+
 module.exports = {
     persistInitializeFileSystem,
     persistOptionTermsFileSystem,
     persistPurgeAllFileSystem,
     persistListAllFileSystem,
     persistOptionIdExistsFileSystem,
-    persistGetOptionTermsFileSystem
+    persistGetOptionTermsFileSystem,
+    persistDeleteOneTermFileSystem
 };

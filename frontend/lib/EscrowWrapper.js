@@ -1,10 +1,10 @@
 import { useWeb3Contract } from "react-moralis";
-import { EscrowStableCoinABI, addressConfig } from "../constants";
+import { EscrowAccountABI } from "../constants";
 
 export function getEscrowContractABI(contractType) {
     var contractABI = null;
     if (contractType === "EscrowAccount") {
-        contractABI = EscrowStableCoinABI;
+        contractABI = EscrowAccountABI;
     }
     return contractABI;
 }
@@ -22,20 +22,30 @@ export function getManagedTokenNameC(addressOfDeployedEscrowAccount, contractABI
     return res.runContractFunction;
 }
 
-export function getBalanceOnHandC(addressOfDeployedLevel, contractABI) {
+export function getBalanceOnHandC(addressOfDeployedEscrowAccount, contractABI) {
     return useWeb3Contract({
         abi: contractABI,
-        contractAddress: addressOfDeployedLevel,
+        contractAddress: addressOfDeployedEscrowAccount,
         functionName: "balanceOnHand",
         params: {},
     }).runContractFunction;
 }
 
-export function getIsBalancedC(addressOfDeployedLevel, contractABI) {
+export function getIsBalancedC(addressOfDeployedEscrowAccount, contractABI) {
     return useWeb3Contract({
         abi: contractABI,
-        contractAddress: addressOfDeployedLevel,
+        contractAddress: addressOfDeployedEscrowAccount,
         functionName: "isBalanced",
         params: {},
     }).runContractFunction;
+}
+
+export function getEscrowDecimalsC(addressOfDeployedEscrowAccount, contractABI) {
+    return useWeb3Contract({
+        abi: contractABI,
+        contractAddress: addressOfDeployedEscrowAccount,
+        functionName: "decimals",
+        params: {},
+    }).runContractFunction;
+
 }
