@@ -111,17 +111,21 @@ const Contract = (props) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="div-table-col">
-                                    <div className="pane-standard">
-                                        <h2 className="header-2">Options Offered for Sale</h2>
-                                        <OptionList
-                                            offered={true}
-                                            offeredOptionList={Object.values(offeredOptDict)}
-                                            asSeller={true}
-                                            handleDel={handleDel}
-                                            handleLogChange={appendLogs} />
+                                {connectedAccountIsSeller ? (
+                                    <div className="div-table-col">
+                                        <div className="pane-standard">
+                                            <h2 className="header-2">Options Offered for Sale</h2>
+                                            <OptionList
+                                                offered={true}
+                                                offeredOptionList={Object.values(offeredOptDict)}
+                                                asSeller={true}
+                                                handleDel={handleDel}
+                                                handleLogChange={appendLogs} />
+                                        </div>
                                     </div>
-                                </div>
+                                ) : (
+                                    <div />
+                                )}
                             </div>
                         </div>
                     </div>

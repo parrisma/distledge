@@ -94,7 +94,9 @@ async function main() {
     UsdCnyFXRateContract,
     UsdUsdFXRateContract,
     EurEurFXRateContract,
-    CnyCnyFXRateContract] = await deployFXRates(sharedConfig, hre, data_vendor, data_vendor); // data_vendor is owner and source
+    CnyCnyFXRateContract,
+    UsdTeslaFXRateContract,
+    UsdAppleFXRateContract] = await deployFXRates(sharedConfig, hre, data_vendor, data_vendor); // data_vendor is owner and source
 
   /* Deploy ERC217 Contracts
   */

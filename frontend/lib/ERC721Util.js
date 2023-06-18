@@ -27,8 +27,9 @@ export async function getERC721MintedOptionList(owningAccount) {
     var resAsJson;
     try {
         var resAsJson = await fetchAsync(`${NFTServerBaseURI()}/list`);
-        const res = resAsJson.message.terms.filter((v, i) => {
-            const a = v.ownerAddress.toUpperCase();
+        const res = resAsJson.message.terms.filter((value, i) => {
+            console.log(`V[${JSON.stringify(value,null,2)}] - I[${i}]`);
+            const a = value.ownerAddress.toUpperCase();
             const b = owningAccount.toUpperCase();
             console.log(`[${a}] === [${b}] is [${a === b}]`);
             return a === b;

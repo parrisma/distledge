@@ -35,6 +35,8 @@ export function getAllFX(loadedSharedConfig) {
     loadedSharedConfig.UsdCnyFXRateContract,
     loadedSharedConfig.CnyCnyFXRateContract,
     loadedSharedConfig.UsdEurFXRateContract,
-    loadedSharedConfig.EurEurFXRateContract
+    loadedSharedConfig.EurEurFXRateContract,
+    loadedSharedConfig.UsdTeslaFXRateContract,
+    loadedSharedConfig.UsdAppleFXRateContract
     ];
 }

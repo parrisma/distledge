@@ -38,18 +38,18 @@ const Contract = (props) => {
    */
   async function getMinedOptionListAndUpdate(buyerAccount) {
     if (isWeb3Enabled) {
-      appendLogs(`Calling WebServer to update list of minted Options`)
+      appendLogs(`Calling WebServer to update list of minted Options for [${buyerAccount}]`);
       var res = {};
       if (buyerAccount !== null && buyerAccount !== undefined && buyerAccount !== NOT_SELECTED) {
-        console.log(`Filter for [${buyerAccount}]`);
         res = await getERC721MintedOptionList(buyerAccount);
+        console.log(`RES: [${JSON.stringify(res,null,2)}]`);
+        if (res.hasOwnProperty('okCode')) {
+          setMintedOptList(res.message.terms.sort((a, b) => parseInt(a.optionId) - parseInt(b.optionId)));
+        } else {
+          appendLogs(`Failed to get OptionList from WebServer [${res.errorCode}]`);
+        }
       } else {
         console.log(`Invalid buyer account [${buyerAccount}]`);
-      }
-      if (res.hasOwnProperty('okCode')) {
-        setMintedOptList(res.message.terms.sort((a, b) => parseInt(a.optionId) - parseInt(b.optionId)));
-      } else {
-        appendLogs(`Failed to get OptionList from WebServer [${res.errorCode}]`);
       }
     } else {
       appendLogs(`Cannot update Minted Option list as we are Not Web3 Connected`);
@@ -62,7 +62,7 @@ const Contract = (props) => {
  */
   async function handleAccountChange(acct) {
     appendLogs(`Connected account :[${acct}]`);
-    setConnectedAccount(acct);
+    await setConnectedAccount(acct);
   }
 
   /**

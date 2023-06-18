@@ -9,14 +9,6 @@ const {
     ERR_BAD_PULL_OPTION_ID_DOES_NOT_EXIST, ERR_BAD_PULL
 } = require("@webserver/serverErrorCodes.js");
 const { getFullyQualifiedError } = require("@webserver/serverErrors");
-// const {
-//     persistInitializeFileSystem,
-//     persistOptionTermsFileSystem,
-//     persistPurgeAllFileSystem,
-//     persistListAllFileSystem,
-//     persistOptionIdExistsFileSystem,
-//     persistGetOptionTermsFileSystem,
-//     persistDeleteOneTermFileSystem } = require("@webserver/persistentSourceFileSystem");
 const {
     persistInitializeIPFS,
     persistListAllIPFS,
@@ -82,44 +74,12 @@ async function persistPurgeAll() {
 
 /**
  * Delete one persistent terms by optionId.
- * Note: This would never be needed in a production context, but this is used for clean start testing
- *       in our demo dApp
- */
-async function persistDeleteOneTerm(optionId) {
-    try {
-        await persistDeleteOneTermFileSystem(optionId);
-    } catch (err) {
-        throw getFullyQualifiedError(
-            ERR_PURGE,
-            `Persistence Layer, Failed to purge all terms`,
-            err);
-    }
-}
-
-/**
- * Delete one persistent terms by optionId.
- * Note: This would never be needed in a production context, but this is used for clean start testing
- *       in our demo dApp
+ * 
+ * @param {*} optionId - The option Id to delete terms for.
  */
 async function persistDeleteOneTerm(optionId) {
     try {
         await persistDeleteOneTermIPFS(optionId);
-    } catch (err) {
-        throw getFullyQualifiedError(
-            ERR_PURGE,
-            `Persistence Layer, Failed to purge all terms`,
-            err);
-    }
-}
-
-/**
- * Delete one persistent terms by optionId.
- * Note: This would never be needed in a production context, but this is used for clean start testing
- *       in our demo dApp
- */
-async function persistDeleteOneTerm(optionId) {
-    try {
-        await persistDeleteOneTermFileSystem(optionId);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_PURGE,
@@ -137,7 +97,7 @@ async function persistDeleteOneTerm(optionId) {
 async function persistListAll(contractDict) {
     var optionsList = undefined;
     try {
-        optionsList = await persistListAllIPFS();
+        optionsList = await persistListAllIPFS(contractDict);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_FAILED_LIST,

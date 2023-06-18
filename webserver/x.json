@@ -1,9 +1,23 @@
-[
-    {
-        "errorCode": "4afb0e49-bd12-43b9-8a7e-9a2e1039ae2e",
-        "errorMessage": "Bad POST request, cannot process",
-        "message": "[0x15d34aaf54267db7d7c367839aaf71a00a2c6a65] is not current owner of [[11]], so cannot exercise it, [0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65] is the owner",
-        "subError": {}
-        message
-    }
-]
+{
+    "okCode": "3e856ee3-331d-4e73-86b4-0519329b6f14",
+    "okMessage": "Handed Pull Terms",
+    "message": {
+        "hash": "0x1985adf7c7eae86c55d1d251c19b8513b0b07222d7853f86789dba9f1acd9ad776666d6771eb58c16634fa59a23025e857eeed0d81f5366fd5a763ecb9d3155e1c",
+        "terms": {
+            "type": "TypeOneOption",
+            "uniqueId": "02fa37e8-fdd5-4f8b-aba3-e0f397158523",
+            "optionName": "Option name - bright-Samantha",
+            "description": "Id diam vel quam elementum pulvinar etiam non quam lacus. ",
+            "premium": "77",
+            "premiumToken": "0x71C95911E9a5D330f4D621842EC243EE1343292e",
+            "settlementToken": "0x948B3c65b89DF0B4894ABE91E6D02FE579834F8F",
+            "notional": "11",
+            "strike": "146",
+            "referenceLevel": "0x663F3ad617193148711d28f5334eE4Ed07016602",
+            "fxReferenceLevel": "0x050499eBdbBBc1216011dE07A48b5182c983Ae74",
+            "seller": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+            "buyer": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65"
+        }
+    },
+    "optionId": "1"
+}

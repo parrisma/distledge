@@ -31,6 +31,8 @@ var sharedConfig = {
     UsdUsdFXRateContract: "",
     EurEurFXRateContract: "",
     CnyCnyFXRateContract: "",
+    UsdTeslaFXRateContract: "",
+    UsdAppleFXRateContract: "",
     PhysicalFXRateContract: "",
     erc721OptionContractTypeOne: "",
     appleStableShare: "",
@@ -85,6 +87,8 @@ function getAllFX(loadedSharedConfig) {
     loadedSharedConfig.CnyCnyFXRateContract,
     loadedSharedConfig.UsdEurFXRateContract,
     loadedSharedConfig.EurEurFXRateContract,
+    loadedSharedConfig.UsdTeslaFXRateContract,
+    loadedSharedConfig.UsdAppleFXRateContract,
     loadedSharedConfig.PhysicalFXRateContract
     ];
 }

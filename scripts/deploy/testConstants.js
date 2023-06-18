@@ -34,6 +34,10 @@ const EUREUR_ticker = "EUREUR";
 const EUREUR_Description = "EUR to EUR Fixed Rate"
 const CNYCNY_ticker = "CNYCNY";
 const CNYCNY_Description = "CNY to CNY Fixed Rate"
+const USDTesla_ticker = "USDTSLA";
+const USDTesla_Description = "USD to Tesla Spot FX Rate"
+const USDApple_ticker = "USDAAPL";
+const USDApple_Description = "USD to Apple Spot FX Rate"
 const Physical_ticker = "Physical";
 const Physical_Description = "Physical Fixed Rate"
 
@@ -64,6 +68,10 @@ module.exports = {
     EUREUR_Description,
     CNYCNY_ticker,
     CNYCNY_Description,
+    USDTesla_ticker,
+    USDTesla_Description,
+    USDApple_ticker,
+    USDApple_Description,
     equityPriceDecimals,
     teslaPriceFeb2023,
     teslaTicker,

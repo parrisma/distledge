@@ -2,7 +2,7 @@
     "map": [
         {
             "rawName": "Escrow",
-            "displayName": "Escrow Manager"
+            "displayName": "Control Account"
         },
         {
             "rawName": "Token",
@@ -74,23 +74,33 @@
         },
         {
             "rawName": "UsdEurFXRateContract",
-            "displayName": "USD-EUR Rate Feed"
+            "displayName": "USD-EUR FX Rate Feed"
         },
         {
             "rawName": "UsdCnyFXRateContract",
-            "displayName": "USD-CNY Rate Feed"
+            "displayName": "USD-CNY FX Rate Feed"
         },
         {
             "rawName": "UsdUsdFXRateContract",
-            "displayName": "USD-USD Rate Feed"
+            "displayName": "USD-USD FX Rate Feed"
         },
         {
             "rawName": "EurEurFXRateContract",
-            "displayName": "EUR-EUR Rate Feed"
+            "displayName": "EUR-EUR FX Rate Feed"
         },
         {
             "rawName": "CnyCnyFXRateContract",
-            "displayName": "CNY-CNY Rate Feed"
+            "displayName": "CNY-CNY FX Rate Feed"
+        },
+        {
+            "rawName": "UsdTeslaFXRateContract",
+            "displayName": "USD-Tesla FX Rate Feed"
+        },
+        {
+            "rawName": "UsdAppleFXRateContract",
+            "displayName": "USD-Apple FX Rate Feed"
         }
+
+        
     ]
 }

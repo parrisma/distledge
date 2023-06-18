@@ -182,7 +182,8 @@ async function persistPurgeAllFileSystem() {
  * Get a list of all current option ID's and their associated hash
  * 
  * @param {*} contractDict - Dictionary of all currently deployed contracts
- * @returns List of terms in form of a Json Object containing an (array) list of option Id and Hash of terms
+ * @returns List of terms in form of a Json Object containing an (array) list of 
+ *          option Id, Hash of terms & option owner address
  */
 async function persistListAllFileSystem(contractDict) {
     var optionsList = { "terms": [] };

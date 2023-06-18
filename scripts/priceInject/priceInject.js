@@ -84,7 +84,7 @@ async function main() {
     [escrow_manager, stable_coin_issuer, data_vendor, option_seller, option_buyer] = await namedAccounts(sharedConfig);
 
     console.log(`\nAccount Addresses`);
-    console.log(`Escrow Manager     : [${escrow_manager.address}]`);
+    console.log(`Manager            : [${escrow_manager.address}]`);
     console.log(`Stable Coin Issuer : [${stable_coin_issuer.address}]`);
     console.log(`Data Vendor        : [${data_vendor.address}]`);
     console.log(`Option Seller      : [${option_seller.address}]`);
@@ -136,8 +136,6 @@ async function main() {
     }, timeout);
 }
 
-// Use this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
     console.log(`\nStarted Price Injector\n`);
     console.error(error);

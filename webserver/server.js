@@ -1,18 +1,8 @@
 /*
 ** Quick and Dirty HttP WebServer to support the ERC271 Option NFT's
 ** 
-** To run me
-** 0) cd distledge
-** 1) npx hardhat node
-** 2) npx hardhat run --network localhost scripts\deploy\deploy.js
-** 3) yarn hardhat run ./scripts/exportToFrontEnd/updateFrontEnd.js --network localhost
-** 4) cd webserver
-** 5) npx hardhat run --network localhost server.js
+** To run me see: https://parrisma.github.io/distledge/howto/strart-environment.html 
 **
-** 6) Navigate to http://localhost:8191 (or whatever URL is reported when server starts)
-** or .. 
-** 7) cd ..\test
-** 8) .\createCommand.bat
 */
 require('module-alias/register'); // npm i --save module-alias
 var fs = require('fs');

@@ -7,10 +7,11 @@ const { addTextToIPFS, getTextFromIPFS } = require('./ipfs/ipfsCore.js');
 const { startIpfs } = require('./ipfs/ipfsCore.js');
 var path = require('path');
 const { serverConfig } = require("@webserver/serverConfig");
-const { ERR_FAILED_PERSIST, ERR_PERSIST_INIT, ERR_PURGE, ERR_FAILED_LIST } = require("@webserver/serverErrorCodes.js");
+const { ERR_FAILED_PERSIST, ERR_PURGE, ERR_FAILED_LIST } = require("@webserver/serverErrorCodes.js");
 const { getFullyQualifiedError } = require("@webserver/serverErrors");
 const { isNumeric } = require("@lib/generalUtil");
 const { rimraf } = require('rimraf');
+const { addressConfig } = require("@webserver/constants");
 
 /**
  * Get the root path where option cid are stored.
@@ -89,12 +90,16 @@ async function persistInitializeIPFS() {
 
 /**
  * Get a list of all persisted option terms, in the form {OptionId & Signed Hash}
+ *  
+ * @param {*} contractDict - Dictionary of all currently deployed contracts
  * 
- * @returns List of terms in form of a Json Object containing an (array) list of option Id and Hash of terms
+ * @returns List of terms in form of a Json Object containing an (array) list of 
+ *          option Id, Hash of terms & option owner address
  */
-async function persistListAllIPFS() {
+async function persistListAllIPFS(contractDict) {
     var optionsList = { "terms": [] };
     try {
+        const erc721Contract = contractDict[addressConfig.erc721OptionContractTypeOne];
         const options = fs.readdirSync(baseTermsDir());
         options.forEach((value, index, array) => {
             if (isNumeric(value)) {
@@ -106,6 +111,10 @@ async function persistListAllIPFS() {
                 });
             }
         });
+        for (let i = 0; i < optionsList.terms.length; i++) {
+            const ownerAddress = await erc721Contract.ownerOf(Number(optionsList.terms[i].optionId));
+            optionsList.terms[i].ownerAddress = ownerAddress;
+        }
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_FAILED_LIST,
@@ -117,9 +126,12 @@ async function persistListAllIPFS() {
 
 
 /**
- * Delete any persistent terms.
+ * Delete all persistent terms.
  * 
- * this would never be needed in a production context, but this is used for clean start testing
+ * There is no concept of IPFS delete, the stored data at some point will stop being held unless the data
+ * is 'pinned' where a paid service would ensure copies of the data are held.
+ * 
+ * This would never be needed in a production context, but this is used for clean start testing
  * in our demo dApp
  */
 async function persistPurgeAllIPFS() {
@@ -166,11 +178,10 @@ async function persistOptionTermsIPFS(
     signedHash) {
     try {
         cid = await addTextToIPFS(JSON.stringify(termsAsJson));
-        console.log(cid)
         const optionTermsDirName = createOptionTermsDir(optionId);
         const optionTermsFileName = await fullPathAndNameOfOptionTermsJson(optionTermsDirName, signedHash);
         fs.writeFileSync(optionTermsFileName, cid)
-        console.log(`Option Terms written Ok to [${optionTermsDirName}] with Signature [${sig}]`);
+        console.log(`Option Terms written Ok to [${optionTermsDirName}] with Signature [${sig}] and IPFS reference [${cid}]`);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_FAILED_PERSIST,
@@ -225,9 +236,10 @@ async function persistGetOptionTermsIPFS(optionId) {
 
 /**
  * Delete the persisted terms for the given option Id, this should remove any local data held by
- * the WebServer and also remove the item from IPFS
+ * the WebServer.
  * 
- * TODO: Delete the item in IPFS space.
+ * There is no concept of IPFS delete, the stored data at some point will stop being held unless the data
+ * is 'pinned' where a paid service would ensure copies of the data are held.
  * 
  * @param {*} optionId - The option id who's terms are to be deleted from local store and IPFS space.
  */
@@ -235,7 +247,6 @@ async function persistDeleteOneTermIPFS(optionId) {
     const termsDirName = optionTermsDirName(optionId);
     try {
         if (fs.existsSync(termsDirName)) {
-            // Delete the terms id dir
             rimraf.sync(termsDirName);
             if (fs.existsSync(termsDirName)) {
                 throw getFullyQualifiedError(
@@ -244,7 +255,6 @@ async function persistDeleteOneTermIPFS(optionId) {
                     err);
             }
         }
-        console.log(`Terms dir ${termsDirName}`);
     } catch (err) {
         throw getFullyQualifiedError(
             ERR_PURGE,
