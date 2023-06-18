@@ -113,9 +113,8 @@ async function persistOptionByPOSTRequest(
         fxRates[Math.floor(Math.random() * fxRates.length)],
     );
 
-    // Send seller and buyer account in request
+    // Add the seller, as on exercise option has to be sold back to original seller.
     optionAsJson.seller = sellerAccount.address;
-    optionAsJson.buyer = buyerAccount.address;
 
     var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_CREATE, buyerAccount.address);
 
@@ -169,7 +168,7 @@ async function main() {
      */
     const contractDict = await getDictionaryOfDeployedContracts(addressConfig);
 
-    const numOptionsToCreate = 10;
+    const numOptionsToCreate = 25;
     console.log(`\nUsing these SharedConfig settings :\n ${JSON.stringify(addressConfig, null, 2)}`);
 
     // Purge any existing contracts

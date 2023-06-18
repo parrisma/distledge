@@ -157,7 +157,7 @@ const Contract = (props) => {
                             >
                                 <div>Offer Option</div>
                             </button>
-                        ) : ``}
+                        ) : <div />}
                     </div>
                 </div>
             </div>

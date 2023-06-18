@@ -42,7 +42,7 @@ const Contract = (props) => {
       var res = {};
       if (buyerAccount !== null && buyerAccount !== undefined && buyerAccount !== NOT_SELECTED) {
         res = await getERC721MintedOptionList(buyerAccount);
-        console.log(`RES: [${JSON.stringify(res,null,2)}]`);
+        console.log(`RES: [${JSON.stringify(res, null, 2)}]`);
         if (res.hasOwnProperty('okCode')) {
           setMintedOptList(res.message.terms.sort((a, b) => parseInt(a.optionId) - parseInt(b.optionId)));
         } else {
@@ -120,8 +120,7 @@ const Contract = (props) => {
     appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${connectedAccount}]`);
 
     let optionTermsAsJson = offeredOptDict[uniqueId];
-    optionTermsAsJson.buyer = connectedAccount;
-    sendCreateOptionRequest(optionTermsAsJson)
+    sendCreateOptionRequest(optionTermsAsJson, connectedAccount)
       .then((res) => {
         if (res.hasOwnProperty(`errorCode`)) {
           appendLogs(`Mint & Transfer Failed : [${res.message}]`);

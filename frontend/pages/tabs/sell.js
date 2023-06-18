@@ -1,9 +1,9 @@
 import SimpleOption from "../../components/SimpleOption";
+import OptionList from "../../components/OptionList";
+import ConnectedAccount from "../../components/ConnectedAccount";
 import { useMoralis } from "react-moralis";
 import { useState, useEffect } from "react";
 import { addressConfig } from "../../constants";
-import OptionList from "../../components/OptionList";
-import ConnectedAccount from "../../components/ConnectedAccount";
 import { OptionTypeOneTermsAreValid } from "../../lib/ERC721Util";
 import { useOfferedOptionContext } from "../../context/offeredOption";
 import { useConsoleLogContext } from "../../context/consoleLog";
@@ -46,14 +46,12 @@ const Contract = (props) => {
      * @param {*} optionId - The Option Id to delete from sale list
      */
     function handleDel(uniqueId) {
-        // TODO - Implement Delete from Offered Options List - by callback into parent where list is kept
         if ((uniqueId in offeredOptDict)) {
             delete offeredOptDict[uniqueId]
             setOfferedOptDict(offeredOptDict);
             appendLogs(`Delete [${uniqueId}] from list`);
             setUpd(upd - 1);
         }
-
     }
 
     /**

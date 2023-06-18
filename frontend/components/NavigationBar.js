@@ -18,10 +18,10 @@ const NavigationBar = (props) => {
           <Link href="/tabs/price" className={currentRoute === '/tabs/price' ? 'active' : ''}>Price</Link>
         </li>
         <li>
-          <Link href="/tabs/sell" className={currentRoute === '/tabs/sell' ? 'active' : ''}>Sell</Link>
+          <Link href="/tabs/sell" className={currentRoute === '/tabs/sell' ? 'active' : ''}>Seller</Link>
         </li>
         <li>
-          <Link href="/tabs/purchase" className={currentRoute === '/tabs/purchase' ? 'active' : ''}>Purchase</Link>
+          <Link href="/tabs/purchase" className={currentRoute === '/tabs/purchase' ? 'active' : ''}>Buyer</Link>
         </li>
       </ul>
     </nav>
