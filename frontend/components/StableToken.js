@@ -2,6 +2,7 @@ import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
 import { useNotification } from "web3uikit";
 import { getTokenContractABI, getSymbolC, getTokenNameC, getDecimalsC, getTokenSupplyC } from "../lib/StableTokenWrapper";
+import { Button } from "@material-ui/core";
 
 export default function Contract(props) {
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
@@ -86,8 +87,7 @@ export default function Contract(props) {
             <div className="div-table-col-fix">{contractType}</div>
             <div className="div-table-col-fix">
             </div>
-            <button
-              className="button"
+            <Button color="primary" variant="contained"
               disabled={isLoading || isFetching}
               onClick={() => {
                 getSymbol({
@@ -96,7 +96,7 @@ export default function Contract(props) {
               }}
             >
               <div>Update Supply</div>
-            </button>
+            </Button>
           </div>
         </div>
       </div>

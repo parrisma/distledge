@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNotification } from "web3uikit";
 import { getEscrowContractABI, getManagedTokenNameC, getBalanceOnHandC, getIsBalancedC, getEscrowDecimalsC } from "@/lib/EscrowWrapper";
 import { ethers } from "ethers";
+import { Button } from "@material-ui/core"
 
 export default function Contract(props) {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
@@ -145,8 +146,7 @@ export default function Contract(props) {
                         <div className="div-table-col-fix">{isBalanced}</div>
                         <div className="div-table-col-fix">
                         </div>
-                        <button
-                            className="button"
+                        <Button color="primary" variant="contained"
                             disabled={isLoading || isFetching}
                             onClick={() => {
                                 getManagedTokenName({
@@ -156,7 +156,7 @@ export default function Contract(props) {
                             }}
                         >
                             <div>Update</div>
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>

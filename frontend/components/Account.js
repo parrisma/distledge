@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { addressConfig } from "../constants";
 import { getTokenContractABI, getBalanceOfC, getDecimalsC } from "../lib/StableTokenWrapper";
 import { StableCoinType, StableShareType } from "../constants";
+import { Button } from "@material-ui/core";
 
 const Contract = (props) => {
 
@@ -112,14 +113,13 @@ const Contract = (props) => {
                 ) : null}
                 <div className="div-table-row">
                     <div className="div-table-col-fix-lab">
-                        <button
-                            className="button"
+                        <Button color="primary" variant="contained"
                             onClick={() => {
                                 updateAllTokenBalances();
                             }}
                         >
                             Update
-                        </button>
+                        </Button>
                     </div>
                     <div className="div-table-col-fix-lab">
                         {props.displayName}

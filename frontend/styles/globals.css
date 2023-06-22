@@ -1,8 +1,8 @@
-@import "tailwindcss/base";
+/* @import "tailwindcss/base";
 
 @import "tailwindcss/components";
 
-@import "tailwindcss/utilities";
+@import "tailwindcss/utilities"; */
 
 @import "./app.css";
 
@@ -13,8 +13,6 @@
 @import "./info.css";
 
 @import "./header.css";
-
-@import "./buttons.css";
 
 @import "./input.css";
 
