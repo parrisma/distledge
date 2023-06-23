@@ -1,8 +1,13 @@
+import * as React from 'react';
 import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
 import { useNotification } from "web3uikit";
 import { getEscrowContractABI, getManagedTokenNameC, getBalanceOnHandC, getIsBalancedC, getEscrowDecimalsC } from "@/lib/EscrowWrapper";
 import { ethers } from "ethers";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import { formatNumber } from '../lib/Format';
+import Button from "@mui/material/Button";
 
 export default function Contract(props) {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
@@ -128,38 +133,61 @@ export default function Contract(props) {
     }, [escrowAddress, contractABI]);
 
     return (
-        <div>
-            <div>
-                <div className="div-table-lite">
-                    {props.withHeader ? (
-                        <div className="div-table-row-header">
-                            <div className="div-table-col-fix-mid">Escrow For</div>
-                            <div className="div-table-col-fix">Supply</div>
-                            <div className="div-table-col-fix">Balanced</div>
-                            <div className="div-table-col-fix"><div /></div>
-                        </div>
-                    ) : null}
-                    <div className="div-table-row">
-                        <div className="div-table-col-fix-mid">{managed_token_name}</div>
-                        <div className="div-table-col-fix">{balance_on_hand}</div>
-                        <div className="div-table-col-fix">{isBalanced}</div>
-                        <div className="div-table-col-fix">
-                        </div>
-                        <button
-                            className="button"
-                            disabled={isLoading || isFetching}
-                            onClick={() => {
-                                getManagedTokenName({
-                                    onSuccess: handleSuccess,
-                                    onError: handleError,
-                                });
-                            }}
-                        >
-                            <div>Update</div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Box height="100%" width="100%" sx={{
+            border: 0,
+            bgcolor: 'background.paper',
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingTop: "10px",
+            paddingBottom: "10px"
+        }}>
+            {props.withHeader ? (
+                <Grid container sx={{ minWidth: 500, color: 'primary.main', fontWeight: 'bold', pb: '20px' }} borderBottom={1} spacing={1} columns={4}>
+                    <Grid item xs={1}>
+                        Escrow For
+                    </Grid>
+                    <Grid item xs={1}>
+                        Supply
+                    </Grid>
+                    <Grid item xs={1}>
+                        Balanced
+                    </Grid>
+                    <Grid item xs={1}>
+                        <div />
+                    </Grid>
+                </Grid>
+            ) : null}
+            {props.withHeader ? (
+                <Grid container sx={{ minWidth: 500 }} spacing={1} columns={4}>
+                    <Grid item xs={4}><br></br></Grid>
+                </Grid>
+            ) : null}
+            <Grid container sx={{ minWidth: 500 }} spacing={1} columns={4}>
+                <Grid item xs={1}>
+                    {managed_token_name}
+                </Grid>
+                <Grid item xs={1}>
+                    <Box display="flex" justifyContent="flex-end">
+                        {formatNumber(Number(balance_on_hand), 2, true)}
+                    </Box>
+                </Grid>
+                <Grid item xs={1}>
+                    {isBalanced}
+                </Grid>
+                <Grid item xs={1}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            getManagedTokenName({
+                                onSuccess: handleSuccess,
+                                onError: handleError,
+                            });
+                        }}
+                    >
+                        Update
+                    </Button>
+                </Grid>
+            </Grid>
+        </Box >
     );
 }

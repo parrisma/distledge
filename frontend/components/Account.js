@@ -1,4 +1,8 @@
+import * as React from 'react';
 import { useMoralis } from "react-moralis";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import { formatNumber } from '../lib/Format';
 import { useState, useEffect } from "react";
 import { addressConfig } from "../constants";
 import { getTokenContractABI, getBalanceOfC, getDecimalsC } from "../lib/StableTokenWrapper";
@@ -13,6 +17,12 @@ const Contract = (props) => {
     const [cnyTokenBalance, setCnyTokenBalance] = useState("0");
     const [appleTokenBalance, setAppleTokenBalance] = useState("0");
     const [teslaTokenBalance, setTeslaTokenBalance] = useState("0");
+
+    const [usdTokenDecimals, setUsdTokenDecimals] = useState("0");
+    const [eurTokenDecimals, setEurTokenDecimals] = useState("0");
+    const [cnyTokenDecimals, setCnyTokenDecimals] = useState("0");
+    const [appleTokenDecimals, setAppleTokenDecimals] = useState("0");
+    const [teslaTokenDecimals, setTeslaTokenDecimals] = useState("0");
 
     const [usdCashBalance, setUsdCashBalance] = useState("0");
     const [eurCashBalance, setEurCashBalance] = useState("0");
@@ -48,6 +58,11 @@ const Contract = (props) => {
             const _appleTokenDecimals = Number(await getAppleTokenDecimalsOfAccount());
             const _teslaTokenDecimals = Number(await getTeslaTokenDecimalsOfAccount());
 
+            setUsdTokenDecimals(_usdTokenDecimal);
+            setEurTokenDecimals(_eurTokenDecimal);
+            setCnyTokenDecimals(_cnyTokenDecimal);
+            setAppleTokenDecimals(_appleTokenDecimals);
+            setTeslaTokenDecimals(_teslaTokenDecimals);
             setUsdTokenBalance(_usdTokenBalance / (10 ** _usdTokenDecimal));
             setEurTokenBalance(_eurTokenBalance / (10 ** _eurTokenDecimal));
             setCnyTokenBalance(_cnyTokenBalance / (10 ** _cnyTokenDecimal));
@@ -71,89 +86,102 @@ const Contract = (props) => {
     }, [isWeb3Enabled]);
 
     return (
-        <div>
-            <div className="div-table">
-                {props.withHeader ? (
-                    <div className="div-table-row-header">
-                        <div className="div-table-col-fix-lab">
-                            &nbsp;
-                        </div>
-                        <div className="div-table-col-fix-lab">
-                            Name:
-                        </div>
-                        <div className="div-table-col-fix-address">
-                            Wallet Address:
-                        </div>
-                        <div className="div-table-col-fix-lab">
-                            EUR Cash:
-                        </div>
-                        <div className="div-table-col-fix-lab">
-                            EUR Token
-                        </div>
-                        <div className="div-table-col-fix-lab">
-                            USD Cash:
-                        </div>
-                        <div className="div-table-col-fix-lab">
-                            USD Token
-                        </div>
-                        <div className="div-table-col-fix-lab">
-                            CNY Cash:
-                        </div>
-                        <div className="div-table-col-fix-lab">
-                            CNY Token
-                        </div>
-                        <div className="div-table-col-fix-lab">
-                            Apple Token
-                        </div>
-                        <div className="div-table-col-fix-lab">
-                            Tesla Token
-                        </div>
-                    </div>
-                ) : null}
-                <div className="div-table-row">
-                    <div className="div-table-col-fix-lab">
-                        <button
-                            className="button"
-                            onClick={() => {
-                                updateAllTokenBalances();
-                            }}
-                        >
-                            Update
-                        </button>
-                    </div>
-                    <div className="div-table-col-fix-lab">
-                        {props.displayName}
-                    </div>
-                    <div className="div-table-col-fix-address-data">
-                        {props.accountDetail.accountAddress}
-                    </div>
-                    <div className="div-table-col-fix-lab">
-                        {eurCashBalance}
-                    </div>
-                    <div className="div-table-col-fix-lab">
-                        {eurTokenBalance}
-                    </div>
-                    <div className="div-table-col-fix-lab">
-                        {usdCashBalance}
-                    </div>
-                    <div className="div-table-col-fix-lab">
-                        {usdTokenBalance}
-                    </div>
-                    <div className="div-table-col-fix-lab">
-                        {cnyCashBalance}
-                    </div>
-                    <div className="div-table-col-fix-lab">
-                        {cnyTokenBalance}
-                    </div>
-                    <div className="div-table-col-fix-lab">
-                        {appleTokenBalance}
-                    </div>
-                    <div className="div-table-col-fix-lab">
-                        {teslaTokenBalance}
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Box height="100%" width="100%" sx={{
+            border: 0,
+            bgcolor: 'background.paper',
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingTop: "10px",
+            paddingBottom: "10px"
+        }}>
+            {props.withHeader ? (
+                <Grid container sx={{ minWidth: 700, color: 'primary.main', fontWeight: 'bold', pb: '20px' }} borderBottom={1} spacing={1} columns={14}>
+                    <Grid item xs={2}>
+                        Name
+                    </Grid>
+                    <Grid item xs={4}>
+                        Wallet Address
+                    </Grid>
+                    <Grid item xs={1}>
+                        EUR Cash
+                    </Grid>
+                    <Grid item xs={1}>
+                        EUR Token
+                    </Grid>
+                    <Grid item xs={1}>
+                        USD Cash
+                    </Grid>
+                    <Grid item xs={1}>
+                        USD Token
+                    </Grid>
+                    <Grid item xs={1}>
+                        CNY Cash
+                    </Grid>
+                    <Grid item xs={1}>
+                        CNY Token
+                    </Grid>
+                    <Grid item xs={1}>
+                        Apple Token
+                    </Grid>
+                    <Grid item xs={1}>
+                        Tesla Token
+                    </Grid>
+                </Grid>
+            ) : null}
+            {props.withHeader ? (
+                <Grid container sx={{ minWidth: 700}} spacing={1} columns={14}>
+                    <Grid item xs={14}><br></br></Grid>
+                </Grid>
+            ) : null}
+            <Grid container sx={{ minWidth: 700 }} spacing={1} columns={14}>
+                <Grid item xs={2}>
+                    {props.displayName}
+                </Grid>
+                <Grid item xs={4}>
+                    {props.accountDetail.accountAddress}
+                </Grid>
+                <Grid item xs={1}>
+                    <Box display="flex" justifyContent="flex-end">
+                        {formatNumber(Number(eurCashBalance), eurTokenDecimals, true)}
+                    </Box>
+                </Grid>
+                <Grid item xs={1}>
+                    <Box display="flex" justifyContent="flex-end">
+                        {formatNumber(Number(eurTokenBalance), eurTokenDecimals, true)}
+                    </Box>
+                </Grid>
+                <Grid item xs={1}>
+                    <Box display="flex" justifyContent="flex-end">
+                        {formatNumber(Number(usdCashBalance), usdTokenDecimals, true)}
+                    </Box>
+                </Grid>
+                <Grid item xs={1}>
+                    <Box display="flex" justifyContent="flex-end">
+                        {formatNumber(Number(usdTokenBalance), usdTokenDecimals, true)}
+                    </Box>
+                </Grid>
+                <Grid item xs={1}>
+                    <Box display="flex" justifyContent="flex-end">
+                        {formatNumber(Number(cnyCashBalance), cnyTokenDecimals, true)}
+                    </Box>
+                </Grid>
+                <Grid item xs={1}>
+                    <Box display="flex" justifyContent="flex-end">
+                        {formatNumber(Number(cnyTokenBalance), cnyTokenDecimals, true)}
+                    </Box>
+                </Grid>
+                <Grid item xs={1}>
+                    <Box display="flex" justifyContent="flex-end">
+                        {formatNumber(Number(appleTokenBalance), appleTokenDecimals, true)}
+                    </Box>
+                </Grid>
+                <Grid item xs={1}>
+                    <Box display="flex" justifyContent="flex-end">
+                        {formatNumber(Number(teslaTokenBalance), teslaTokenDecimals, true)}
+                    </Box>
+                </Grid>
+            </Grid>
+        </Box >
     );
 };
 

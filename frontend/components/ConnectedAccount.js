@@ -2,6 +2,8 @@ import { addressConfig } from "@/constants";
 import { getDisplayName } from "@/lib/DisplayName";
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 /* Show the name of the given connected account
 */
@@ -42,19 +44,16 @@ const Contract = (props) => {
     }, [isWeb3Enabled, account])
 
     return (
-        <div>
+        <Box>
             {isWeb3Enabled ?
                 (
-                    <div className="header-3">
-                        Connected as {acctName} @ {acct}
-                    </div>) :
+                    <Typography variant="h6" color="success.main">Connected as [{acctName}] @ [{acct}]</Typography>
+                ) :
                 (
-                    <div className="header-3-red">
-                        Not connected, Press Connect
-                    </div>
+                    <Typography variant="h6" color="error.main">Not connected, Press Connect</Typography>
                 )
             }
-        </div>
+        </Box>
     );
 };
 

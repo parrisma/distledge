@@ -1,6 +1,10 @@
+import * as React from "react";
 import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { valueOptionByPOSTRequest, emptyValuationResponse } from "../lib/ERC721Util";
+import Button from "@mui/material/Button";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 
 const Contract = (props) => {
 
@@ -31,74 +35,75 @@ const Contract = (props) => {
     }, [isWeb3Enabled, props.buyerAccount]);
 
     return (
-        <div className="div-table">
+        <Box height="100%" width="100%" sx={{
+            border: 0,
+            bgcolor: 'background.paper',
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingTop: "10px",
+            paddingBottom: "10px"
+        }}>
             {props.rowNum === 0 ? (
-                <div className="div-table-row-header">
-                    <div className="div-table-col-fix-mid">
+                <Grid container sx={{ minWidth: 700, color: 'primary.main', fontWeight: 'bold' }} spacing={1} columns={10}>
+                    <Grid item xs={3}>
                         Unique Id
-                    </div>
-                    <div className="div-table-col-fix-mid">
+                    </Grid>
+                    <Grid item xs={2}>
                         Option Name
-                    </div>
-                    <div className="div-table-col-fix-number">
+                    </Grid>
+                    <Grid item xs={1}>
                         Premium
-                    </div>
-                    <div className="div-table-col-fix-number">
+                    </Grid>
+                    <Grid item xs={1}>
                         Notional
-                    </div>
-                    <div className="div-table-col-fix-number">
+                    </Grid>
+                    <Grid item xs={1}>
                         Strike
-                    </div>
-                    <div className="div-table-col-fix-number">
+                    </Grid>
+                    <Grid item xs={1}>
                         Value
-                    </div>
-                    <div className="div-table-col">
+                    </Grid>
+                    <Grid item xs={1}>
                         Action
-                    </div>
-                </div>
+                    </Grid>
+                </Grid>
             ) :
                 <div />
             }
             {props.optionDetail !== undefined && props.optionDetail.hasOwnProperty('uniqueId') ? (
-                <div className="div-table-row">
-                    <div className="div-table-col-fix-mid">
+                <Grid container sx={{ minWidth: 700 }} spacing={1} columns={10}>
+                    <Grid item xs={3}>
                         {props.optionDetail.uniqueId}
-                    </div>
-                    <div className="div-table-col-fix-mid">
+                    </Grid>
+                    <Grid item xs={2}>
                         {props.optionDetail.optionName}
-                    </div>
-                    <div className="div-table-col-fix-number">
+                    </Grid>
+                    <Grid item xs={1}>
                         {props.optionDetail.premium}
-                    </div>
-                    <div className="div-table-col-fix-number">
+                    </Grid>
+                    <Grid item xs={1}>
                         {props.optionDetail.notional}
-                    </div>
-                    <div className="div-table-col-fix-number">
+                    </Grid>
+                    <Grid item xs={1}>
                         {props.optionDetail.strike}
-                    </div>
-                    <div className="div-table-col-fix-number">
-                        <div className="item-right">
-                            {Number(optionValuation.value).toLocaleString('en-US', { maximumFractionDigits: 2 })}
-                        </div>
-                    </div>
-                    <div className="div-table-col">
-                        <button
-                            className="button"
+                    </Grid>
+                    <Grid item xs={1}>
+                        {Number(optionValuation.value).toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Button
+                            variant="outlined"
                             onClick={() => {
                                 props.handleAction(props.optionDetail.uniqueId);
                             }}>
                             <div>{props.action}</div>
-                        </button>
-                    </div>
-                </div>
+                        </Button>
+                    </Grid>
+                </Grid>
             ) :
-                <div className="div-table-row">
-                    <div className="div-table-col-fix-wide">
-                        {``}
-                    </div>
-                </div>
+                <div />
             }
-        </div>
+        </Box >
     );
 };
 

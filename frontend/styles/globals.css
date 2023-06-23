@@ -1,37 +1,16 @@
-@import "tailwindcss/base";
+.option-list {
+    color: white;
+    text-align: left;
+    height: 100%;
+    width: 100%;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
 
-@import "tailwindcss/components";
-
-@import "tailwindcss/utilities";
-
-@import "./app.css";
-
-@import "./error.css";
-
-@import "./warning.css";
-
-@import "./info.css";
-
-@import "./header.css";
-
-@import "./buttons.css";
-
-@import "./input.css";
-
-@import "./selector.css";
-
-@import "./tab.css";
-
-@import "./layout-row-col.css";
-
-@import "./console.css";
-
-@import "./option-list.css";
-
-@import "./resizable.css";
-
-@import "./panes.css";
-
-@import "./navigator.css";
-
-@import "./price.css";
+.no-bullet {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}

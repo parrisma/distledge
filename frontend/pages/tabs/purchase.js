@@ -7,6 +7,9 @@ import { useConsoleLogContext } from "../../context/consoleLog";
 import { sendCreateOptionRequest } from "../../lib/CreateOptionConnector";
 import { sendExerciseRequest } from "../../lib/ExerciseConnector";
 import { getERC721MintedOptionList } from "../../lib/ERC721Util";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 const Contract = (props) => {
 
@@ -149,47 +152,48 @@ const Contract = (props) => {
   }, [isWeb3Enabled, account, connectedAccount])
 
   return (
-    <div className="resizable">
-      <div className="div-table">
-        <div className="div-table-row">
-          <div className="div-table-col">
-            <ConnectedAccount
-              handleChange={handleAccountChange}
-            />
-          </div>
-        </div>
-        <div className="div-table-row">
-          <div className="div-table-col">
-            <div className="div-table">
-              <div className="div-table-row">
-                <div className="div-table-col">
-                  <div className="pane-standard">
-                    <h2 className="header-2">Options Purchased</h2>
-                    <OptionList
-                      buyerAccount={connectedAccount}
-                      minted={true}
-                      minedOptions={mintedOptList}
-                      handleExercise={handleExercise}
-                      handleLogChange={appendLogs} />
-                  </div>
-                </div>
-                <div className="div-table-col">
-                  <div className="pane-standard">
-                    <h2 className="header-2">Options Offered for Sale</h2>
-                    <OptionList
-                      offered={true}
-                      offeredOptionList={Object.values(offeredOptDict)}
-                      handleBuy={handleBuy}
-                      asSeller={false}
-                      handleLogChange={appendLogs} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Box height="100%" width="100%" sx={{
+      border: 0,
+      bgcolor: 'background.paper',
+      paddingLeft: "10px",
+      paddingRight: "10px",
+      paddingTop: "10px",
+      paddingBottom: "10px"
+    }}>
+      <Grid container sx={{ minWidth: 700 }} spacing={1} columns={2}>
+        <Grid item xs={3}>
+          <ConnectedAccount
+            handleChange={handleAccountChange}
+          />
+        </Grid>
+        <Grid item xs={1}>
+          <Box sx={{ minWidth: 700 }} >
+            <Typography borderBottom={1} variant="h6" sx={{ pb: '20px' }} >Options Purchased</Typography>
+            <Box>
+              <OptionList
+                buyerAccount={connectedAccount}
+                minted={true}
+                minedOptions={mintedOptList}
+                handleExercise={handleExercise}
+                handleLogChange={appendLogs} />
+            </Box>
+          </Box>
+        </Grid>
+        <Grid item xs={1}>
+          <Box sx={{ minWidth: 700 }} >
+            <Typography borderBottom={1} variant="h6" sx={{ pb: '20px' }}>Options Offered for Sale</Typography>
+            <Box>
+              <OptionList
+                offered={true}
+                offeredOptionList={Object.values(offeredOptDict)}
+                handleBuy={handleBuy}
+                asSeller={false}
+                handleLogChange={appendLogs} />
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

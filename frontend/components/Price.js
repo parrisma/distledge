@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { useNotification } from "web3uikit";
 import { getLevelContractABI, getTickerC, getLevelDetailsC, getVerifiedValueC, getDecimalsC } from "../lib/LevelWrapper";
 import { ethers } from "ethers";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import { formatNumber } from '../lib/Format';
 
 const Contract = (props) => {
   const { chainId: chainIdHex, isWeb3Enabled } = useMoralis();
@@ -61,11 +64,6 @@ const Contract = (props) => {
   useEffect(() => {
     updateUI(); // update immediately once page is mounted.
   }, []);
-
-  const handleSuccess = async (tx) => {
-    handleButtonClick(`Request price update ${tx}.`);
-    handleNewNotification();
-  };
 
   const handleNewNotification = () => {
     dispatch({
@@ -129,28 +127,58 @@ const Contract = (props) => {
   }, [levelAddress, contractABI]);
 
   return (
-    <div>
-      <div>
-        <div className="div-table-lite">
-          {props.withHeader ? (
-            <div className="div-table-row-header">
-              <div className="div-table-col-fix-mid">Description</div>
-              <div className="div-table-col-fix">Ticker</div>
-              <div className="div-table-col-fix">Price</div>
-              <div className="div-table-col-fix">Decimals</div>
-              <div className="div-table-col-fix">Type</div>
-            </div>
-          ) : null}
-          <div className="div-table-row">
-            <div className="div-table-col-fix-mid">{description}</div>
-            <div className="div-table-col-fix">{ticker}</div>
-            <div className={priceCellClass}>{verifiedValue}</div>
-            <div className="div-table-col-fix">{decimals}</div>
-            <div className="div-table-col-fix">{contractType}</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Box height="100%" width="100%" sx={{
+      border: 0,
+      bgcolor: 'background.paper',
+      paddingLeft: "10px",
+      paddingRight: "10px",
+      paddingTop: "10px",
+      paddingBottom: "10px"
+    }}>
+      {props.withHeader ? (
+        <Grid container sx={{ minWidth: 700, color: 'primary.main', fontWeight: 'bold', pb: '20px' }} borderBottom={1} spacing={1} columns={6}>
+          <Grid item xs={2}>
+            Description
+          </Grid>
+          <Grid item xs={1}>
+            Ticker
+          </Grid>
+          <Grid item xs={1}>
+            Price
+          </Grid>
+          <Grid item xs={1}>
+            Decimals
+          </Grid>
+          <Grid item xs={1}>
+            Type
+          </Grid>
+        </Grid>
+      ) : null}
+      {props.withHeader ? (
+        <Grid container sx={{ minWidth: 700 }} spacing={1} columns={6}>
+          <Grid item xs={6}><br></br></Grid>
+        </Grid>
+      ) : null}
+      <Grid container sx={{ minWidth: 700 }} spacing={1} columns={6}>
+        <Grid item xs={2}>
+          {description}
+        </Grid>
+        <Grid item xs={1}>
+          {ticker}
+        </Grid>
+        <Grid item xs={1}>
+          <Box display="flex" justifyContent="flex-end">
+            {formatNumber(verifiedValue, decimals, true)}
+          </Box>
+        </Grid>
+        <Grid item xs={1}>
+          {decimals}
+        </Grid>
+        <Grid item xs={1}>
+          {contractType}
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

@@ -7,6 +7,9 @@ import { addressConfig } from "../../constants";
 import { OptionTypeOneTermsAreValid } from "../../lib/ERC721Util";
 import { useOfferedOptionContext } from "../../context/offeredOption";
 import { useConsoleLogContext } from "../../context/consoleLog";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 const Contract = (props) => {
 
@@ -81,55 +84,58 @@ const Contract = (props) => {
     }, [isWeb3Enabled, offeredOptDict, account, connectedAccount]);
 
     return (
-        <div className="resizable">
-            <div className="div-table">
-                <div className="div-table-row">
-                    <div className="div-table-col">
+        <Box height="100%" width="100%" sx={{
+            border: 0,
+            bgcolor: 'background.paper',
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            paddingTop: "10px",
+            paddingBottom: "10px"
+        }}>
+            {connectedAccountIsSeller ? (
+                <Grid container sx={{ minWidth: 700 }} spacing={1} columns={3}>
+                    <Grid item xs={3}>
                         <ConnectedAccount
                             handleChange={handleAccountChange}
                         />
-                    </div>
-                </div>
-                <div className="div-table-row">
-                    <div className="div-table-col">
-                        <div className="div-table">
-                            <div className="div-table-row">
-                                <div className="div-table-col">
-                                    <div className="pane-narrow">
-                                        <h2 className="header-2">Print Option for Sale</h2>
-                                        <div>
-                                            {connectedAccountIsSeller ? (
-                                                <SimpleOption
-                                                    handleOfferOption={offerOption}
-                                                    handleLogChange={appendLogs} />
-                                            ) :
-                                                (<div className="header-3-red">
-                                                    Connect as a Seller account to print options
-                                                </div>)}
-                                        </div>
-                                    </div>
-                                </div>
-                                {connectedAccountIsSeller ? (
-                                    <div className="div-table-col">
-                                        <div className="pane-standard">
-                                            <h2 className="header-2">Options Offered for Sale</h2>
-                                            <OptionList
-                                                offered={true}
-                                                offeredOptionList={Object.values(offeredOptDict)}
-                                                asSeller={true}
-                                                handleDel={handleDel}
-                                                handleLogChange={appendLogs} />
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div />
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Box sx={{ minWidth: 700 }} >
+                            <Typography borderBottom={1} variant="h6" sx={{ pb: '20px' }} >Print Option for Sale</Typography>
+                            <Box>
+                                <SimpleOption
+                                    handleOfferOption={offerOption}
+                                    handleLogChange={appendLogs} />
+                            </Box>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Box sx={{ minWidth: 700 }} >
+                            <Typography borderBottom={1} variant="h6" sx={{ pb: '20px' }} >Options Offered for Sale</Typography>
+                            <Box>
+                                <OptionList
+                                    offered={true}
+                                    offeredOptionList={Object.values(offeredOptDict)}
+                                    asSeller={true}
+                                    handleDel={handleDel}
+                                    handleLogChange={appendLogs} />
+                            </Box>
+                        </Box>
+                    </Grid>
+                </Grid>
+            ) : (
+                <Grid container sx={{ minWidth: 700 }} spacing={1} columns={1}>
+                    <Grid item xs={1}>
+                        <ConnectedAccount
+                            handleChange={handleAccountChange}
+                        />
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Typography variant="h6" color="error.main">Connect as a Seller account to offer options</Typography>
+                    </Grid>
+                </Grid>
+            )}
+        </Box>
     );
 };
 

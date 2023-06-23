@@ -28,8 +28,8 @@
     "hardhat-gas-reporter": "^1.0.9",
     "ipfs-core": "^0.17.0",
     "ipfs-http-client": "^60.0.0",
-    "ipfs-http-server": "^0.15.1",
     "ipfs-http-gateway": "^0.13.1",
+    "ipfs-http-server": "^0.15.1",
     "solidity-coverage": "^0.7.22",
     "ts-node": "^10.9.1",
     "typechain": "^8.1.1",
@@ -37,7 +37,8 @@
     "web3": "^1.8.2"
   },
   "dependencies": {
-    "@chainlink/contracts": "^0.5.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@openzeppelin/contracts": "^4.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",

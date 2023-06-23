@@ -2,6 +2,9 @@ import StableToken from "../../components/StableToken";
 import EscrowAccount from "../../components/Escrow";
 import { addressConfig, StableCoinType, StableShareType, EscrowAccountType } from "../../constants";
 import { useConsoleLogContext } from "../../context/consoleLog";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+
 
 const EscrowPage = (props) => {
 
@@ -12,140 +15,130 @@ const EscrowPage = (props) => {
     }
 
     return (
-        <div className="resizable-horizontal">
-            <div className="div-table">
-                <div className="div-table-row">
-                    <div className="div-table-col">
-                        <EscrowAccount
-                            contract={{
-                                address: addressConfig["usdEscrowAccount"]
-                                    ? addressConfig["usdEscrowAccount"]
-                                    : null,
-                                type: `${EscrowAccountType}`,
-                            }}
-                            onAddInfo={appendLogs}
-                            withHeader={true}
-                        />
-                    </div>
-                    <div className="div-table-col">
-                        <StableToken
-                            contract={{
-                                address: addressConfig["usdStableCoin"]
-                                    ? addressConfig["usdStableCoin"]
-                                    : null,
-                                type: `${StableCoinType}`,
-                            }}
-                            onAddInfo={appendLogs}
-                            withHeader={true}
-                        />
-                    </div>
-                </div>
-                <div className="div-table-row">
-                    <div className="div-table-col">
-                        <EscrowAccount
-                            contract={{
-                                address: addressConfig["eurEscrowAccount"]
-                                    ? addressConfig["eurEscrowAccount"]
-                                    : null,
-                                type: `${EscrowAccountType}`,
-                            }}
-                            onAddInfo={appendLogs}
-                            withHeader={false}
-                        />
-                    </div>
-                    <div className="div-table-col">
-                        <StableToken
-                            contract={{
-                                address: addressConfig["eurStableCoin"]
-                                    ? addressConfig["eurStableCoin"]
-                                    : null,
-                                type: `${StableCoinType}`,
-                            }}
-                            onAddInfo={appendLogs}
-                            withHeader={false}
-                        />
-                    </div>
-                </div>
-                <div className="div-table-row">
-                    <div className="div-table-col">
-                        <EscrowAccount
-                            contract={{
-                                address: addressConfig["cnyEscrowAccount"]
-                                    ? addressConfig["cnyEscrowAccount"]
-                                    : null,
-                                type: `${EscrowAccountType}`,
-                            }}
-                            onAddInfo={appendLogs}
-                            withHeader={false}
-                        />
-                    </div>
-                    <div className="div-table-col">
-                        <StableToken
-                            contract={{
-                                address: addressConfig["cnyStableCoin"]
-                                    ? addressConfig["cnyStableCoin"]
-                                    : null,
-                                type: `${StableCoinType}`,
-                            }}
-                            onAddInfo={appendLogs}
-                            withHeader={false}
-                        />
-                    </div>
-                </div>
-                <div className="div-table-row">
-                    <div className="div-table-col">
-                        <EscrowAccount
-                            contract={{
-                                address: addressConfig["appleEscrowAccount"]
-                                    ? addressConfig["appleEscrowAccount"]
-                                    : null,
-                                type: `${EscrowAccountType}`,
-                            }}
-                            onAddInfo={appendLogs}
-                            withHeader={false}
-                        />
-                    </div>
-                    <div className="div-table-col">
-                        <StableToken
-                            contract={{
-                                address: addressConfig["appleStableShare"]
-                                    ? addressConfig["appleStableShare"]
-                                    : null,
-                                type: `${StableShareType}`,
-                            }}
-                            onAddInfo={appendLogs}
-                            withHeader={false}
-                        />
-                    </div>
-                </div>
-                <div className="div-table-row">
-                    <div className="div-table-col">
-                        <EscrowAccount
-                            contract={{
-                                address: addressConfig["teslaEscrowAccount"]
-                                    ? addressConfig["teslaEscrowAccount"]
-                                    : null,
-                                type: `${EscrowAccountType}`,
-                            }}
-                            onAddInfo={appendLogs}
-                            withHeader={false}
-                        />
-                    </div>
-                    <div className="div-table-col">
-                        <StableToken
-                            contract={{
-                                address: addressConfig["teslaStableShare"]
-                                    ? addressConfig["teslaStableShare"]
-                                    : null,
-                                type: `${StableShareType}`,
-                            }}
-                            onAddInfo={appendLogs}
-                            withHeader={false}
-                        />
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Box sx={{ border: 0 }}>
+            <Grid container spacing={0} columns={2}>
+                <Grid item xs={1}>
+                    <EscrowAccount
+                        contract={{
+                            address: addressConfig["usdEscrowAccount"]
+                                ? addressConfig["usdEscrowAccount"]
+                                : null,
+                            type: `${EscrowAccountType}`,
+                        }}
+                        onAddInfo={appendLogs}
+                        withHeader={true}
+                    />
+                </Grid>
+                <Grid item xs={1}>
+                    <StableToken
+                        contract={{
+                            address: addressConfig["usdStableCoin"]
+                                ? addressConfig["usdStableCoin"]
+                                : null,
+                            type: `${StableCoinType}`,
+                        }}
+                        onAddInfo={appendLogs}
+                        withHeader={true}
+                    />
+                </Grid>
+                <Grid item xs={1}>
+                    <EscrowAccount
+                        contract={{
+                            address: addressConfig["eurEscrowAccount"]
+                                ? addressConfig["eurEscrowAccount"]
+                                : null,
+                            type: `${EscrowAccountType}`,
+                        }}
+                        onAddInfo={appendLogs}
+                        withHeader={false}
+                    />
+                </Grid>
+                <Grid item xs={1}>
+                    <StableToken
+                        contract={{
+                            address: addressConfig["eurStableCoin"]
+                                ? addressConfig["eurStableCoin"]
+                                : null,
+                            type: `${StableCoinType}`,
+                        }}
+                        onAddInfo={appendLogs}
+                        withHeader={false}
+                    />
+                </Grid>
+                <Grid item xs={1}>
+                    <EscrowAccount
+                        contract={{
+                            address: addressConfig["cnyEscrowAccount"]
+                                ? addressConfig["cnyEscrowAccount"]
+                                : null,
+                            type: `${EscrowAccountType}`,
+                        }}
+                        onAddInfo={appendLogs}
+                        withHeader={false}
+                    />
+                </Grid>
+                <Grid item xs={1}>
+                    <StableToken
+                        contract={{
+                            address: addressConfig["cnyStableCoin"]
+                                ? addressConfig["cnyStableCoin"]
+                                : null,
+                            type: `${StableCoinType}`,
+                        }}
+                        onAddInfo={appendLogs}
+                        withHeader={false}
+                    />
+                </Grid>
+                <Grid item xs={1}>
+                    <EscrowAccount
+                        contract={{
+                            address: addressConfig["appleEscrowAccount"]
+                                ? addressConfig["appleEscrowAccount"]
+                                : null,
+                            type: `${EscrowAccountType}`,
+                        }}
+                        onAddInfo={appendLogs}
+                        withHeader={false}
+                    />
+                </Grid>
+                <Grid item xs={1}>
+                    <StableToken
+                        contract={{
+                            address: addressConfig["appleStableShare"]
+                                ? addressConfig["appleStableShare"]
+                                : null,
+                            type: `${StableShareType}`,
+                        }}
+                        onAddInfo={appendLogs}
+                        withHeader={false}
+                    />
+                </Grid>
+                <Grid item xs={1}>
+                    <EscrowAccount
+                        contract={{
+                            address: addressConfig["teslaEscrowAccount"]
+                                ? addressConfig["teslaEscrowAccount"]
+                                : null,
+                            type: `${EscrowAccountType}`,
+                        }}
+                        onAddInfo={appendLogs}
+                        withHeader={false}
+                    />
+                </Grid>
+                <Grid item xs={1}>
+                    <StableToken
+                        contract={{
+                            address: addressConfig["teslaStableShare"]
+                                ? addressConfig["teslaStableShare"]
+                                : null,
+                            type: `${StableShareType}`,
+                        }}
+                        onAddInfo={appendLogs}
+                        withHeader={false}
+                    />
+                </Grid>
+            </Grid>
+        </Box>
     );
 };
 
