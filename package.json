@@ -9,7 +9,7 @@
     "deploy-opt": "npx hardhat run --network localhost ./webserver/test/serverTest.js",
     "backend": "npx hardhat run --network localhost ./webserver/server.js",
     "ftb": "npm run deploy && npm run export-fe && npm run export-be && npm run backend",
-    "frontend": "cd frontend && yarn dev",
+    "frontend": "cd frontend && npm run dev",
     "price-feed": "npx hardhat run --network localhost ./scripts/priceInject/priceInject.js"
   },
   "devDependencies": {

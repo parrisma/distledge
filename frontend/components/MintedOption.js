@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { getOptionById, valueOptionById } from "../lib/ERC721Util";
+import { Button } from "@material-ui/core";
 
 const Contract = (props) => {
 
@@ -79,13 +80,12 @@ const Contract = (props) => {
                         </div>
                     </div>
                     <div className="div-table-col">
-                        <button
-                            className="button"
+                        <Button color="primary" variant="contained" size="small"                        
                             onClick={() => {
                                 props.handleExercise(props.optionId, optionValuation.value);
                             }}>
                             <div>Exercise</div>
-                        </button>
+                        </Button>
                     </div>
                 </div>
             ) :

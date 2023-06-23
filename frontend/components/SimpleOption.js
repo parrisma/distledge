@@ -6,6 +6,7 @@ import InputField from "../components/InputField";
 import { GloballyUniqueId } from "../lib/GloballyUniqueId";
 import { formatOptionTypeOneTerms } from "../../lib/SimpleOptionTypeOne";
 import { useState } from "react";
+import { Button } from "@material-ui/core";
 
 const Contract = (props) => {
 
@@ -137,8 +138,7 @@ const Contract = (props) => {
                 <div className="div-table-row">
                     <div className="div-table-col-fix-mid">
                         {props.handleOfferOption !== undefined ? (
-                            <button
-                                className="button"
+                            <Button color="primary" variant="contained"                               
                                 onClick={() => {
                                     props.handleOfferOption(
                                         formatOptionTypeOneTerms(
@@ -156,7 +156,7 @@ const Contract = (props) => {
                                 }}
                             >
                                 <div>Offer Option</div>
-                            </button>
+                            </Button>
                         ) : <div />}
                     </div>
                 </div>

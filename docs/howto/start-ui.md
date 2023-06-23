@@ -108,13 +108,13 @@ Server Listening on [http://localhost:8191]
 
 ```bash
 cd ./frontend/
-yarn
+npm install
 ```
 
 ## Run UI
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 ## Using the Front-end
