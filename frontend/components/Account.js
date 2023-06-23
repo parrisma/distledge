@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { addressConfig } from "../constants";
 import { getTokenContractABI, getBalanceOfC, getDecimalsC } from "../lib/StableTokenWrapper";
 import { StableCoinType, StableShareType } from "../constants";
+import { Button } from "@material-ui/core";
 
 const Contract = (props) => {
 
