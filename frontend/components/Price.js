@@ -62,8 +62,10 @@ const Contract = (props) => {
   }
 
   useEffect(() => {
-    updateUI(); // update immediately once page is mounted.
-  }, []);
+    if (isWeb3Enabled) {
+      updateUI(); // update immediately once page is mounted.
+    }
+  }, [isWeb3Enabled]);
 
   const handleNewNotification = () => {
     dispatch({
@@ -80,51 +82,53 @@ const Contract = (props) => {
   };
 
   useEffect(() => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const contract = new ethers.Contract(levelAddress, contractABI, provider);
-    const handleChangeOfSource = async (
-      currentSigner,
-      newSigner,
-      event
-    ) => {
-      let info =
-        "Signer changed  from " +
-        currentSigner +
-        " to " +
-        newSigner;
-      props.onAddInfo(info);
-    };
-    const handleSecureLevelUpdate = async (
-      value,
-      event
-    ) => {
-      let valueFormatted = formatValue(value, decimalsForCalc[0]);
-      updateUpdatePriceCell(valueFormatted);
-      let info = `Secure ${symbolForCalc[0]} level updated to ${valueFormatted}`;
-      setVerifiedValue(valueFormatted);
-      props.onAddInfo(info);
-    };
-    const setSecureLevelEvents = async () => {
-      // Subscribe to the "Deposit" event
-      contract.on("ChangeOfSource", handleChangeOfSource, {
-        fromBlock: 0,
-        toBlock: "latest",
-      });
+    if (isWeb3Enabled) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(levelAddress, contractABI, provider);
+      const handleChangeOfSource = async (
+        currentSigner,
+        newSigner,
+        event
+      ) => {
+        let info =
+          "Signer changed  from " +
+          currentSigner +
+          " to " +
+          newSigner;
+        props.onAddInfo(info);
+      };
+      const handleSecureLevelUpdate = async (
+        value,
+        event
+      ) => {
+        let valueFormatted = formatValue(value, decimalsForCalc[0]);
+        updateUpdatePriceCell(valueFormatted);
+        let info = `Secure ${symbolForCalc[0]} level updated to ${valueFormatted}`;
+        setVerifiedValue(valueFormatted);
+        props.onAddInfo(info);
+      };
+      const setSecureLevelEvents = async () => {
+        // Subscribe to the "Deposit" event
+        contract.on("ChangeOfSource", handleChangeOfSource, {
+          fromBlock: 0,
+          toBlock: "latest",
+        });
 
-      // Subscribe to the "Withdrawal" event
-      contract.on("LevelUpdated", handleSecureLevelUpdate, {
-        fromBlock: 0,
-        toBlock: "latest",
-      });
-    };
+        // Subscribe to the "Withdrawal" event
+        contract.on("LevelUpdated", handleSecureLevelUpdate, {
+          fromBlock: 0,
+          toBlock: "latest",
+        });
+      };
 
-    setSecureLevelEvents();
+      setSecureLevelEvents();
 
-    return () => {
-      contract.off("ChangeOfSource", handleChangeOfSource);
-      contract.off("LevelUpdated", handleSecureLevelUpdate);
-    };
-  }, [levelAddress, contractABI]);
+      return () => {
+        contract.off("ChangeOfSource", handleChangeOfSource);
+        contract.off("LevelUpdated", handleSecureLevelUpdate);
+      };
+    }
+  }, [levelAddress, contractABI, isWeb3Enabled]);
 
   return (
     <Box height="100%" width="100%" sx={{
@@ -141,30 +145,40 @@ const Contract = (props) => {
             Description
           </Grid>
           <Grid item xs={1}>
-            Ticker
+            <Box display="flex" justifyContent="center">
+              Ticker
+            </Box>
           </Grid>
           <Grid item xs={1}>
-            Price
+            <Box display="flex" justifyContent="center">
+              Price
+            </Box>
           </Grid>
           <Grid item xs={1}>
-            Decimals
+            <Box display="flex" justifyContent="center">
+              Decimals
+            </Box>
           </Grid>
           <Grid item xs={1}>
-            Type
+            <Box display="flex" justifyContent="center">
+              Type
+            </Box>
           </Grid>
         </Grid>
       ) : null}
       {props.withHeader ? (
-        <Grid container sx={{ minWidth: 700 }} spacing={1} columns={6}>
+        <Grid container spacing={1} columns={6}>
           <Grid item xs={6}><br></br></Grid>
         </Grid>
       ) : null}
-      <Grid container sx={{ minWidth: 700 }} spacing={1} columns={6}>
+      <Grid container spacing={1} columns={6}>
         <Grid item xs={2}>
           {description}
         </Grid>
         <Grid item xs={1}>
-          {ticker}
+          <Box display="flex" justifyContent="center">
+            {ticker}
+          </Box>
         </Grid>
         <Grid item xs={1}>
           <Box display="flex" justifyContent="flex-end">
@@ -172,10 +186,14 @@ const Contract = (props) => {
           </Box>
         </Grid>
         <Grid item xs={1}>
-          {decimals}
+          <Box display="flex" justifyContent="center">
+            {decimals}
+          </Box>
         </Grid>
         <Grid item xs={1}>
-          {contractType}
+          <Box display="flex" justifyContent="center">
+            {contractType}
+          </Box>
         </Grid>
       </Grid>
     </Box>

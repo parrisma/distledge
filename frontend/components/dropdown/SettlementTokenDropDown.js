@@ -1,9 +1,12 @@
 import { addressConfig } from "@/constants";
 import { getDisplayName } from "@/lib/DisplayName";
-import Select from 'react-select'
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 /* A list of all stable tokens that can be used to settle a contract
-** e.g. stablke coins, stable shares or any contract that implements StableAsset interface.
+** e.g. stable coins, stable shares or any contract that implements StableAsset interface.
 */
 const Contract = (props) => {
 
@@ -19,18 +22,29 @@ const Contract = (props) => {
     }
   };
 
-  function handleChange(e) {
-    props.handleChange(e.value);
+  function handleChange(event) {
+    props.handleChange(event.target.value);
   }
 
   return (
-    <Select
-      className='selector'
-      options={optionsList}
-      placeholder={`${props.placeholder}`}
-      clearable={false}
-      onChange={handleChange}
-    />
+    <FormControl fullWidth>
+      <InputLabel id="settle-token-drop-down-label">{props.label}</InputLabel>
+      <Select
+        labelId="settle-token-drop-down-label"
+        onChange={handleChange}
+        variant="filled"
+        size="small"
+        fullWidth
+      >
+        {optionsList.map((item) => (
+          <MenuItem
+            value={item.value}
+          >
+            {item.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 

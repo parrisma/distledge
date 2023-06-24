@@ -14,8 +14,9 @@ const PricePage = (props) => {
 
     return (
         <Box sx={{
-            border: 0,
-            bgcolor: 'background.paper'
+            width: '750px', 
+            overflow: 'auto',
+            border: 0
         }}>
             <Grid container spacing={0} columns={1}>
                 <Grid item xs={1}>

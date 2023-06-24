@@ -15,7 +15,7 @@ const EscrowPage = (props) => {
     }
 
     return (
-        <Box sx={{ border: 0 }}>
+        <Box sx={{ width: '1150px', overflow: 'auto', border: 0 }}>
             <Grid container spacing={0} columns={2}>
                 <Grid item xs={1}>
                     <EscrowAccount

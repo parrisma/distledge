@@ -1,8 +1,11 @@
 import { addressConfig } from "@/constants";
 import { getDisplayName } from "@/lib/DisplayName";
-import Select from 'react-select'
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
-/* A list of all Refernce Level (price) feeds
+/* A list of all Reference Level (price) feeds
 */
 const Contract = (props) => {
 
@@ -18,18 +21,29 @@ const Contract = (props) => {
         }
     };
 
-    function handleChange(e) {
-        props.handleChange(e.value);
+    function handleChange(event) {
+        props.handleChange(event.target.value);
     }
 
     return (
-        <Select
-            className='selector'
-            options={optionsList}
-            placeholder={`${props.placeholder}`}
-            clearable={false}
-            onChange={handleChange}
-        />
+        <FormControl fullWidth>
+            <InputLabel id="ref-level-drop-down-label">{props.label}</InputLabel>
+            <Select
+                labelId="ref-level-drop-down-label"
+                onChange={handleChange}
+                variant="filled"
+                size="small"
+                fullWidth
+            >
+                {optionsList.map((item) => (
+                    <MenuItem
+                        value={item.value}
+                    >
+                        {item.label}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
     );
 };
 

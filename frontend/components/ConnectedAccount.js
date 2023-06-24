@@ -47,10 +47,10 @@ const Contract = (props) => {
         <Box>
             {isWeb3Enabled ?
                 (
-                    <Typography variant="h6" color="success.main">Connected as [{acctName}] @ [{acct}]</Typography>
+                    <Typography variant="h7" color="success.main">Connected as [{acctName}] @ [{acct}]</Typography>
                 ) :
                 (
-                    <Typography variant="h6" color="error.main">Not connected, Press Connect</Typography>
+                    <Typography variant="h7" color="error.main">Not connected, Press Connect</Typography>
                 )
             }
         </Box>

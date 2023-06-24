@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
+import { addressConfig } from "../../constants";
 import ConnectedAccount from "../../components/ConnectedAccount";
 import OptionList from "../../components/OptionList";
 import { useOfferedOptionContext } from "../../context/offeredOption";
@@ -32,6 +33,7 @@ const Contract = (props) => {
   const { account } = useMoralis();
   const NOT_SELECTED = "?";
   var [connectedAccount, setConnectedAccount] = useState(NOT_SELECTED);
+  var [connectedAccountIsSeller, setConnectedAccountIsSeller] = useState(false);
 
   /**
    * Get current list of all minted options from the server and filter for the current buyer account.
@@ -144,6 +146,26 @@ const Contract = (props) => {
   }
 
   /**
+   * Return True if given account is the defined 'seller' account.
+   * @param {*} account - The account verify (or not) as seller
+   * @returns True if given account is the seller.
+   */
+  function isSellerAccount(account) {
+    const acctUpper = `${account}`.toUpperCase();
+    return `${account}`.toUpperCase() == addressConfig.sellerAccount.accountAddress.toString().toUpperCase();
+  }
+
+  /**
+ * Handle the event that the in-browser wallet switches (connects) as a different account.
+ * @param {*} acct - The account that is now active
+ */
+  function handleAccountChange(acct) {
+    setConnectedAccount(acct);
+    setConnectedAccountIsSeller(isSellerAccount(acct));
+    appendLogs(`Connected account :[${acct}] and is seller account [${connectedAccountIsSeller}]`);
+  }
+
+  /**
    * component life cycle hook for construction
    */
   useEffect(() => {
@@ -160,39 +182,56 @@ const Contract = (props) => {
       paddingTop: "10px",
       paddingBottom: "10px"
     }}>
-      <Grid container sx={{ minWidth: 700 }} spacing={1} columns={2}>
-        <Grid item xs={3}>
-          <ConnectedAccount
-            handleChange={handleAccountChange}
-          />
-        </Grid>
-        <Grid item xs={1}>
-          <Box sx={{ minWidth: 700 }} >
-            <Typography borderBottom={1} variant="h6" sx={{ pb: '20px' }} >Options Purchased</Typography>
-            <Box>
-              <OptionList
-                buyerAccount={connectedAccount}
-                minted={true}
-                minedOptions={mintedOptList}
-                handleExercise={handleExercise}
-                handleLogChange={appendLogs} />
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item xs={1}>
-          <Box sx={{ minWidth: 700 }} >
-            <Typography borderBottom={1} variant="h6" sx={{ pb: '20px' }}>Options Offered for Sale</Typography>
-            <Box>
-              <OptionList
-                offered={true}
-                offeredOptionList={Object.values(offeredOptDict)}
-                handleBuy={handleBuy}
-                asSeller={false}
-                handleLogChange={appendLogs} />
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
+      {connectedAccountIsSeller ? (
+        <Box sx={{ overflow: 'auto' }}>
+          <Grid container spacing={1} columns={1}>
+            <Grid item xs={1}>
+              <ConnectedAccount
+                handleChange={handleAccountChange}
+              />
+            </Grid>
+            <Grid item xs={1}>
+              <Typography variant="h7" color="error.main">Connect as a Buyer account to trade Options</Typography>
+            </Grid>
+          </Grid>
+        </Box>
+      ) : (
+        <Box sx={{ width: '1800px', overflow: 'auto' }}>
+          <Grid container spacing={1} columns={2}>
+            <Grid item xs={2}>
+              <ConnectedAccount
+                handleChange={handleAccountChange}
+              />
+            </Grid>
+            <Grid item xs={1}>
+              <Box display="flex"  >
+                <Typography height="100%" width="100%" borderBottom={1} variant="h7" sx={{ pb: '5px' }} >Options Purchased</Typography>
+              </Box>
+              <Box>
+                <OptionList
+                  buyerAccount={connectedAccount}
+                  minted={true}
+                  minedOptions={mintedOptList}
+                  handleExercise={handleExercise}
+                  handleLogChange={appendLogs} />
+              </Box>
+            </Grid>
+            <Grid item xs={1}>
+              <Box display="flex"  >
+                <Typography height="100%" width="100%" borderBottom={1} variant="h7" sx={{ pb: '5px' }}>Options Offered for Sale</Typography>
+              </Box>
+              <Box>
+                <OptionList
+                  offered={true}
+                  offeredOptionList={Object.values(offeredOptDict)}
+                  handleBuy={handleBuy}
+                  asSeller={false}
+                  handleLogChange={appendLogs} />
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+      )}
     </Box>
   );
 };

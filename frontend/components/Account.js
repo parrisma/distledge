@@ -7,7 +7,6 @@ import { useState, useEffect } from "react";
 import { addressConfig } from "../constants";
 import { getTokenContractABI, getBalanceOfC, getDecimalsC } from "../lib/StableTokenWrapper";
 import { StableCoinType, StableShareType } from "../constants";
-import { Button } from "@material-ui/core";
 
 const Contract = (props) => {
 
@@ -96,49 +95,69 @@ const Contract = (props) => {
             paddingBottom: "10px"
         }}>
             {props.withHeader ? (
-                <Grid container sx={{ minWidth: 700, color: 'primary.main', fontWeight: 'bold', pb: '20px' }} borderBottom={1} spacing={1} columns={14}>
-                    <Grid item xs={2}>
-                        Name
+                <Grid container sx={{ color: 'primary.main', fontWeight: 'bold', pb: '20px' }} borderBottom={1} spacing={0} columns={12}>
+                    <Grid item xs={1}>
+                        <Box display="flex" justifyContent="center">
+                            Name
+                        </Box>
                     </Grid>
-                    <Grid item xs={4}>
-                        Wallet Address
+                    <Grid item xs={3}>
+                        <Box display="flex" justifyContent="center">
+                            Wallet Address
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        EUR Cash
+                        <Box display="flex" justifyContent="flex-end">
+                            EUR Cash
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        EUR Token
+                        <Box display="flex" justifyContent="flex-end">
+                            EUR Token
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        USD Cash
+                        <Box display="flex" justifyContent="flex-end">
+                            USD Cash
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        USD Token
+                        <Box display="flex" justifyContent="flex-end">
+                            USD Token
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        CNY Cash
+                        <Box display="flex" justifyContent="flex-end">
+                            CNY Cash
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        CNY Token
+                        <Box display="flex" justifyContent="flex-end">
+                            CNY Token
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        Apple Token
+                        <Box display="flex" justifyContent="flex-end">
+                            Apple Token
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        Tesla Token
+                        <Box display="flex" justifyContent="flex-end">
+                            Tesla Token
+                        </Box>
                     </Grid>
                 </Grid>
             ) : null}
             {props.withHeader ? (
-                <Grid container sx={{ minWidth: 700}} spacing={1} columns={14}>
-                    <Grid item xs={14}><br></br></Grid>
+                <Grid container spacing={0} columns={12}>
+                    <Grid item xs={12}><br></br></Grid>
                 </Grid>
             ) : null}
-            <Grid container sx={{ minWidth: 700 }} spacing={1} columns={14}>
-                <Grid item xs={2}>
+            <Grid container spacing={1} columns={12}>
+                <Grid item xs={1}>
                     {props.displayName}
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                     {props.accountDetail.accountAddress}
                 </Grid>
                 <Grid item xs={1}>

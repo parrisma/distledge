@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
+import { formatNumber } from '../lib/Format';
 import { valueOptionByPOSTRequest, emptyValuationResponse } from "../lib/ERC721Util";
 import Button from "@mui/material/Button";
 import Box from '@mui/material/Box';
@@ -44,34 +45,46 @@ const Contract = (props) => {
             paddingBottom: "10px"
         }}>
             {props.rowNum === 0 ? (
-                <Grid container sx={{ minWidth: 700, color: 'primary.main', fontWeight: 'bold' }} spacing={1} columns={10}>
+                <Grid container sx={{ color: 'primary.main', fontWeight: 'bold' }} spacing={1} columns={10}>
                     <Grid item xs={3}>
                         Unique Id
                     </Grid>
                     <Grid item xs={2}>
-                        Option Name
+                        <Box display="flex" justifyContent="center">
+                            Option Name
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        Premium
+                        <Box display="flex" justifyContent="center">
+                            Premium
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        Notional
+                        <Box display="flex" justifyContent="center">
+                            Notional
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        Strike
+                        <Box display="flex" justifyContent="center">
+                            Strike
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        Value
+                        <Box display="flex" justifyContent="center">
+                            Value
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        Action
+                        <Box display="flex" justifyContent="center">
+                            Action
+                        </Box>
                     </Grid>
                 </Grid>
             ) :
                 <div />
             }
             {props.optionDetail !== undefined && props.optionDetail.hasOwnProperty('uniqueId') ? (
-                <Grid container sx={{ minWidth: 700 }} spacing={1} columns={10}>
+                <Grid container spacing={1} columns={10}>
                     <Grid item xs={3}>
                         {props.optionDetail.uniqueId}
                     </Grid>
@@ -79,25 +92,36 @@ const Contract = (props) => {
                         {props.optionDetail.optionName}
                     </Grid>
                     <Grid item xs={1}>
-                        {props.optionDetail.premium}
+                        <Box display="flex" justifyContent="flex-end">
+                            {formatNumber(Number(props.optionDetail.premium), 0, true)}
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        {props.optionDetail.notional}
+                        <Box display="flex" justifyContent="flex-end">
+                            {formatNumber(Number(props.optionDetail.notional), 0, true)}
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        {props.optionDetail.strike}
+                        <Box display="flex" justifyContent="flex-end">
+                            {formatNumber(Number(props.optionDetail.strike), 0, true)}
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        {Number(optionValuation.value).toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                        <Box display="flex" justifyContent="flex-end">
+                            {formatNumber(Number(optionValuation.value), 2, true)}
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        <Button
-                            variant="outlined"
-                            onClick={() => {
-                                props.handleAction(props.optionDetail.uniqueId);
-                            }}>
-                            <div>{props.action}</div>
-                        </Button>
+                        <Box display="flex" justifyContent="flex-end">
+                            <Button
+                                variant="outlined"
+                                sx={{ fontSize: '14px', pt: 0.1, pb: 0.1, whiteSpace: 'nowrap', textTransform: "none" }}
+                                onClick={() => {
+                                    props.handleAction(props.optionDetail.uniqueId);
+                                }}>
+                                <div>{props.action}</div>
+                            </Button>
+                        </Box>
                     </Grid>
                 </Grid>
             ) :

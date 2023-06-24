@@ -1,6 +1,9 @@
 import { addressConfig } from "@/constants";
 import { getDisplayName } from "@/lib/DisplayName";
-import Select from 'react-select'
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 /* A list of all FX Rate feeds
 */
@@ -18,18 +21,29 @@ const Contract = (props) => {
         }
     };
 
-    function handleChange(e) {
-        props.handleChange(e.value);
+    function handleChange(event) {
+        props.handleChange(event.target.value);
     }
 
     return (
-        <Select
-            className='selector'
-            options={optionsList}
-            placeholder={`${props.placeholder}`}
-            clearable={false}
-            onChange={handleChange}
-        />
+        <FormControl fullWidth>
+            <InputLabel id="fx-rate-drop-down-label">{props.label}</InputLabel>
+            <Select
+                labelId="fx-rate-drop-down-label"
+                onChange={handleChange}
+                variant="filled"
+                size="small"
+                fullWidth
+            >
+                {optionsList.map((item) => (
+                    <MenuItem
+                        value={item.value}
+                    >
+                        {item.label}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
     );
 };
 

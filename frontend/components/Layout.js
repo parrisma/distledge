@@ -1,4 +1,4 @@
-import NavigationBar from "./NavigationBar"
+import MenuAndTabs from "./MenuAndTabs"
 import Header from "./Header";
 import Console from "./Console";
 import Box from '@mui/material/Box';
@@ -11,15 +11,15 @@ export default function Layout({ children }) {
   const [logs] = useConsoleLogContext();
 
   return (
-    <Box height="100%" width="100%">
-      <Grid container>
-        <Grid item xs={12}>
+    <Box height="100%" width="100%" sx={{ fontSize: '14px' }}>
+      <Grid container columns={1}>
+        <Grid item xs={1}>
           <Header />
         </Grid>
-        <Grid item xs={12}>
-          <NavigationBar></NavigationBar>
+        <Grid item xs={1}>
+          <MenuAndTabs></MenuAndTabs>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={1}>
           <Console outputContent={logs} />
         </Grid>
       </Grid>

@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { getOptionById, valueOptionById } from "../lib/ERC721Util";
+import { formatNumber } from '../lib/Format';
 import Button from "@mui/material/Button";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -51,19 +52,29 @@ const Contract = (props) => {
                     Option Id
                 </Grid>
                 <Grid item xs={2}>
-                    Option Name
+                    <Box display="flex" justifyContent="center">
+                        Option Name
+                    </Box>
                 </Grid>
                 <Grid item xs={1}>
-                    Notional
+                    <Box display="flex" justifyContent="center">
+                        Notional
+                    </Box>
                 </Grid>
                 <Grid item xs={1}>
-                    Strike
+                    <Box display="flex" justifyContent="center">
+                        Strike
+                    </Box>
                 </Grid>
                 <Grid item xs={1}>
-                    Value
+                    <Box display="flex" justifyContent="center">
+                        Value
+                    </Box>
                 </Grid>
                 <Grid item xs={1}>
-                    Action
+                    <Box display="flex" justifyContent="center">
+                        Action
+                    </Box>
                 </Grid>
             </Grid>
         ) :
@@ -78,22 +89,31 @@ const Contract = (props) => {
                         {optionDetail.optionName}
                     </Grid>
                     <Grid item xs={1}>
-                        {optionDetail.notional}
+                        <Box display="flex" justifyContent="flex-end">
+                            {formatNumber(Number(optionDetail.notional), 0, true)}
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        {optionDetail.strike}
+                        <Box display="flex" justifyContent="flex-end">
+                            {formatNumber(Number(optionDetail.strike), 0, true)}
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        {Number(optionValuation.value).toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                        <Box display="flex" justifyContent="flex-end">
+                            {formatNumber(Number(optionValuation.value), 2, true)}
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
-                        <Button
-                            variant="outlined"
-                            onClick={() => {
-                                props.handleExercise(props.optionId, optionValuation.value);
-                            }}>
-                            <div>Exercise</div>
-                        </Button>
+                        <Box display="flex" justifyContent="flex-end">
+                            <Button
+                                variant="outlined"
+                                sx={{ fontSize: '14px', pt: 0.1, pb: 0.1, whiteSpace: 'nowrap', textTransform: "none" }}
+                                onClick={() => {
+                                    props.handleExercise(props.optionId, optionValuation.value);
+                                }}>
+                                <div>Exercise</div>
+                            </Button>
+                        </Box>
                     </Grid>
                 </Grid>
             ) :

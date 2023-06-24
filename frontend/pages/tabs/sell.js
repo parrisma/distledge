@@ -93,47 +93,59 @@ const Contract = (props) => {
             paddingBottom: "10px"
         }}>
             {connectedAccountIsSeller ? (
-                <Grid container sx={{ minWidth: 700 }} spacing={1} columns={3}>
-                    <Grid item xs={3}>
-                        <ConnectedAccount
-                            handleChange={handleAccountChange}
-                        />
+                <Box sx={{ width: '1800px', overflow: 'auto' }}>
+                    <Grid container spacing={1} columns={3}>
+                        <Grid item xs={3}>
+                            <ConnectedAccount
+                                handleChange={handleAccountChange}
+                            />
+                        </Grid>
+                        <Grid item xs={1} >
+                            <Grid container spacing={1} columns={1} >
+                                <Grid item xs={1} sx={{ pb: '5px' }}>
+                                    <Box display="flex">
+                                        <Typography height="100%" width="100%" borderBottom={1} variant="h7" sx={{ pb: '5px' }} >Print Option for Sale</Typography>
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={1}>
+                                    <SimpleOption
+                                        handleOfferOption={offerOption}
+                                        handleLogChange={appendLogs} />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Grid container spacing={1} columns={1}>
+                                <Grid item xs={1} sx={{ pb: '5px' }}>
+                                    <Box display="flex">
+                                        <Typography height="100%" width="100%" borderBottom={1} variant="h7" sx={{ pb: '5px' }} >Options Offered for Sale</Typography>
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={1}>
+                                    <OptionList
+                                        offered={true}
+                                        offeredOptionList={Object.values(offeredOptDict)}
+                                        asSeller={true}
+                                        handleDel={handleDel}
+                                        handleLogChange={appendLogs} />
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={1}>
-                        <Box sx={{ minWidth: 700 }} >
-                            <Typography borderBottom={1} variant="h6" sx={{ pb: '20px' }} >Print Option for Sale</Typography>
-                            <Box>
-                                <SimpleOption
-                                    handleOfferOption={offerOption}
-                                    handleLogChange={appendLogs} />
-                            </Box>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Box sx={{ minWidth: 700 }} >
-                            <Typography borderBottom={1} variant="h6" sx={{ pb: '20px' }} >Options Offered for Sale</Typography>
-                            <Box>
-                                <OptionList
-                                    offered={true}
-                                    offeredOptionList={Object.values(offeredOptDict)}
-                                    asSeller={true}
-                                    handleDel={handleDel}
-                                    handleLogChange={appendLogs} />
-                            </Box>
-                        </Box>
-                    </Grid>
-                </Grid>
+                </Box>
             ) : (
-                <Grid container sx={{ minWidth: 700 }} spacing={1} columns={1}>
-                    <Grid item xs={1}>
-                        <ConnectedAccount
-                            handleChange={handleAccountChange}
-                        />
+                <Box sx={{ overflow: 'auto' }}>
+                    <Grid container spacing={1} columns={1}>
+                        <Grid item xs={1}>
+                            <ConnectedAccount
+                                handleChange={handleAccountChange}
+                            />
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Typography variant="h7" color="error.main">Connect as a Seller account to offer options</Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={1}>
-                        <Typography variant="h6" color="error.main">Connect as a Seller account to offer options</Typography>
-                    </Grid>
-                </Grid>
+                </Box>
             )}
         </Box>
     );

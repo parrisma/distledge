@@ -79,18 +79,24 @@ export default function Contract(props) {
       paddingBottom: "10px"
     }}>
       {props.withHeader ? (
-        <Grid container sx={{ minWidth: 500, color: 'primary.main', fontWeight: 'bold', pb: '20px' }} borderBottom={1} spacing={1} columns={6}>
+        <Grid container sx={{ color: 'primary.main', fontWeight: 'bold', pb: '20px' }} borderBottom={1} spacing={1} columns={6}>
           <Grid item xs={1}>
             Symbol
           </Grid>
           <Grid item xs={1}>
-            Decimals
+            <Box display="flex" justifyContent="center">
+              Decimals
+            </Box>
           </Grid>
           <Grid item xs={1}>
-            Supply
+            <Box display="flex" justifyContent="center">
+              Supply
+            </Box>
           </Grid>
           <Grid item xs={1}>
-            Type
+            <Box display="flex" justifyContent="center">
+              Type
+            </Box>
           </Grid>
           <Grid item xs={1}>
             <div />
@@ -98,29 +104,33 @@ export default function Contract(props) {
         </Grid>
       ) : null}
       {props.withHeader ? (
-        <Grid container sx={{ minWidth: 500 }} spacing={1} columns={6}>
+        <Grid container spacing={1} columns={6}>
           <Grid item xs={6}><br></br></Grid>
         </Grid>
       ) : null}
-      <Grid container sx={{ minWidth: 500 }} spacing={1} columns={6}>
+      <Grid container spacing={1} columns={6}>
         <Grid item xs={1}>
           {symbol}
         </Grid>
         <Grid item xs={1}>
-          {decimals}
-        </Grid>
-        <Grid item xs={1}>
-          <Box display="flex" justifyContent="flex-end">
-            {formatNumber(Number(token_supply), 0, true)}
+          <Box display="flex" justifyContent="center">
+            {decimals}
           </Box>
         </Grid>
         <Grid item xs={1}>
-          {contractType}
+          <Box display="flex" justifyContent="flex-end">
+            {formatNumber(Number(token_supply), decimals, true)}
+          </Box>
+        </Grid>
+        <Grid item xs={1}>
+          <Box display="flex" justifyContent="center">
+            {contractType}
+          </Box>
         </Grid>
         <Grid item xs={1}>
           <Button
             variant="outlined"
-            sx={{ whiteSpace: 'nowrap' }}
+            sx={{ fontSize: '14px', pt: 0.1, pb: 0.1, whiteSpace: 'nowrap', textTransform: "none" }}
             onClick={() => {
               getSymbol({
                 onSuccess: handleSuccess

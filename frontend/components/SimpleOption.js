@@ -2,13 +2,13 @@ import SettlementTokenDropDown from "../components/dropdown/SettlementTokenDropD
 import StableCoinDropDown from "../components/dropdown/StableCoinDropDown";
 import FXRateDropDown from "../components/dropdown/FXRateDropDown";
 import ReferenceLevelDropDown from "../components/dropdown/ReferenceLevelDropDown";
-import InputField from "../components/InputField";
 import { GloballyUniqueId } from "../lib/GloballyUniqueId";
 import { formatOptionTypeOneTerms } from "../../lib/SimpleOptionTypeOne";
 import { useState } from "react";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from "@mui/material/Button";
+import TextField from '@mui/material/TextField';
 
 const Contract = (props) => {
 
@@ -32,105 +32,104 @@ const Contract = (props) => {
             paddingTop: "10px",
             paddingBottom: "10px"
         }}>
-            <Grid container sx={{ minWidth: 700 }} spacing={1} columns={4}>
+            <Grid container spacing={1} columns={1}>
                 <Grid item xs={1}>
-                    Unique Id
-                </Grid>
-                <Grid item xs={3}>
-                    <InputField
-                        value={uniqueId || GloballyUniqueId()}
-                        handleValueChange={(value) => { setUniqueId(value); }}
-                        width={"300px"} />
-                </Grid>
-                <Grid item xs={1}>
-                    <p>Contract Name</p>
-                </Grid>
-                <Grid item xs={3}>
-                    <InputField
-                        value={optionName || ""}
-                        placeholder={"The name of the contract"}
-                        handleValueChange={(value) => { setOptionName(value); }}
-                        width={"300px"} />
+                    <TextField
+                        label="Unique Id"
+                        defaultValue={uniqueId || GloballyUniqueId()}
+                        onChange={(event) => { setUniqueId(event.target.value); }}
+                        variant="filled"
+                        size="small"
+                        fullWidth
+                        InputLabelProps={{ shrink: true }}
+                    />
                 </Grid>
                 <Grid item xs={1}>
-                    <p>Description</p>
-                </Grid>
-                <Grid item xs={3}>
-                    <InputField
-                        value={description || ""}
-                        placeholder={"A description of the contract"}
-                        handleValueChange={(value) => { setDescription(value); }}
-                        width={"300px"} />
-                </Grid>
-                <Grid item xs={1}>
-                    <p>Premium</p>
-                </Grid>
-                <Grid item xs={3}>
-                    <InputField
-                        value={premium || ""}
-                        handleValueChange={(value) => { setPremium(value); }}
-                        width={"300px"}
-                        type={"number"} />
+                    <TextField
+                        label="Option Name"
+                        defaultValue={optionName || ""}
+                        onChange={(event) => { setOptionName(event.target.value); }}
+                        variant="filled"
+                        size="small"
+                        fullWidth
+                        InputLabelProps={{ shrink: true }}
+                    />
                 </Grid>
                 <Grid item xs={1}>
-                    <p>Premium Token</p>
+                    <TextField
+                        label="Description"
+                        defaultValue={description || ""}
+                        onChange={(event) => { setDescription(event.target.value); }}
+                        variant="filled"
+                        size="small"
+                        fullWidth
+                        InputLabelProps={{ shrink: true }}
+                    />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={1}>
+                    <TextField
+                        label="Premium"
+                        defaultValue={premium || ""}
+                        onChange={(event) => { setPremium(event.target.value); }}
+                        type="number"
+                        variant="filled"
+                        size="small"
+                        fullWidth
+                        InputLabelProps={{ shrink: true }}
+                    />
+                </Grid>
+                <Grid item xs={1}>
                     <StableCoinDropDown
                         handleChange={(value) => { setPremiumTokenAddress(value); }}
-                        placeholder={`Premium Coin`} />
+                        label={`Premium Coin`} />
                 </Grid>
                 <Grid item xs={1}>
-                    <p>Notional</p>
-                </Grid>
-                <Grid item xs={3}>
-                    <InputField
-                        value={notional || ""}
-                        handleValueChange={(value) => { setNotional(value); }}
-                        width={"300px"}
-                        type={"number"} />
+                    <TextField
+                        label="Notional"
+                        defaultValue={notional || ""}
+                        onChange={(event) => { setNotional(event.target.value); }}
+                        type="number"
+                        variant="filled"
+                        size="small"
+                        fullWidth
+                        InputLabelProps={{ shrink: true }}
+                    />
                 </Grid>
                 <Grid item xs={1}>
-                    <p>Reference Level</p>
-                </Grid>
-                <Grid item xs={3}>
                     <ReferenceLevelDropDown
                         handleChange={(value) => { setReferenceLevelAddress(value); }}
-                        placeholder={`Reference Level`} />
+                        label={`Reference Level`} />
                 </Grid>
                 <Grid item xs={1}>
-                    <p>Strike</p>
-                </Grid>
-                <Grid item xs={3}>
-                    <InputField
-                        value={strike || ""}
-                        handleValueChange={(value) => { setStrike(value); }}
-                        width={"300px"}
-                        type={"number"} />
+                    <TextField
+                        label="Strike"
+                        defaultValue={strike || ""}
+                        onChange={(event) => { setStrike(event.target.value); }}
+                        type="number"
+                        variant="filled"
+                        size="small"
+                        fullWidth
+                        InputLabelProps={{ shrink: true }}
+                    />
                 </Grid>
                 <Grid item xs={1}>
-                    <p>Settlement Token</p>
-                </Grid>
-                <Grid item xs={3}>
                     <SettlementTokenDropDown
                         handleChange={(value) => { setSettlementTokenAddress(value); }}
-                        placeholder={`Settlement Token`} />
+                        label={`Settlement Token`} />
                 </Grid>
                 <Grid item xs={1}>
-                    <p>Settlement FX Rate</p>
-                </Grid>
-                <Grid item xs={3}>
                     <FXRateDropDown
                         handleChange={(value) => { setFxReferenceLevelAddress(value); }}
-                        placeholder={`Settlement Rate`} />
+                        label={`Settlement Token`} />
                 </Grid>
                 <Grid item xs={1}>
                     <div />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={1}>
                     {props.handleOfferOption !== undefined ? (
                         <Button
                             variant="outlined"
+                            sx={{ fontSize: '14px', pt: 0.1, pb: 0.1, whiteSpace: 'nowrap', textTransform: "none" }}
                             onClick={() => {
                                 props.handleOfferOption(
                                     formatOptionTypeOneTerms(

@@ -22,6 +22,7 @@ const CNY_to_USD = 1.0 / USD_to_CNY;
 const USD_to_USD = 1.0;
 const EUR_to_EUR = 1.0;
 const CNY_to_CNY = 1.0;
+const currencyDecimals = 2;
 
 
 const USDEUR_ticker = "USDEUR";
@@ -42,7 +43,7 @@ const Physical_ticker = "Physical";
 const Physical_Description = "Physical Fixed Rate"
 
 // Opening Deposits from cash to token
-const depositQtyUSD = 10000 * (10 ** equityPriceDecimals); // 100.00 USD to 2 DP
+const depositQtyUSD = 10000 * (10 ** currencyDecimals); // USD to 2 DP
 const depositQtyEUR = depositQtyUSD * USD_to_EUR;
 const depositQtyCNY = depositQtyUSD * USD_to_CNY;
 
