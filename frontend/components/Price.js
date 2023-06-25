@@ -1,6 +1,5 @@
 import { useMoralis } from "react-moralis";
 import { useEffect, useState } from "react";
-import { useNotification } from "web3uikit";
 import { getLevelContractABI, getTickerC, getLevelDetailsC, getVerifiedValueC, getDecimalsC } from "../lib/LevelWrapper";
 import { ethers } from "ethers";
 import Box from '@mui/material/Box';

@@ -15,16 +15,10 @@ import Typography from '@mui/material/Typography';
 const Contract = (props) => {
 
   const [logs, setLogs] = useConsoleLogContext()
-
-  /**
-   * TODO: Would ideally be a shared func in central library as all tabs use Console
-   * @param {*} textLine 
-   */
   function appendLogs(textLine) {
     logs.push(textLine);
-    setLogs(logs.slice(-10))
+    setLogs(logs.slice(-250))
   }
-
 
   const [offeredOptDict, setOfferedOptDict] = useOfferedOptionContext(); // [Dictionary] for options offered by seller
   const [mintedOptList, setMintedOptList] = useState([]); // [List] for minted options retrieved from block chain.
@@ -56,7 +50,7 @@ const Contract = (props) => {
         console.log(`Invalid buyer account [${buyerAccount}]`);
       }
     } else {
-      appendLogs(`Cannot update Minted Option list as we are Not Web3 Connected`);
+      appendLogs(`Error, cannot update Minted Option list as we are Not Web3 Connected`);
     }
   }
 
@@ -84,12 +78,12 @@ const Contract = (props) => {
     if (value >= 0) {
       sendExerciseRequest(optionId, value, connectedAccount)
         .then((res) => {
-          appendLogs(`[${optionId}] has been sent for exercise. !`);
+          appendLogs(`Option with NFT Id [${optionId}] has been sent for exercise.`);
           getMinedOptionListAndUpdate(connectedAccount);
           if (res.hasOwnProperty(`errorCode`)) {
             appendLogs(`Exercise Failed : [${res.message}]`);
           } else {
-            appendLogs(`Exercise Ok [${res.message}]`);
+            appendLogs(`${res.message} for Option NFT Id [${optionId}]`);
           }
         })
         .catch((err) => {
@@ -112,12 +106,12 @@ const Contract = (props) => {
      *       - to the buyer and move the option premium from buyer to seller.
      */
     if (NOT_SELECTED === connectedAccount) {
-      appendLogs(`Please select a buyer account`);
+      appendLogs(`Error, please select a buyer account`);
       return;
     }
 
     if (!(uniqueId in offeredOptDict)) {
-      appendLogs(`Option [${uniqueId}] is not found!`);
+      appendLogs(`Error, Option [${uniqueId}] is not found!`);
       return;
     }
 
@@ -133,7 +127,7 @@ const Contract = (props) => {
           if (uniqueId in offeredOptDict) {
             delete offeredOptDict[uniqueId]
             setOfferedOptDict(offeredOptDict);
-            appendLogs(`[${uniqueId}] Deleted from offer list as it has been sold`);
+            appendLogs(`[${uniqueId}] deleted from offer list as it has been sold`);
           }
           appendLogs(`Mint & Transfer Ok [${res.message}]`);
         }

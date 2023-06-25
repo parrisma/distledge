@@ -23,6 +23,8 @@ const SimpleOptionByteCode = require("./SimpleOption-bytecode.json");
 const SimplePutOption = require("./SimplePutOption.json");
 const HelloWorldABI = require("./HelloWorld.json");
 const HelloWorldByteCode = require("./HelloWorld-bytecode.json");
+const ERC721OptionContractTypeOneABI = require("./ERC721OptionContractTypeOne.json");
+const ERC721OptionContractTypeOneByteCode = require("./ERC721OptionContractTypeOne-bytecode.json");
 
 const StableShareType = "Stable Share";
 const StableCoinType = "Stable Coin";
@@ -50,5 +52,7 @@ module.exports = {
   SimplePutOption,
   EscrowAccountType,
   HelloWorldABI,
-  HelloWorldByteCode
+  HelloWorldByteCode,
+  ERC721OptionContractTypeOneABI,
+  ERC721OptionContractTypeOneByteCode
 };

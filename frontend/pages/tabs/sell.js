@@ -16,7 +16,7 @@ const Contract = (props) => {
     const [logs, setLogs] = useConsoleLogContext()
     function appendLogs(textLine) {
         logs.push(textLine);
-        setLogs(logs.slice(-10))
+        setLogs(logs.slice(-250))
     }
 
     const { isWeb3Enabled } = useMoralis();
@@ -40,7 +40,7 @@ const Contract = (props) => {
             } else
                 appendLogs(`option [${optionTermsAsJson.uniqueId}] exits already.`);
         } else {
-            appendLogs(`Terms in-valid [${valid}] with message [${msg}]`);
+            appendLogs(`Error, terms invalid [${valid}] with message [${msg}]`);
         }
     }
 

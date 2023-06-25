@@ -11,7 +11,7 @@ const EscrowPage = (props) => {
     const [logs, setLogs] = useConsoleLogContext()
     function appendLogs(textLine) {
         logs.push(textLine);
-        setLogs(logs.slice(-50))
+        setLogs(logs.slice(-250))
     }
 
     return (

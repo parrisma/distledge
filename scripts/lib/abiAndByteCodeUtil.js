@@ -37,15 +37,27 @@ async function exportAbiAndBytecodeFromBuildArtifacts(
     contractName,
     abiLocation) {
     try {
+        const interfaceFilename = `${abiLocation}${contractName}.json`;
+        const bytecodeFilename = `${abiLocation}${contractName}-bytecode.json`;
+
+        if (fs.existsSync(interfaceFilename)) {
+            console.log(`Cleaning up old interface export [${interfaceFilename}]`);
+            fs.unlinkSync(interfaceFilename);
+        }
+        if (fs.existsSync(bytecodeFilename)) {
+            console.log(`Cleaning up old bytecode export [${bytecodeFilename}]`);
+            fs.unlinkSync(bytecodeFilename);
+        }
+
         const contractFile = `./artifacts/contracts/${contractGroup}/${contractName}.sol/${contractName}.json`;
         let jsonData = JSON.parse(fs.readFileSync(contractFile, 'utf-8'));
         const iface = new ethers.utils.Interface(jsonData.abi);
         fs.writeFileSync(
-            `${abiLocation}${contractName}.json`,
+            interfaceFilename,
             iface.format(ethers.utils.FormatTypes.json));
-        console.log(`Exported ABI for [${contractFile}]`);
+        console.log(`Exported Interface (ABI) for [${contractFile}]`);
         fs.writeFileSync(
-            `${abiLocation}${contractName}-bytecode.json`,
+            bytecodeFilename,
             `{"bytecode":"${jsonData.bytecode}"}`);
         console.log(`Exported Bytecode for [${contractFile}]`);
     } catch (err) {

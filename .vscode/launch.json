@@ -2,22 +2,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
+            "type": "node-terminal",
+            "name": "Front-End",
             "request": "launch",
-            "name": "FrontEnd",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/frontend"
+            "command": "npm run dev",
+            "cwd": "${workspaceFolder}/frontend"
         },
         {
             "type": "node-terminal",
-            "name": "WebServer",
+            "name": "Web-Server",
             "request": "launch",
             "command": "npx hardhat run --network localhost server.js",
             "cwd": "${workspaceFolder}/webserver"
         },
         {
             "type": "node-terminal",
-            "name": "WebServerTest",
+            "name": "Web-ServerTest",
             "request": "launch",
             "command": "npx hardhat run --network localhost serverTest.js",
             "cwd": "${workspaceFolder}/webserver/test"

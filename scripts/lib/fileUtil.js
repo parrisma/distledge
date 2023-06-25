@@ -1,6 +1,5 @@
 let fs = require('fs')
 
-//.map(f => fs.unlinkSync(directoryPath + f))
 /**
  * Delete all the files in teh given directory that match the given regular expression
  * @param {*} directoryPath 
@@ -12,7 +11,7 @@ function deleteFilesMatchingPattern(directoryPath, regexPattern) {
         let regex = new RegExp(regexPattern, 'i');
         fs.readdirSync(directoryPath)
             .filter(f => regex.test(f))
-            .map(f => console.log(`${directoryPath + f}`))
+            .map(f => fs.unlinkSync(directoryPath + f))
     } else {
         throw new Error(`Cannot delete files as [${directoryPath}] does not exist`);
     }

@@ -77,7 +77,6 @@ const Contract = (props) => {
 
     // Update every 2.5 seconds.
     useEffect(() => {
-        console.log(`isWeb3Enabled : [${isWeb3Enabled}]`);
         updateAllTokenBalances(); // update immediately after render
         const interval = setInterval(() => { updateAllTokenBalances(); }, 2500);
         return () => {
