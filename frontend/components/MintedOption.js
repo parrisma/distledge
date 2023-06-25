@@ -3,15 +3,19 @@ import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { getOptionById, valueOptionById } from "../lib/ERC721Util";
 import { formatNumber } from '../lib/Format';
+import OptionDetail from "./OptionDetail";
 import Button from "@mui/material/Button";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import InfoIcon from '@mui/icons-material/Info';
+import IconButton from '@mui/material/IconButton';
 
 const Contract = (props) => {
 
     const { isWeb3Enabled } = useMoralis();
     var [optionDetail, setOptionDetail] = useState({});
     var [optionValuation, setOptionValuation] = useState({});
+    var [showDetail, setShowDetail] = useState(false);
 
     async function update(optionId) {
         if (isWeb3Enabled) {
@@ -38,6 +42,16 @@ const Contract = (props) => {
         update(props.optionId);
     }, [isWeb3Enabled, props.buyerAccount]);
 
+    function detailShow() {
+        setShowDetail(true);
+        console.log(`Open`);
+    }
+
+    function detailHide() {
+        setShowDetail(false);
+        console.log(`Close`);
+    }
+
     return (
         <Box height="100%" width="100%" sx={{
             border: 0,
@@ -47,31 +61,34 @@ const Contract = (props) => {
             paddingTop: "10px",
             paddingBottom: "10px"
         }}>            {props.rowNum === 0 ? (
-            <Grid container sx={{ minWidth: 700, color: 'primary.main', fontWeight: 'bold' }} spacing={1} columns={7}>
+            <Grid container sx={{ color: 'primary.main', fontWeight: 'bold' }} rowSpacing={0} spacing={0} columns={14}>
                 <Grid item xs={1}>
-                    Option Id
+                    <div />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={1}>
+                    Id
+                </Grid>
+                <Grid item xs={4}>
                     <Box display="flex" justifyContent="center">
                         Option Name
                     </Box>
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item xs={2}>
                     <Box display="flex" justifyContent="center">
                         Notional
                     </Box>
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item xs={2}>
                     <Box display="flex" justifyContent="center">
                         Strike
                     </Box>
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item xs={2}>
                     <Box display="flex" justifyContent="center">
                         Value
                     </Box>
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item xs={2}>
                     <Box display="flex" justifyContent="center">
                         Action
                     </Box>
@@ -81,29 +98,44 @@ const Contract = (props) => {
             <div />
             }
             {optionDetail !== undefined && optionDetail.hasOwnProperty('uniqueId') ? (
-                <Grid container sx={{ minWidth: 700 }} spacing={1} columns={7}>
+                <Grid container spacing={0} columns={14}>
+                    <Grid item xs={1}>
+                        <IconButton
+                            sx={{ p: 0 }}
+                            size="small"
+                            onClick={() => { detailShow(); }}>
+                            <InfoIcon></InfoIcon>
+                        </IconButton>
+                        <OptionDetail
+                            open={showDetail}
+                            handleClose={detailHide}
+                            detail={optionDetail}
+                            valuation={optionValuation}
+                            optionId={props.optionId}
+                        />
+                    </Grid>
                     <Grid item xs={1}>
                         {props.optionId}
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={4}>
                         {optionDetail.optionName}
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={2}>
                         <Box display="flex" justifyContent="flex-end">
                             {formatNumber(Number(optionDetail.notional), 0, true)}
                         </Box>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={2}>
                         <Box display="flex" justifyContent="flex-end">
                             {formatNumber(Number(optionDetail.strike), 0, true)}
                         </Box>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={2}>
                         <Box display="flex" justifyContent="flex-end">
                             {formatNumber(Number(optionValuation.value), 2, true)}
                         </Box>
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={2}>
                         <Box display="flex" justifyContent="flex-end">
                             <Button
                                 variant="outlined"
