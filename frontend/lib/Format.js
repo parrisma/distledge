@@ -6,7 +6,14 @@
  * @returns 
  */
 function formatNumber(number, num_decimals, include_comma) {
-    return number.toLocaleString('en-US', { useGrouping: include_comma, minimumFractionDigits: num_decimals, maximumFractionDigits: num_decimals });
+    var res = '';
+    try {
+        res = number.toLocaleString('en-US', { useGrouping: include_comma, minimumFractionDigits: num_decimals, maximumFractionDigits: num_decimals });
+    } catch (err) {
+        res = 'Err';
+        console.log(`Failed to format number [${number}] with error [${err.message}]`);
+    }
+    return res;
 }
 
 export {
