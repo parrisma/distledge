@@ -1,1 +1,0 @@
-[{"type":"function","name":"getUniqueId","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"bytes32","name":"id"}]}]
