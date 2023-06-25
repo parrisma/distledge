@@ -13,7 +13,6 @@ const Contract = (props) => {
     var [optionValuation, setOptionValuation] = useState(emptyValuationResponse());
 
     async function update(optionDetail) {
-        console.log(`Update valuation by POST`);
         try {
             var valRes = await valueOptionByPOSTRequest(optionDetail);
             if (valRes.hasOwnProperty('okCode')) {
@@ -21,7 +20,6 @@ const Contract = (props) => {
                     "value": `${valRes.message.value}`,
                     "parameters": valRes.message.parameters
                 });
-                console.log(`Option Val [${JSON.stringify(optionValuation, null, 4)}]`);
             } else {
                 props.handleLogChange(`Failed to get OptionList from WebServer [${res.errorCode}]`);
                 setOptionValuation(emptyValuationResponse());

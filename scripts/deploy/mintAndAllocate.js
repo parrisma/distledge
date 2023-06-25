@@ -45,15 +45,15 @@ async function mintAndAllocate(hre,
     // SELLER
     console.log("\nOption seller pays physical cash (USD,CNY,EUR) to Escrow account which mints stable coin tokens and transfers them");
     var transId = crypto.randomUUID();
-    await escrowUSDCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyUSD * 10000, transId);
+    await escrowUSDCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyUSD * 100, transId);
     console.log("Option seller has " + await erc20USDStableCoin.balanceOf(option_seller.address) + " USD Token");
 
     transId = crypto.randomUUID();
-    await escrowEURCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyEUR * 10000, transId);
+    await escrowEURCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyEUR * 100, transId);
     console.log("Option seller has " + await erc20EURStableCoin.balanceOf(option_seller.address) + " EUR Token");
 
     transId = crypto.randomUUID();
-    await escrowCNYCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyCNY * 10000, transId);
+    await escrowCNYCurrenyAccount.connect(escrow_manager).processDepositTransaction(option_seller.address, depositQtyCNY * 100, transId);
     console.log("Option seller has " + await erc20CNYStableCoin.balanceOf(option_seller.address) + " CNY Token");
 
     console.log("\nInitial shares issued as stable share");

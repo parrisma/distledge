@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import MintedOption from "./MintedOption";
 import OfferedOption from "./OfferedOption";
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+const { addressConfig } = require("../constants");
 
 const Contract = (props) => {
 
     const { isWeb3Enabled } = useMoralis();
     var [optionList, setOptionList] = useState([]);
+    const [erc721ContractAddress, setERC721ContractAddress] = useState(`${addressConfig.erc721OptionContractTypeOne}`);
 
     useEffect(() => {
         if (props.minted) {
@@ -18,7 +18,8 @@ const Contract = (props) => {
             // Get the offered option details as passed by properties
             setOptionList(props.offeredOptionList);
         }
-    }, [isWeb3Enabled, props.buyerAccount, props.offeredOptionList, props.minedOptions]);
+        console.log(`ERC721: [${erc721ContractAddress}]`);
+    }, [isWeb3Enabled, props.buyerAccount, props.offeredOptionList, props.minedOptions, erc721ContractAddress]);
 
     return (
         <div className="option-list">

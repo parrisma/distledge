@@ -35,7 +35,6 @@ const Contract = (props) => {
     }
 
     useEffect(() => {
-        console.log("Connected account changed to:", account);
         setAccount(account);
         setAccountName(accountDisplayName(`${account}`.toString()));
         if (typeof props.handleChange === 'function') {

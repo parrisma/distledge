@@ -17,7 +17,6 @@ const Contract = (props) => {
   const [verifiedValue, setVerifiedValue] = useState("0");
   const [decimals, setDecimals] = useState(0);
   const [description, setDescription] = useState("?");
-  const dispatch = useNotification();
   const [decimalsForCalc, setDecimalsForCalc] = useState([]);
   const [symbolForCalc, setSymbolForCalc] = useState([]);
 
@@ -27,7 +26,7 @@ const Contract = (props) => {
   const getVerifiedValue = getVerifiedValueC(levelAddress, contractABI);
   const getDecimalsFromContract = getDecimalsC(levelAddress, contractABI);
 
-  const [priceCellClass, setPriceCellClass] = useState("div-table-col");
+  const [priceBgColor, setPriceBgColor] = useState("background.paper");
 
   function formatValue(value, decimals) {
     return Number(value) / 10 ** decimals
@@ -51,11 +50,11 @@ const Contract = (props) => {
   function updateUpdatePriceCell(formattedValue) {
     setVerifiedValue(prevValue => {
       if (formattedValue > prevValue) {
-        setPriceCellClass(prevPriceCellClass => "div-table-col-fix price-up");
+        setPriceBgColor(prevBgColor => "#2e7d32"); // mui green[800]
       } else if (formattedValue < prevValue) {
-        setPriceCellClass(prevPriceCellClass => "div-table-col-fix price-down");
+        setPriceBgColor(prevBgColor => "#c62828"); // mui red[800]
       } else {
-        setPriceCellClass(prevPriceCellClass => "div-table-col-fix");
+        setPriceBgColor(prevBgColor => "background.paper");
       }
       return formattedValue;
     });
@@ -67,36 +66,10 @@ const Contract = (props) => {
     }
   }, [isWeb3Enabled]);
 
-  const handleNewNotification = () => {
-    dispatch({
-      type: "info",
-      message: "Ticker Received!",
-      title: "Ticker Notification",
-      position: "topR",
-      icon: "bell",
-    });
-  };
-
-  const handleButtonClick = (info) => {
-    props.onAddInfo(info);
-  };
-
   useEffect(() => {
     if (isWeb3Enabled) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const contract = new ethers.Contract(levelAddress, contractABI, provider);
-      const handleChangeOfSource = async (
-        currentSigner,
-        newSigner,
-        event
-      ) => {
-        let info =
-          "Signer changed  from " +
-          currentSigner +
-          " to " +
-          newSigner;
-        props.onAddInfo(info);
-      };
       const handleSecureLevelUpdate = async (
         value,
         event
@@ -108,12 +81,6 @@ const Contract = (props) => {
         props.onAddInfo(info);
       };
       const setSecureLevelEvents = async () => {
-        // Subscribe to the "Deposit" event
-        contract.on("ChangeOfSource", handleChangeOfSource, {
-          fromBlock: 0,
-          toBlock: "latest",
-        });
-
         // Subscribe to the "Withdrawal" event
         contract.on("LevelUpdated", handleSecureLevelUpdate, {
           fromBlock: 0,
@@ -124,7 +91,6 @@ const Contract = (props) => {
       setSecureLevelEvents();
 
       return () => {
-        contract.off("ChangeOfSource", handleChangeOfSource);
         contract.off("LevelUpdated", handleSecureLevelUpdate);
       };
     }
@@ -140,7 +106,7 @@ const Contract = (props) => {
       paddingBottom: "10px"
     }}>
       {props.withHeader ? (
-        <Grid container sx={{ minWidth: 700, color: 'primary.main', fontWeight: 'bold', pb: '20px' }} borderBottom={1} spacing={1} columns={6}>
+        <Grid container sx={{ color: 'primary.main', fontWeight: 'bold', pb: '20px' }} borderBottom={1} spacing={1} columns={6}>
           <Grid item xs={2}>
             Description
           </Grid>
@@ -181,7 +147,7 @@ const Contract = (props) => {
           </Box>
         </Grid>
         <Grid item xs={1}>
-          <Box display="flex" justifyContent="flex-end">
+          <Box display="flex" justifyContent="flex-end" bgcolor={priceBgColor}>
             {formatNumber(verifiedValue, decimals, true)}
           </Box>
         </Grid>

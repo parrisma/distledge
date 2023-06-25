@@ -47,7 +47,6 @@ const Contract = (props) => {
       var res = {};
       if (buyerAccount !== null && buyerAccount !== undefined && buyerAccount !== NOT_SELECTED) {
         res = await getERC721MintedOptionList(buyerAccount);
-        console.log(`RES: [${JSON.stringify(res, null, 2)}]`);
         if (res.hasOwnProperty('okCode')) {
           setMintedOptList(res.message.terms.sort((a, b) => parseInt(a.optionId) - parseInt(b.optionId)));
         } else {
