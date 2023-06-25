@@ -1,12 +1,12 @@
 require('module-alias/register'); // npm i --save module-alias
-const { ethers } = require("hardhat");
 const fs = require("fs");
 const { frontEndAbiLocation } = require("../../helper-hardhat-config");
 const { loadSharedConfig } = require("@scripts/lib/sharedConfig.js");
-const {exportAbiAndBytecodeFromBuildArtifacts} = require("@scripts/lib/abiAndByteCodeUtil");
+const { exportAbiAndBytecodeFromBuildArtifacts } = require("@scripts/lib/abiAndByteCodeUtil");
 const exportAddressName = "./frontend/constants/contractAddressesConfig.json";
 
 async function main() {
+
   console.log("Exporting details to ./frontend...");
 
   console.log('Running from working directory: ' + process.cwd());
@@ -18,6 +18,7 @@ async function main() {
   console.log("Exporting Contract ABI")
   await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimpleOption", frontEndAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("Options", "SimplePutOption", frontEndAbiLocation);
+  await exportAbiAndBytecodeFromBuildArtifacts("Options", "ERC721OptionContractTypeOne", frontEndAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("Deals", "FXDeal", frontEndAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "EquityPrice", frontEndAbiLocation);
   await exportAbiAndBytecodeFromBuildArtifacts("DataFeeder", "FXPrice", frontEndAbiLocation);
