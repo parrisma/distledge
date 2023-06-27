@@ -25,7 +25,6 @@ export default function OptionDetail(props) {
     const [fxReferenceLevel, setFxReferenceLevel] = useState("?");
     const [seller, setSeller] = useState("?");
 
-    console.log(`Val: [${JSON.stringify(props.valuation,null,2)}]`)
     useEffect(() => {
         // Check details exist, as worst case empty JSON is passed via props while WebServer response pending
         if (props.valuation.hasOwnProperty(`value`)) {

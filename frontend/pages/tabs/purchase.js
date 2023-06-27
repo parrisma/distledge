@@ -47,6 +47,7 @@ const Contract = (props) => {
           appendLogs(`Failed to get OptionList from WebServer [${res.errorCode}]`);
         }
       } else {
+        // This is not normally an error, but account is "?" until async update from useState() is seen
         console.log(`Invalid buyer account [${buyerAccount}]`);
       }
     } else {

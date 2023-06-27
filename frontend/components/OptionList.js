@@ -27,7 +27,6 @@ const Contract = (props) => {
     const contract = new ethers.Contract(erc721ContractAddress, ERC721OptionContractTypeOneABI, provider);
     provider.getBlockNumber().then((n) => {
         setLatestBlockNum(n);
-        console.log(`Block Num [${latestBlockNum}] [${n}]`);
     });
 
     const handleNewNotification = (msg) => {
@@ -65,7 +64,6 @@ const Contract = (props) => {
                 event
             ) => {
                 const eventBlockNumber = event.blockNumber;
-                console.log(`Burn Event [${eventBlockNumber}]`);
                 if (latestBlockNum !== undefined) {
                     if (eventBlockNumber > latestBlockNum) {
                         const msg = `Event, Burned Option (NFT) after Exercise [${value}] @ [${eventBlockNumber}]`;
