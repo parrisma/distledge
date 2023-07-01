@@ -11,6 +11,9 @@ import { getERC721MintedOptionList } from "../../lib/ERC721Util";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { ethers } from "ethers";
+import { getTokenContractABI } from "../../lib/StableTokenWrapper";
+import { StableCoinType } from "../../constants";
 
 const Contract = (props) => {
 
@@ -116,9 +119,12 @@ const Contract = (props) => {
       return;
     }
 
-    appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${connectedAccount}]`);
-
     let optionTermsAsJson = offeredOptDict[uniqueId];
+    approveTransfer(optionTermsAsJson);
+
+    if(!appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${connectedAccount}]`)) 
+      return;
+
     sendCreateOptionRequest(optionTermsAsJson, connectedAccount)
       .then((res) => {
         if (res.hasOwnProperty(`errorCode`)) {
@@ -157,6 +163,38 @@ const Contract = (props) => {
     setConnectedAccount(acct);
     setConnectedAccountIsSeller(isSellerAccount(acct));
     appendLogs(`Connected account :[${acct}] and is seller account [${connectedAccountIsSeller}]`);
+  }
+
+  async function approveTransfer(optionTermsAsJson) {
+    // alert('Clicked!')
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    // Check if the user is connected
+    if (window.ethereum.selectedAddress === null) {
+      // User is not connected
+      alert('User is not connected');
+      return false;
+    }
+
+    const contractAddress = optionTermsAsJson.premiumToken;
+    const contractABI = getTokenContractABI(StableCoinType);
+
+    const tokenContract = new ethers.Contract(
+      contractAddress,
+      contractABI,
+      provider.getSigner()
+    );
+
+    const spenderAddress = optionTermsAsJson.seller;
+    const amountToApprove = ethers.utils.parseUnits(optionTermsAsJson.premium.toString(), "ether");
+
+    const approvalTx = await tokenContract.approve(
+      spenderAddress,
+      amountToApprove
+    );
+    await approvalTx.wait();
+    return true;
   }
 
   /**
