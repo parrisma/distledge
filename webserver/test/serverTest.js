@@ -116,6 +116,10 @@ async function persistOptionByPOSTRequest(
     // Add the seller, as on exercise option has to be sold back to original seller.
     optionAsJson.seller = sellerAccount.address;
 
+    const premiumTokenContract = contractDict[optionAsJson.premiumToken];
+    const premiumInDecimal = Number(await premiumTokenContract.unitsPerToken()) * Number(optionAsJson.premium);
+    await premiumTokenContract.connect(buyerAccount).approve(addressConfig.erc721OptionContractTypeOne, premiumInDecimal);
+
     var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_CREATE, buyerAccount.address);
 
     const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
