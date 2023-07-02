@@ -23,3 +23,19 @@ export async function sendCreateOptionRequest(optionTermsAsJson, buyerAddress) {
     });
     return await rawResponse.json();
 }
+
+export async function sendBuyOptionRequest(optionTermsAsJson, buyerAddress) {
+
+    var optionToPersistAsJson = formatOptionTermsMessage(optionTermsAsJson, 'buy', buyerAddress);
+    console.log(optionToPersistAsJson);
+
+    const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(optionToPersistAsJson)
+    });
+    return await rawResponse.json();
+}

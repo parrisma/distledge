@@ -5,7 +5,7 @@ import ConnectedAccount from "../../components/ConnectedAccount";
 import OptionList from "../../components/OptionList";
 import { useOfferedOptionContext } from "../../context/offeredOption";
 import { useConsoleLogContext } from "../../context/consoleLog";
-import { sendCreateOptionRequest } from "../../lib/CreateOptionConnector";
+import { sendCreateOptionRequest, sendBuyOptionRequest } from "../../lib/CreateOptionConnector";
 import { sendExerciseRequest } from "../../lib/ExerciseConnector";
 import { getERC721MintedOptionList } from "../../lib/ERC721Util";
 import Box from '@mui/material/Box';
@@ -120,17 +120,26 @@ const Contract = (props) => {
     }
 
     let optionTermsAsJson = offeredOptDict[uniqueId];
-    approveTransfer(optionTermsAsJson);
 
-    if(!appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${connectedAccount}]`)) 
-      return;
+    appendLogs(`Request Mint & Transfer of Option [${uniqueId}] for account [${connectedAccount}]`);
 
     sendCreateOptionRequest(optionTermsAsJson, connectedAccount)
       .then((res) => {
         if (res.hasOwnProperty(`errorCode`)) {
           appendLogs(`Mint & Transfer Failed : [${res.message}]`);
         } else {
-          appendLogs(`[${uniqueId}] minted with NFT Id ${JSON.stringify(res.optionId)}!`);
+          const optionId = res.optionId;
+          appendLogs(`[${uniqueId}] minted with NFT Id ${JSON.stringify(optionId)}!`);
+
+          optionTermsAsJson.mintedOptionId = optionId;
+          if(approveTransfer(optionTermsAsJson)) {
+            // Send request for premium transfer
+            doTransfer(optionTermsAsJson, connectedAccount, uniqueId);
+          } else {
+            appendLogs(`Error, failed to approve premium transfer for Option [${uniqueId}]`);
+            return;
+          }
+
           if (uniqueId in offeredOptDict) {
             delete offeredOptDict[uniqueId]
             setOfferedOptDict(offeredOptDict);
@@ -166,14 +175,13 @@ const Contract = (props) => {
   }
 
   async function approveTransfer(optionTermsAsJson) {
-    // alert('Clicked!')
     const provider = new ethers.providers.Web3Provider(window.ethereum);
 
     await window.ethereum.request({ method: "eth_requestAccounts" });
     // Check if the user is connected
     if (window.ethereum.selectedAddress === null) {
       // User is not connected
-      alert('User is not connected');
+      appendLogs('User is not connected to chain');
       return false;
     }
 
@@ -186,7 +194,7 @@ const Contract = (props) => {
       provider.getSigner()
     );
 
-    const spenderAddress = optionTermsAsJson.seller;
+    const spenderAddress = addressConfig.erc721OptionContractTypeOne;
     const amountToApprove = ethers.utils.parseUnits(optionTermsAsJson.premium.toString(), "ether");
 
     const approvalTx = await tokenContract.approve(
@@ -195,6 +203,21 @@ const Contract = (props) => {
     );
     await approvalTx.wait();
     return true;
+  }
+
+  function doTransfer(optionTermsAsJson, connectedAccount, uniqueId){
+    sendBuyOptionRequest(optionTermsAsJson, connectedAccount)
+      .then((res) => {
+        if (res.hasOwnProperty(`errorCode`)) {
+          appendLogs(`Mint & Transfer Failed : [${res.message}]`);
+        } else {
+          const optionId = JSON.stringify(res.optionId);
+          appendLogs(`[${uniqueId}] settled with NFT Id ${optionId}!`);
+        }
+      })
+      .catch((err) => {
+        appendLogs(`Failed to settle option due to ${err}!`);
+      })
   }
 
   /**

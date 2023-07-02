@@ -11,40 +11,10 @@ const {
     getOKWithMessage,
     handleJsonOK
 } = require("@webserver/serverResponse");
-const { OK_CREATE_TERMS } = require("@webserver/serverResponseCodes");
+const { OK_BUY_OPTION } = require("@webserver/serverResponseCodes");
 const { addressConfig } = require("@webserver/constants");
-const { mintERC721OptionNFT, erc721OptionNFTExists, settleERC721OptionNFT } = require("@lib/contracts/Options/ERC721OptionContractTypeOne");
-const { persistOptionTerms, persistOptionIdExists } = require("@webserver/serverPersist");
-const { ERR_FAIL_CREATE } = require("@webserver/serverErrorCodes");
-
-/**
- * Deploy option of given terms
- * 
- * @param {*} termsAsJson - The option terms as a Json object
- * @param {*} managerAccount - The manager account to sign the terms
- * @param {*} sellerAddress - The address of the seller account
- * @param {*} contractDict - the dictionary of all required and deployed utility contracts 
- */
-async function mintNFTOption(
-    termsAsJson,
-    managerAccount,
-    sellerAddress,
-    contractDict) {
-    var mintedOptionId, hashOfTerms, response;
-    try {
-        /**
-         * This is an async call to the contract on chain, the handler [handleOptionMintedEmittedEvent] 
-         * will catch the emitted event and process the rest of the request
-         */
-        [mintedOptionId, hashOfTerms, response] = await mintERC721OptionNFT(contractDict[addressConfig.erc721OptionContractTypeOne],
-            termsAsJson,
-            managerAccount,
-            sellerAddress);
-    } catch (err) {
-        throw new Error(`Failed to mint new NTF for Type One Option Contract - [${err.message}]`);
-    }
-    return [mintedOptionId, hashOfTerms, response];
-}
+const { settleERC721OptionNFT } = require("@lib/contracts/Options/ERC721OptionContractTypeOne");
+const { ERR_FAIL_BUY } = require("@webserver/serverErrorCodes");
 
 /**
  * Transfer the newly minted NFT Option from manager to buyer and transfer premium from buyer to seller.
@@ -89,13 +59,14 @@ async function settleNFTOption(
  * @param {*} req - http request
  * @param {*} res - http response
  */
-async function mintAndPersistOptionNFT(
+async function settleOptionNFT(
     termsAsJson,
     managerAccount,
     contractDict,
     req, res) {
     try {
-        if (termsAsJson.hasOwnProperty("terms") && termsAsJson.terms.hasOwnProperty("uniqueId")) {
+        if (termsAsJson.hasOwnProperty("terms") && termsAsJson.terms.hasOwnProperty("uniqueId") && termsAsJson.terms.hasOwnProperty("mintedOptionId")) {
+            const mintedOptionId = termsAsJson.terms.mintedOptionId;
             /**
              * Verify terms are as signed by buyer
              * TODO
@@ -118,34 +89,30 @@ async function mintAndPersistOptionNFT(
                 throw new Error(`Invalid account passed as Option buyer [${buyerAddress}]`);
             }
 
-            /**
-             * Mint the ERC721 contract NFT, which will allocate the new optionId
-             */
-            const optionTerms = termsAsJson.terms;
-            const [mintedOptionId, hashOfTerms, response] = await mintNFTOption(optionTerms, managerAccount, sellerAddress, contractDict, req, res);
-            if (!await erc721OptionNFTExists(contractDict[addressConfig.erc721OptionContractTypeOne], mintedOptionId)) {
-                throw new Error(`Expected option id [${mintedOptionId}] does not exist according to ERC721 Option NFT Contract [${addressConfig.erc721OptionContractTypeOne}]`);
-            }
 
             /**
-             * Persist the option terms, such that they can be recovered by this WebServer
+             *  - The code transfers the Option NFT from the manager account to the buyer account
+             *  - As well as the logic to transfer the premium from the buyer to the seller.
              */
-            await persistOptionTerms(optionTerms, mintedOptionId, hashOfTerms);
-            if (!(await persistOptionIdExists(mintedOptionId))) {
-                throw new Error(`Expected option id [${mintedOptionId}] does not exist in persistent source`);
-            }
+            await settleNFTOption(
+                termsAsJson.terms,
+                managerAccount,
+                sellerAddress,
+                buyerAddress,
+                mintedOptionId,
+                contractDict);
 
             /**
              * All, done OK
              */
-            handleJsonOK(getOKWithMessage(OK_CREATE_TERMS, `${hashOfTerms}`, mintedOptionId), res);
+            handleJsonOK(getOKWithMessage(OK_BUY_OPTION, 'Successfully settled option', mintedOptionId), res);
         } else {
             handleJsonError(getError(ERR_BAD_TERMS), res);
         }
     } catch (err) {
         throw getFullyQualifiedError(
-            ERR_FAIL_CREATE,
-            `Create Handler, failed to mint and persist option terms`,
+            ERR_FAIL_BUY,
+            `Buy Handler, failed to settle option`,
             err);
     }
 }
@@ -159,20 +126,20 @@ async function mintAndPersistOptionNFT(
  * @param {*} req - http request
  * @param {*} res - http response
  */
-async function handlePOSTCreateTermsRequest(
+async function handlePOSTBuyOptionRequest(
     termsAsJson,
     signingAccount,
     contractDict,
     req, res) {
     console.log(`Handle POST Create Terms Request for Id [${termsAsJson.id}]`);
     try {
-        await mintAndPersistOptionNFT(termsAsJson, signingAccount, contractDict, req, res);
+        await settleOptionNFT(termsAsJson, signingAccount, contractDict, req, res);
     } catch (err) {
         handleJsonError(err, res);
     }
 }
 
 module.exports = {
-    handlePOSTCreateTermsRequest
+    handlePOSTBuyOptionRequest
 }
 

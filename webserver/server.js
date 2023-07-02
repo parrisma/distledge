@@ -18,7 +18,8 @@ const {
     ERR_BAD_GET, ERR_UNKNOWN_COMMAND, ERR_BAD_POST, ERR_BAD_HTTP, ERR_BAD_HTTP_CALL
 } = require("./serverErrorCodes.js");
 const {
-    HTTP_OPTIONS, HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
+    HTTP_OPTIONS, HTTP_GET, HTTP_POST, COMMAND_CREATE, COMMAND_BUY,
+    COMMAND_DEFUNCT, COMMAND_ICON, COMMAND_PULL,
     COMMAND_VALUE, COMMAND_LIST, COMMAND_PURGE, COMMAND_EXERCISE, COMMAND,
     handleJsonOK,
     COMMAND_DELETE
@@ -31,6 +32,7 @@ const { isNumeric, currentDateTime } = require("@lib/generalUtil");
 const { text_content } = require("./utility");
 const { valuationHandler, handlePOSTValueTermsRequest } = require("./commandValue");
 const { handlePOSTCreateTermsRequest } = require("./commandCreate");
+const { handlePOSTBuyOptionRequest } = require("./commandBuy");
 const { handlePOSTExerciseTermsRequest } = require("./commandExercise");
 const { pullHandler } = require("./commandPull");
 const { listHandler } = require("./commandList");
@@ -144,12 +146,16 @@ async function handlePOSTedJson(
     mgrAccount,
     contractDict,
     bodyAsJson,
-    req, res) {
+    req, 
+    res) {
     console.log(`Post Message received : \n ${JSON.stringify(bodyAsJson, null, 2)}`);
     if (bodyAsJson.hasOwnProperty(COMMAND)) { // Json must include a command type.
         switch (bodyAsJson.command) {
             case COMMAND_CREATE:
                 await handlePOSTCreateTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
+                break;
+            case COMMAND_BUY: 
+                await handlePOSTBuyOptionRequest(bodyAsJson, managerAccount, contractDict, req, res);
                 break;
             case COMMAND_VALUE:
                 await handlePOSTValueTermsRequest(bodyAsJson, managerAccount, contractDict, req, res);
@@ -176,7 +182,8 @@ async function handlePOSTedJson(
 async function handleMethodPOST(
     mgrAccount,
     contractDict,
-    req, res) {
+    req, 
+    res) {
     try {
         console.log(`Handle POST`);
         var body = '';

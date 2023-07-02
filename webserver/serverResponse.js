@@ -1,6 +1,6 @@
 require('module-alias/register'); // npm i --save module-alias
 const { json_content } = require("@webserver/utility");
-const { OK_DEFUNCT, OK_CREATE_TERMS, OK_PULL_TERMS, OK_LIST_TERMS, OK_PURGE, OK_VALUE, OK_EXERCISE, OK_DELETE } = require("@webserver/serverResponseCodes");
+const { OK_DEFUNCT, OK_CREATE_TERMS, OK_BUY_OPTION, OK_PULL_TERMS, OK_LIST_TERMS, OK_PURGE, OK_VALUE, OK_EXERCISE, OK_DELETE } = require("@webserver/serverResponseCodes");
 const { deepCopyJson } = require("@webserver/serverErrors");
 
 const HTTP_GET = "get";
@@ -11,6 +11,7 @@ const COMMAND = "command";
 
 const COMMAND_PULL = "pull";
 const COMMAND_CREATE = "create";
+const COMMAND_BUY = "buy";
 const COMMAND_VALUE = "value";
 const COMMAND_DEFUNCT = "defunct";
 const COMMAND_LIST = "list";
@@ -43,6 +44,12 @@ OKDict[OK_CREATE_TERMS] =
 {
     "okCode": `${OK_CREATE_TERMS}`,
     "okMessage": `Created Option Terms`
+};
+
+OKDict[OK_BUY_OPTION] =
+{
+    "okCode": `${OK_BUY_OPTION}`,
+    "okMessage": `Buy Option Done`
 };
 
 OKDict[OK_LIST_TERMS] =
@@ -137,6 +144,7 @@ module.exports = {
     HTTP_OPTIONS,
     COMMAND,
     COMMAND_CREATE,
+    COMMAND_BUY,
     COMMAND_DEFUNCT,
     COMMAND_ICON,
     COMMAND_PULL,

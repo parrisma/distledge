@@ -13,7 +13,7 @@ const { randomWords, randomSentence } = require("@lib/randomWord");
 const { formatOptionTypeOneTerms } = require("@lib/SimpleOptionTypeOne");
 const { verifyTerms } = require("@webserver/utility");
 const {
-    COMMAND_CREATE, COMMAND_VALUE
+    COMMAND_CREATE, COMMAND_VALUE, COMMAND_BUY
 } = require("@webserver/serverResponse");
 const { getDictionaryOfDeployedContracts } = require("@lib/deployedContracts");
 
@@ -118,7 +118,7 @@ async function persistOptionByPOSTRequest(
 
     var optionToPersistAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_CREATE, buyerAccount.address);
 
-    const rawResponse = await fetch(`${NFTServerBaseURI()}`, {
+    const rawCreateResponse = await fetch(`${NFTServerBaseURI()}`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -126,8 +126,26 @@ async function persistOptionByPOSTRequest(
         },
         body: JSON.stringify(optionToPersistAsJson)
     });
-    const res = await rawResponse.json();
-    return res;
+    const createRes = await rawCreateResponse.json();
+    
+    const premiumTokenContract = contractDict[optionAsJson.premiumToken];
+    const premiumInDecimal = Number(await premiumTokenContract.unitsPerToken()) * Number(optionAsJson.premium);
+    await premiumTokenContract.connect(buyerAccount).approve(addressConfig.erc721OptionContractTypeOne, premiumInDecimal);
+
+    optionAsJson.mintedOptionId = createRes.optionId;
+    var optionToBuyAsJson = formatOptionTermsMessage(optionAsJson, COMMAND_BUY, buyerAccount.address);
+
+    const rawBuyResponse = await fetch(`${NFTServerBaseURI()}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(optionToBuyAsJson)
+    });
+    const buyRes = await rawBuyResponse.json();
+
+    return buyRes;
 }
 
 /**
