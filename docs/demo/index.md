@@ -45,7 +45,8 @@ A live demo of a full, but light weight project for how simple contingent contra
 1. Q : Who can interact with a smart contract 
    - A : ...
 1. Q : How can we securely identify those who we are interacting with
-   - A :
+   - A : ...
+<br>
 ## 2. Objectives
 1. Q : What did you show with the demo
    - A : That the eco system of digital wallets, tokenized assets and non-fungible tokens is sufficient to support the issuance, transacting and settlement of contingent contracts.
@@ -62,27 +63,31 @@ A live demo of a full, but light weight project for how simple contingent contra
 1. Q : What is holding back the further growth
    - A : The number of reputable financial services names present in this eco-system is still low, however as recently as June 2023 we are seeing big names such as Blackrock pushing the Sec for listing of on chain ETFs.
    - A: in addition, there is still a general confusion between crypto coins and the distributed ledger technology that makes them possible. Here we focus on how we leverage the technology not the crypto markets.
-   ## 3. Anatomy
+<br>
+## 3. Anatomy
 
    [![Design With NFT](../resources/OnChainFinancialContracts.png)](../resources/OnChainFinancialContracts.pdf)
-### 5.1 Participants
+### 3.1 Participants
 1. Q: Who are the participants ?
    - Firstly, we note that all participants must have a digital wallet as this is their on chain identity.
    - The seller, is the party who writes or issues the contracts
    - The buyer, is any party who purchases a contract, directly from the seller or another buyer
    - The Escrow, is a party that holds a physical asset (collateral) and issues backed (ERC20) tokens on chain.
    - The data provider, is a trusted party that injects data on chain, such as asset prices.
+### 3.2 Key Components
 1. Q: What are the key components ?
    - Tokenized assets issues as ERC20 tokens
    - NFT's as the means to represent the obligation between seller and buyer
    - The Web server, managed by the seller to hold details of contracts issued behind the NFTs, as well as to price and exercise the contracts.
    - IFPS as a means to store contract details in a decentralized way.
    - Meta-mask, or other third party Wallet able to transact ERC20 tokens or ERC721 NFTs
+### 3.3 Smart Contracts
 1. Q: What smart contracts are used.
    - An ERC721 smart contract to manage the NFTs associated with issued contracts
    - A set of ERC20 token to represent the tokenized cash and chares.
    - A set of bespoke contracts that represent the validated an secure prices that drive the contract valuations.
-## 6 The Life-cycle
+<br>
+## 4 The Process Life-cycle
 * Done as live demo.
 1. Q: What is the life-cycle ?
    - The seller advertises contracts for sale on the Web server.
