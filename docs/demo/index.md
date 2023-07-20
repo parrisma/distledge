@@ -53,11 +53,11 @@ A live demo of a full, but light weight project for how simple contingent contra
    - A : That the eco system of digital wallets, tokenized assets and non-fungible tokens is sufficient to support the issuance, transacting and settlement of contingent contracts.
    - A : Also to increase the organizational intuition for this space with a view to promote thinking about how services could be offered to our customers safely
 1. Q : Does ths solution involve commercial exchanges such as Binance or Coinbase ?
-   - A : ...
+   - In this demo, no. However, any party that can interact with ERC20 or ERC721 could support participation in this. This is teh real power of the eco-system in that anyone can offer contracts as ERC721 NFTs in this way and settle them in any backed (stable) asset issued as ERC20.
 1. Q : Is the solution impacted by the price volatility we see with crypto currencies and crypto market a activity ?
-   - A : ...
+   - It is independent of the crypto markets, except where crypto currency has to be purchased to pay gas fees for the on chain activity.
 1. Q : What is currently the biggest challenge with this eco-system
-   - A : regulation ...
+   - The technology is able to support the activity, the gap is with the financial regulation that would allow services to be offered in this way. Having said that there are significant developments as of summer 2023 where big players such as Black Rock are pushing regulation relating to ETF issuance. The indication are that progress will soon be seen here.
 1. Q : Conversely, what is the biggest positive ?
    - A : Fully decentralized platform, with millions of participants and a rapidly growing and increasingly rich set of standards for tokenization and establishing multi party obligations.
    - A : The service can also scale quickly with marginal costs, which fits well with the market trends we see for ever smaller notional transaction at smaller premiums.
