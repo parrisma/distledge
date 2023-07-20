@@ -6,7 +6,7 @@ This is a script for the demo of the ideas in this project.
 
 It is written as an interactive question and answer session between a commentator and one or more subject matter experts.
 
-Depending on the audience, a few of the early questions can be asked directly to them in to help engage them with the thought process.
+Depending on the audience, a few of the early questions can be asked directly to them to help engage them with the thought process.
 
 ## 0. What are we going to see ?
 
@@ -19,34 +19,35 @@ A live demo of a full, but light weight project for how simple contingent contra
 ## 1. Introduction
 
 1. Q : Why use distributed ledger and smart contracts to build an options platform ?
-   - A : Distributed ledger, combined with standard smart contracts ([ERC20](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/), [ERC721](https://eips.ethereum.org/EIPS/eip-721)) is a becoming a rich, secure and low-friction eco-system for peer to peer tokenization and transferable, contingent obligations through non fungible tokens (NFT)
+   - Distributed ledger, combined with standard smart contracts ([ERC20](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/), [ERC721](https://eips.ethereum.org/EIPS/eip-721)) is a becoming a rich, secure and low-friction eco-system for peer to peer tokenization and transferable, contingent obligations through non fungible tokens (NFT)
 1. Q : How does the help create a market ?
-    - A :  ... 
+    - There are a huge number and diversity of individuals and corporates on chain, and this eco-system is able to connect them without geographical or technical boundaries. With the ability to settle value with any  tokenised asset.
 1. Q : What does "on chain" mean ?
-   - A : ...
+   - This means a service where the code (smart contract) and compute resources are supplied by a distributed ledger technology such as Ethereum.
 1. Q : Are there different chains or ledgers ?
-   - A : ...
+   - Yes, this is becoming a competitive space to offer these services for 'gas' fees. So in the same way that we have AWS, GCP and Azure we also have many distributed ledger providers.
 1. Q : Where are we in the maturity of this technology ?
-   - A : 
+   - The technology has been around for 10+ years and supports multi billion dollar flows. In this example we are using a stable generation two technology (Ethereum). The maturity gap is around the contract standards (ERC30, ERC721) and the associated financial regulation.
 1. Q : What is a smart contract ?
-   - A : ...
+   - A Smart contract is a piece of code that can be deployed and run on-chain. The environment is more limited that for general cloud compute, and is focused mainly on secure interaction between wallets.
 1. Q : Is it free to create and run smart contracts on a chain
-   - A : ...
+   - No, the providers of the network have to pay for compute and storage, and this cost is passed on as 'gas' fees. Where activity such as deploying a smart contract or causing it to use compute or storage is charged as 'gas' fees. These gas fees are paid in terms of an agreed crypto currency. It is via these gas fees that users are exposed to crypto price volatility as they must buy the crypto currency to settle the gas fees.
 1. Q : What is tokenization?
-   - A : ...
+   - This is where a asset such as cash, shares, property is given a virtual presence on chain. A holder of the real asset creates a divisible token that represents the the real token. To introduce more of the token the issuer mints more tokens and to withdraw the asset the issuer burns existing tokens. In many case the tokens are backed, but in some cases they are not.
 1. Q : What is difference between a token and a coin ?
-   - A: ...
+   - Crypto currencies have their won block chain, where as tokens piggy back on the blockchain of crypto currencies. A token can become a crypto currency by migrating itself to its own blockchain. 
 1. Q : How do we transact real assets on chain ?
-   - A : ...
+   - Crypto currencies can be used as proxy for value, where the real asset is transfered off chain. The alternative is with Tokens and NFTs where the title is digitally transfered between wallets on chain. Then at some point in teh future the asset could be converted by the NFT or token issuer for a real asset.
 1. Q : Is this secure ?
-   - A : ...
+   - ...
 1. Q : Given on chain ledger transactions are transparent to all, how can parties be offered privacy ?
-   - A : ...
+   - At all times the transaction history is visible between the wallets, so hiding wallet identity is the only option here. In terms of the contract the terms stored in IPFS could be encrypted using the cryptography keys of the participants. There are many robust mechanism for verifying identity and encrypting sensitive details. This uses the same basic cryptography as other on line financial services so is exposed to the same vulnerabilities.
 1. Q : Who can interact with a smart contract 
-   - A : ...
+   - The prerequisite is to have a digital wallet. This is a secure address crated by the participant and that can then be managed by any third party wallet service. The alternative is to have an exchange account with someone like coinbase exchange, where they transact on your behalf. However in this set-up you do not really own the asset they do and you can only transact the asset types they support.
 1. Q : How can we securely identify those who we are interacting with
-   - A : ...
+   - It is possible to use identity authorities as are used for https. Where entities verify their identify with a trusted certificate authority, and interaction with them can be verified if they are able to produce the required signed certificate. So in this model the wallet holders can do the same, an use certificates as a means to identify who they are in these on chain interactions.
 <br>
+
 ## 2. Objectives
 1. Q : What did you show with the demo
    - A : That the eco system of digital wallets, tokenized assets and non-fungible tokens is sufficient to support the issuance, transacting and settlement of contingent contracts.
@@ -64,9 +65,11 @@ A live demo of a full, but light weight project for how simple contingent contra
    - A : The number of reputable financial services names present in this eco-system is still low, however as recently as June 2023 we are seeing big names such as Blackrock pushing the Sec for listing of on chain ETFs.
    - A: in addition, there is still a general confusion between crypto coins and the distributed ledger technology that makes them possible. Here we focus on how we leverage the technology not the crypto markets.
 <br>
+
 ## 3. Anatomy
 
    [![Design With NFT](../resources/OnChainFinancialContracts.png)](../resources/OnChainFinancialContracts.pdf)
+
 ### 3.1 Participants
 1. Q: Who are the participants ?
    - Firstly, we note that all participants must have a digital wallet as this is their on chain identity.
@@ -74,6 +77,7 @@ A live demo of a full, but light weight project for how simple contingent contra
    - The buyer, is any party who purchases a contract, directly from the seller or another buyer
    - The Escrow, is a party that holds a physical asset (collateral) and issues backed (ERC20) tokens on chain.
    - The data provider, is a trusted party that injects data on chain, such as asset prices.
+
 ### 3.2 Key Components
 1. Q: What are the key components ?
    - Tokenized assets issues as ERC20 tokens
@@ -81,12 +85,14 @@ A live demo of a full, but light weight project for how simple contingent contra
    - The Web server, managed by the seller to hold details of contracts issued behind the NFTs, as well as to price and exercise the contracts.
    - IFPS as a means to store contract details in a decentralized way.
    - Meta-mask, or other third party Wallet able to transact ERC20 tokens or ERC721 NFTs
+
 ### 3.3 Smart Contracts
 1. Q: What smart contracts are used.
    - An ERC721 smart contract to manage the NFTs associated with issued contracts
    - A set of ERC20 token to represent the tokenized cash and chares.
    - A set of bespoke contracts that represent the validated an secure prices that drive the contract valuations.
 <br>
+
 ## 4 The Process Life-cycle
 * Done as live demo.
 1. Q: What is the life-cycle ?
