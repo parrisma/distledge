@@ -11,4 +11,5 @@ This is a demo project to show how smart contracts can be used to issue, price a
 1. [Deployment](./deployment/index)
 1. [How To](./howto/index)
 1. [Knowledge](./knowledge/index)
+1. [Demo Script](./demo/index)
 1. [Team Minutes](./minutes/index)
