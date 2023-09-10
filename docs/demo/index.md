@@ -1,134 +1,119 @@
+# The Journey to "on Chain" agreements (contracts)
 
-# Project Demo Script
+## The concepts
 
-## Notes
+### In the beginning
 
-This is a script for the demo of the ideas in this project.
+- Contracts: Financial, insurance, Hotel, Flight etc can be offered by a supplier over the internet.
+- The contract is offered and agreed over the internet, optionally references some public data and is settled for cash via digital payment.
 
-It is written as an interactive question and answer session between a commentator and one or more subject matter experts.
+[![Web 2.0 Contract Process](../resources/basics-1.png)](../resources/basics-1.pdf)
 
-Depending on the audience, a few of the early questions can be asked directly to them to help engage them with the thought process.
+### What is "on-chain"
 
-## What are we going to see ?
+- Most services to date, including the internet rely on and are managed by central authorities.
+- An on-chain example is [Ethereum](https://en.wikipedia.org/wiki/Ethereum), which is the software and services that provide a platform which is in effect a decentralized super-computer
+  - It is decentralized as:
+    - it supports people and organizations connecting and transacting **directly** in a secure way
+    - the computation and storage is not centrally owned.
+  - It has the ability to store and run-programs called smart contracts
+- So, "on-chain" is a service (distributed App [dApp](https://en.wikipedia.org/wiki/Decentralized_application)) that has been implemented on top of such as decentralized network
+- Operations such as computation and storage are paid for in the form of "gas fees" which are normally settled between parties using a crypto currency such as [Ether](https://en.wikipedia.org/wiki/Ethereum#Ether).
 
-A live demo of a full, but light weight project for how simple contingent contracts can be issued "On-Chain"
+### What is a Smart Contract
 
-1. Contract issued On-Chain as a Non Fungible Token (NFT)
-1. Paid for and settled using Tokenized cash and shares
-1. Valued by a central service using digitally verified data.
-1. Decentralized storage of contract details using Inter Planetary Filesystem (IPFS)
-1. How smart contract standards for NFT (ERC721) & Tokens (ERC20) can work with Wallets to build a flexible eco-system
+- A smart-contract is a piece of code that runs "on-chain" and forms part of a distributed App [dApp](https://en.wikipedia.org/wiki/Decentralized_application).
+- The code is much like other programming languages. However as the smart contracts can be executed by anyone who has on-chain presence, smart-contracts once on-chain cannot be modified and have special features that restrict who (which wallet) can execute which functions in the program.
+- Another important aspect of these smart contracts is that they can be given common capabilities, an example of this is the [ERC-20 standard](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/) that is the emerging standard for how all Token behave.
+- This standardization means we can build decentralized eco-systems of services that can interact with each other by using these standard capabilities.
 
-## Why do this ?
+### The Move to chain
 
-1. Q : Why use distributed ledger and smart contracts to build an options platform ?
-   - Decentralized Finance ([DeFi](https://en.wikipedia.org/wiki/Decentralized_finance)) is a growing eco-system where there are no intermediaries or exchanges
-   - Distributed ledger, combined with standard smart contracts ([ERC20](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/), [ERC721](https://eips.ethereum.org/EIPS/eip-721)) is a becoming a rich, secure and low-friction eco-system for peer to peer tokenization and transferable, contingent obligations through non fungible tokens (NFT)
-1. Q : How does the help create a market ?
-    - There are a huge number and diversity of individuals and corporate on chain, and this eco-system is able to connect them without geographical or technical boundaries. With the ability to enter into contracts and settle value with any tokenized asset.
-    - This level of standardization is a step beyond the current trend for flight, hotel, Insurance and other services to be consolidated via a single Web Site.
-1. Q: Does it relate to Web 3
-    - Yes, it is the decentralization element of the four pillars of Web 3.0
-      - Decentralization
-      - Trustful and Permission-less
-      - Artificial Intelligence
-      - Connectivity and Ubiquity
+- This first requires that individuals and organizations have a presence on-chain. This comes in the form of a Wallet, which is a secured Id that we use to transact with other entities via their Wallet.
+- Every participant has a unique Id that is their on-chain identity. This must be kept secure, with access to the wallet anyone can access the assets associated with that wallet or act as that wallet.
+- There are many services such as [Meta-mask](https://metamask.io/) that can create and manage your wallet and track your on-chain assets for you.
 
-## Basic concepts
+[![On-chain Wallets](../resources/basics-1.5.png)](../resources/basics-1.5.pdf)
 
-1. Q : What does "on chain" mean ?
-   - This means a service where the code (smart contract) and compute resources are supplied by a distributed ledger technology such as Ethereum.
-   - Let's have a look at an example.
+### Assets on chain - ERC20 Tokens
 
-## More
+- We need a representation of value on-chain. This can be done with digital-coins such as Bit-Coin and Ethereum etc.
+- However, a more flexible option is to use a Token, which is a smart contract that can represent any asset.
+- An emerging standard here is [ECR-20](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/), which gives all tokens the same set of behaviors
+- This makes it possible for all of the different wallet services to cooperate in exchange of Token and digital coins.
+- Tokens can be "asset backed" and represent any asset on-chain, cash, property, commodity, shares etc.
+- A similar idea is when you buy chips at a casino. You exchange real currency at the door for chips (tokens), which you use inside to play at the tables (on-chain) and then swap the chips (tokens) back for cash when you leave.
 
-1. Q : Are there different chains or ledgers ?
-   - Yes, this is becoming a competitive space to offer these services for 'gas' fees. So in the same way that we have AWS, GCP and Azure we also have many distributed ledger providers.
-1. Q : Where are we in the maturity of this technology ?
-   - The technology has been around for 10+ years and supports multi billion dollar flows. In this example we are using a stable generation two technology (Ethereum). The maturity gap is around the contract standards (ERC30, ERC721) and the associated financial regulation.
-1. Q : What is a smart contract ?
-   - A Smart contract is a piece of code that can be deployed and run on-chain. The environment is more limited that for general cloud compute, and is focused mainly on secure interaction between wallets.
-1. Q : Is it free to create and run smart contracts on a chain
-   - No, the providers of the network have to pay for compute and storage, and this cost is passed on as 'gas' fees. Where activity such as deploying a smart contract or causing it to use compute or storage is charged as 'gas' fees. These gas fees are paid in terms of an agreed crypto currency. It is via these gas fees that users are exposed to crypto price volatility as they must buy the crypto currency to settle the gas fees.
-1. Q : What is tokenization?
-   - This is where a asset such as cash, shares, property is given a virtual presence on chain. A holder of the real asset creates a divisible token that represents the the real token. To introduce more of the token the issuer mints more tokens and to withdraw the asset the issuer burns existing tokens. In many case the tokens are backed, but in some cases they are not.
-1. Q : What is difference between a token and a coin ?
-   - Crypto currencies have their won block chain, where as tokens piggy back on the blockchain of crypto currencies. A token can become a crypto currency by migrating itself to its own blockchain.
-1. Q : How do we transact real assets on chain ?
-   - Crypto currencies can be used as proxy for value, where the real asset is transfered off chain. The alternative is with Tokens and NFTs where the title is digitally transfered between wallets on chain. Then at some point in teh future the asset could be converted by the NFT or token issuer for a real asset.
-1. Q : Is this secure ?
-   - ...
-1. Q : Given on chain ledger transactions are transparent to all, how can parties be offered privacy ?
+[![Tokens](../resources/basics-1.6.png)](../resources/basics-1.6.pdf)
 
-- At all times the transaction history is visible between the wallets, so hiding wallet identity is the only option here. In terms of the contract the terms stored in IPFS could be encrypted using the cryptography keys of the participants. There are many robust mechanism for verifying identity and encrypting sensitive details. This uses the same basic cryptography as other on line financial services so is exposed to the same vulnerabilities.
+- Token are smart contract (code) that manages the basic capabilities of a token
+  - create more tokens, **minting** in response to more assets being added.
+  - destroying token, **burning** in response ot assess being disassociated with the token
+  - **transfer** of a number of tokens from one Wallet to another
+  - **tracking** the balance of a token against all the holding wallets.
 
-1. Q : Who can interact with a smart contract
+[![Tokens as smart-contracts](../resources/basics-1.7.png)](../resources/basics-1.7.pdf)
 
-- The prerequisite is to have a digital wallet. This is a secure address crated by the participant and that can then be managed by any third party wallet service. The alternative is to have an exchange account with someone like coinbase exchange, where they transact on your behalf. However in this set-up you do not really own the asset they do and you can only transact the asset types they support.
+### Agreements (contracts) on Chain
 
-1. Q : How can we securely identify those who we are interacting with
-
-- It is possible to use identity authorities as are used for https. Where entities verify their identify with a trusted certificate authority, and interaction with them can be verified if they are able to produce the required signed certificate. So in this model the wallet holders can do the same, an use certificates as a means to identify who they are in these on chain interactions.
-
-## 2. Objectives
-
-1. Q : What did you show with the demo
-   - A : That the eco system of digital wallets, tokenized assets and non-fungible tokens is sufficient to support the issuance, transacting and settlement of contingent contracts.
-   - A : Also to increase the organizational intuition for this space with a view to promote thinking about how services could be offered to our customers safely
-1. Q : Does ths solution involve commercial exchanges such as Binance or Coinbase ?
-   - In this demo, no. However, any party that can interact with ERC20 or ERC721 could support participation in this. This is teh real power of the eco-system in that anyone can offer contracts as ERC721 NFTs in this way and settle them in any backed (stable) asset issued as ERC20.
-1. Q : Is the solution impacted by the price volatility we see with crypto currencies and crypto market a activity ?
-   - It is independent of the crypto markets, except where crypto currency has to be purchased to pay gas fees for the on chain activity.
-1. Q : What is currently the biggest challenge with this eco-system
-   - The technology is able to support the activity, the gap is with the financial regulation that would allow services to be offered in this way. Having said that there are significant developments as of summer 2023 where big players such as Black Rock are pushing regulation relating to ETF issuance. The indication are that progress will soon be seen here.
-1. Q : Conversely, what is the biggest positive ?
-   - A : Fully decentralized platform, with millions of participants and a rapidly growing and increasingly rich set of standards for tokenization and establishing multi party obligations.
-   - A : The service can also scale quickly with marginal costs, which fits well with the market trends we see for ever smaller notional transaction at smaller premiums.
-1. Q : What is holding back the further growth
-   - A : The number of reputable financial services names present in this eco-system is still low, however as recently as June 2023 we are seeing big names such as Blackrock pushing the Sec for listing of on chain ETFs.
-   - A: in addition, there is still a general confusion between crypto coins and the distributed ledger technology that makes them possible. Here we focus on how we leverage the technology not the crypto markets.
-
-## 3. Anatomy
-
-   [![Design With NFT](../resources/OnChainFinancialContracts.png)](../resources/OnChainFinancialContracts.pdf)
-
-### 3.1 Participants
-
-1. Q: Who are the participants ?
-   - Firstly, we note that all participants must have a digital wallet as this is their on chain identity.
-   - The seller, is the party who writes or issues the contracts
-   - The buyer, is any party who purchases a contract, directly from the seller or another buyer
-   - The Escrow, is a party that holds a physical asset (collateral) and issues backed (ERC20) tokens on chain.
-   - The data provider, is a trusted party that injects data on chain, such as asset prices.
-
-### 3.2 Key Components
-
-1. Q: What are the key components ?
-   - Tokenized assets issues as ERC20 tokens
-   - NFT's as the means to represent the obligation between seller and buyer
-   - The Web server, managed by the seller to hold details of contracts issued behind the NFTs, as well as to price and exercise the contracts.
-   - IFPS as a means to store contract details in a decentralized way.
-   - Meta-mask, or other third party Wallet able to transact ERC20 tokens or ERC721 NFTs
-
-### 3.3 Smart Contracts
-
-1. Q: What smart contracts are used.
-   - An ERC721 smart contract to manage the NFTs associated with issued contracts
-   - A set of ERC20 token to represent the tokenized cash and chares.
-   - A set of bespoke contracts that represent the validated an secure prices that drive the contract valuations.
-<br>
-
-## 4 The Process Life-cycle
-
-- Done as live demo.
+- We have value on chain in the form of Tokens (and coins) we can make (buy) and settle agreements (contracts).
+- Now, we need a way to represent the agreement and the how we enter into and exit that agreement.
+- For this we can use a [Non Fungible Token (NFT)](https://en.wikipedia.org/wiki/Non-fungible_token)
+- The [NFT](https://en.wikipedia.org/wiki/Non-fungible_token) is a smart-contract that has:
+  - An owner
+  - A means to point at some specific asset or digital agreement
+- So, if we create an NFT that is a represents digital ownership of something, we can then transfer the ownership for a fee that can be paid for with a Token (or crypto currency).
+- As with tokens there are emerging standards for such NFTs, [ERC-721](https://eips.ethereum.org/EIPS/eip-721) and [ERC-1155](https://ethereum.org/en/developers/docs/standards/tokens/erc-1155/). This gives them standard features that make them easier to manage and transact
   
-1. Q: What is the life-cycle ?
-   - The seller advertises contracts for sale on the Web server.
-   - The buyer agrees to purchase a contract.
-   - The seller registers the details of the sold contract on the Web server and in IPFS, for which a unique & digitally signed URI is generated.
-   - The seller, *mints* an NFT via the ERC7201 smart contract for the agreed terms. Lined to the URI for the option terms.
-   - The NTF is transfered from seller to buyer, for payment from buyer of the agreed amount of the agreed token.
-   - The data provider (for payment) injects updated prices and the Web server updates the contract price.
-   - The buyer, can choose to sell the NTF to any other digital Wallet holder for the current value.
-   - At some point the buyer can choose to exercise the contract, at which point the original seller will pay the current value (if any) to the buyer in the agreed settlement token.
-   - The current owner transfers the NTF back to the seller, who *burns* the NFT terminating it's on chain existence for ever
+[![Tokens as smart-contracts](../resources/basics-1.65.png)](../resources/basics-1.65.pdf)
+
+- In our example the NFT references the digital terms of an agreement between two parties (wallets).
+- The agreement is defined by the seller and who creates an NFT to represent that agreement. They advertise the agreement for an amount of a given token.
+- The agreement is then bought by the buyer and the NFT ownership NFT is transfered to them
+- The Transfer of the NFT is a critical point as it must be legally recognized as transfer of ownership of what the NFT represents
+
+[![Tokens as smart-contracts](../resources/basics-1.75.png)](../resources/basics-1.75.pdf)
+
+### Reliable Data
+
+- Often the agreements we make will have to reference some sort of external or market data.
+- So, we need a secure way to get this data on chain so it can be used be the smart contracts
+- The way this is done is for a data provider to digitally sign the data so that the receiving smart contract can verify the value and the sending wallet.
+- The data vendor wallet address could be defined as part of the agreement terms and pre-verified in the same was at https protocol verifies trusted parties with [certificate authorities](https://en.wikipedia.org/wiki/Certificate_authority).
+- For this we create a smart contract that allows such values to be injected on-chain and referenced by other smart contracts.
+
+[![Secure on chain data](../resources/basics-1.8.png)](../resources/basics-1.8.pdf)
+
+### Real Value, Stable-"token"
+
+- We want the tokens we buy and settle with to represent a real asset such as curreny, commodity (gold), property etc.
+- This is the concept of a "stable token", where the token buys and holds the real asset for every quantity of the token issued, and as such it's value is pegged 1:1 to the value of that asset.
+- So, we have an on chain equivalent of the asset, some examples are [tether](https://tether.to/en/) which is a USD stable-coin.
+- The process for this is
+  - An entity create as stable-coin by issuing a smart-contract for a Token
+  - For every unit of the token minted (created) the issuers buys and holds the asset
+  - For every unit of the token burned (destroyed) the issue can sell the asset
+
+[![Stable Tokens - curreny](../resources/basics-2.png)](../resources/basics-2.pdf)
+
+[![Stable Tokens - property](../resources/basics-2.1.png)](../resources/basics-2.1.pdf)
+
+### Create, Buy, Sell, Settle on chain
+
+1. The option seller defines some agreement terms that may be of interest to a buyer.
+2. An NFT is created by the seller to represent these terms that are of interest to a buyer
+3. These terms also reference some specific market prices, which are linked a secure on-chain levels wrapped by a smart contract
+4. A buyer who finds the terms of value can then have the NFT transfered to them by the seller in exchange for a given amount of a token.
+5. The seller and buyer are now obliged to honor the terms of the agreement represented by thr NFT
+
+[![Issue Agreement](../resources/basics-3.png)](../resources/basics-3.pdf)
+
+1. At some point the seller and or buyer may wish to exit the agreement (if the agreement allows for it)
+2. So the value of the agreement is calculated with reference to the secure prices
+3. The value is then settled between buyer and seller as a token. The settlement can be in the form any agreed token.
+4. Once the value is settled, the NFT is transfered to the original seller, who destroys it.
+[![Settle Agreement](../resources/basics-3.5.png)](../resources/basics-3.5.pdf)
+
+- It is the process that we have created a fully functional demo application for.
+
+## The application
