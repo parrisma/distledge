@@ -1,5 +1,7 @@
 # The Journey to "on Chain" agreements (contracts)
 
+{:toc}
+
 ## The concepts
 
 ### In the beginning
@@ -112,6 +114,7 @@
 2. So the value of the agreement is calculated with reference to the secure prices
 3. The value is then settled between buyer and seller as a token. The settlement can be in the form any agreed token.
 4. Once the value is settled, the NFT is transfered to the original seller, who destroys it.
+
 [![Settle Agreement](../resources/basics-3.5.png)](../resources/basics-3.5.pdf)
 
 - It is the process that we have created a fully functional demo application for.
