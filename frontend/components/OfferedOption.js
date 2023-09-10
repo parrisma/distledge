@@ -3,17 +3,27 @@ import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { formatNumber } from '../lib/Format';
 import { valueOptionByPOSTRequest, emptyValuationResponse } from "../lib/ERC721Util";
+import { getOptionById, valueOptionById } from "../lib/ERC721Util";
 import Button from "@mui/material/Button";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import OptionDetail from "./OptionDetail";
 
 const Contract = (props) => {
 
     const { isWeb3Enabled } = useMoralis();
     var [optionValuation, setOptionValuation] = useState(emptyValuationResponse());
+    var [showDetail, setShowDetail] = useState(false);
+    var [optionDetail, setOptionDetail] = useState({});
 
     async function update(optionDetail) {
         try {
+            var res = await getOptionById(optionDetail.uniqueId);
+            props.handleLogChange(`optionID is [${optionDetail.uniqueId}]`);
+            props.handleLogChange(`own property is [${res.hasOwnProperty('okCode')}]`);
+
+            setOptionDetail(optionDetail);
+
             var valRes = await valueOptionByPOSTRequest(optionDetail);
             if (valRes.hasOwnProperty('okCode')) {
                 setOptionValuation({
@@ -32,6 +42,16 @@ const Contract = (props) => {
     useEffect(() => {
         update(props.optionDetail);
     }, [isWeb3Enabled, props.buyerAccount]);
+
+    function showDetail() {
+        setShowDetail(false);
+        console.log(`Open`);
+    }
+
+    function detailHide() {
+        setShowDetail(false);
+        console.log(`Close`);
+    }
 
     return (
         <Box height="100%" width="100%" sx={{
@@ -82,7 +102,24 @@ const Contract = (props) => {
                 <div />
             }
             {props.optionDetail !== undefined && props.optionDetail.hasOwnProperty('uniqueId') ? (
+
                 <Grid container spacing={1} columns={10}>
+                    <Grid item xs={1}>
+                        <Button
+                            variant="outlined"
+                            sx={{ fontSize: '14px', pt: 0, pb: 0, whiteSpace: 'nowrap', textTransform: "none" }}
+                            onClick={setShowDetail}
+                        >
+                            <div>info</div>
+                        </Button>
+                        <OptionDetail
+                            open={showDetail}
+                            handleClose={detailHide}
+                            detail={optionDetail}
+                            valuation={optionValuation}
+                            optionId={props.optionId}
+                        />
+                    </Grid>
                     <Grid item xs={3}>
                         {props.optionDetail.uniqueId}
                     </Grid>
