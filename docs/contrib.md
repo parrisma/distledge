@@ -7,3 +7,4 @@ Contributors
 5. Siming Yuan
 6. Min ZHU
 7. Jason Su
+8. Edwin Lu
