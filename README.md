@@ -1,6 +1,6 @@
 # Distributed Ledger Project
 
-see our full documentation on our [github pages](https://parrisma.github.io/distledge/)
+see our full documentation on our [github pages](https://parrisma.github.io/distledge/) or watch our [YouTube Video](https://www.youtube.com/watch?v=kINVb9jWNd0)
 
 tips for local debugging:
 
